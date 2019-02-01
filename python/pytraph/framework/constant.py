@@ -1,4 +1,4 @@
 
 
 def constant(tensor):
-    
+    pass
