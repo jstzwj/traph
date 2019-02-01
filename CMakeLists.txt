@@ -1,4 +1,17 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.0)
+
+if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+  	set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+	  CACHE STRING "")
+	MESSAGE(STATUS "Using vcpkg")
+endif()
+
 project(traph)
+
+SET(TRAPH_PATH ${PROJECT_SOURCE_DIR} CACHE STRING "Adds a path to TRAPH" FORCE)
+SET(TRAPH_PATH_INCLUDE ${TRAPH_PATH}/traph/include CACHE STRING "Adds a path to TRAPH header" FORCE)
+SET(TRAPH_PATH_HEADER ${TRAPH_PATH_INCLUDE}/traph CACHE STRING "Adds a path to TRAPH header" FORCE)
+SET(TRAPH_PATH_SOURCE ${TRAPH_PATH}/traph/source CACHE STRING "Adds a path to TRAPH source" FORCE)
+SET(TRAPH_PATH_DEPENDENCIES ${TRAPH_PATH}/traph/contrib CACHE STRING "Adds a path to TRAPH dependencies" FORCE)
 
 ADD_SUBDIRECTORY(traph)

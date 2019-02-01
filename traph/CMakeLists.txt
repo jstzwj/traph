@@ -1,2 +1,3 @@
 
+ADD_SUBDIRECTORY(contrib)
 ADD_SUBDIRECTORY(source)
