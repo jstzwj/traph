@@ -2,3 +2,6 @@
 [submodule "traph/contrib/xtensor"]
 	path = traph/contrib/xtensor
 	url = https://github.com/QuantStack/xtensor.git
+[submodule "traph/contrib/xtl"]
+	path = traph/contrib/xtl
+	url = https://github.com/QuantStack/xtl.git
