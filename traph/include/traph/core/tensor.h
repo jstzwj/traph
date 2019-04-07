@@ -131,46 +131,23 @@ namespace traph
             auto_strides();
         }
 
-        Tensor(nested_initializer_list_t<T, 1> t)
-            :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(order)
-        {
-            dimensions.resize(1);
-            auto_strides();
-        }
-        Tensor(nested_initializer_list_t<T, 2> t)
-            :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(order)
-        {
-            dimensions.resize(2);
-            auto_strides();
-        }
-
-        Tensor(nested_initializer_list_t<T, 3> t)
-            :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(order)
-        {
-            dimensions.resize(3);
-            auto_strides();
-        }
-        Tensor(nested_initializer_list_t<T, 4> t)
-            :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(order)
-        {
-            dimensions.resize(4);
-            auto_strides();
-        }
-        Tensor(nested_initializer_list_t<T, 5> t)
-            :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(order)
-        {
-            dimensions.resize(5);
-            auto_strides();
-        }
-
-        void reshape(std::initializer_list<idx_type> t)
+        void reshape(const DimVector& dims)
         {
 
+        }
+
+        T& index(const DimVector& dims)
+        {
+            idx_type pos = 0;
+
+            for(idx_type i = 0; i < dimensions.size(); ++i)
+            {
+                pos += dimensions[i] * strides[i];
+            }
+
+            pos += offset;
+
+            return rep->data[pos];
         }
 
         Tensor& operator ()(idx_type idx)
