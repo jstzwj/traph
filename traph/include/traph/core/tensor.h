@@ -1,0 +1,9 @@
+
+
+namespace traph
+{
+    class Tensor
+    {
+        
+    };
+}

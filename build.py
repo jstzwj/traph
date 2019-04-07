@@ -11,6 +11,7 @@ def main(argv):
         os.mkdir("build")
     os.chdir(traph_root + "/build")
     subprocess.run("cmake ../")
+    subprocess.run("cmake --build .")
     
 if __name__ == '__main__':
 	main(sys.argv)
