@@ -140,6 +140,8 @@ namespace traph
         idx_type offset;
 		DimVector strides;
         layout_type order;
+
+        bool requires_grad;
     private:
         void auto_strides()
         {
@@ -174,41 +176,41 @@ namespace traph
     public:
         Tensor()
             :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(layout_type::column_major)
+            dimensions(), offset(0), strides(), order(layout_type::column_major), requires_grad(false)
         {
         }
 
         explicit Tensor(const DimVector& dimensions)
             :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(), order(layout_type::column_major)
+            dimensions(dimensions), offset(0), strides(), order(layout_type::column_major), requires_grad(false)
         {
             auto_strides();
         }
 
         explicit Tensor(const DimVector& dimensions, layout_type order)
             :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(), order(order)
+            dimensions(dimensions), offset(0), strides(), order(order), requires_grad(false)
         {
             auto_strides();
         }
 
         explicit Tensor(const DimVector& dimensions, const DimVector& strides)
             :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(strides), order(layout_type::column_major)
+            dimensions(dimensions), offset(0), strides(strides), order(layout_type::column_major), requires_grad(false)
         {
             auto_strides();
         }
 
         explicit Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
             :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(strides), order(order)
+            dimensions(dimensions), offset(0), strides(strides), order(order), requires_grad(false)
         {
             auto_strides();
         }
 
         Tensor(const T& t)
             :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(order)
+            dimensions(), offset(0), strides(), order(order), requires_grad(false)
         {
             dimensions.resize(1);
             auto_strides();
@@ -219,7 +221,8 @@ namespace traph
             dimensions(other.dimensions),
             offset(other.offset),
             strides(other.strides),
-            order(other.order)
+            order(other.order),
+            requires_grad(other.requires_grad)
         {
         }
 
@@ -228,7 +231,8 @@ namespace traph
             dimensions(other.dimensions),
             offset(other.offset),
             strides(other.strides),
-            order(other.order)
+            order(other.order),
+            requires_grad(other.requires_grad)
         {
         }
 
@@ -244,6 +248,32 @@ namespace traph
             return result;
         }
         // op
+        void add_(T value)
+        {
+            idx_type i = offset;
+            for(idx_type dim = 0;dim < dimensions.size();++dim)
+            {
+                for(idx_type step = 0; step < dimension[dim];++step)
+                {
+                    rep->data[i] = rep->data[i] + value;
+                    i += strides[dim];
+                }
+            }
+        }
+
+        void fill_(T value)
+        {
+            idx_type i = offset;
+            for(idx_type dim = 0;dim < dimensions.size();++dim)
+            {
+                for(idx_type step = 0; step < dimension[dim];++step)
+                {
+                    rep->data[i] = value;
+                    i += strides[dim];
+                }
+            }
+        }
+
         void abs_()
         {
             idx_type i = offset;
@@ -282,23 +312,6 @@ namespace traph
             pos += offset;
 
             return rep->data[pos];
-        }
-
-        Tensor& operator ()(idx_type idx)
-        {
-            
-        }
-
-        template<class... Args>
-        Tensor& operator ()(idx_type idx, Args... args)
-        {
-            
-        }
-
-        template<class... Args>
-        const Tensor& operator ()(idx_type idx, Args... args) const
-        {
-            
         }
     };
 }
