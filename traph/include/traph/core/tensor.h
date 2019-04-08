@@ -1,3 +1,5 @@
+#include <cmath>
+
 
 #include<traph/core/type.h>
 #include<traph/core/index.h>
@@ -242,6 +244,18 @@ namespace traph
             return result;
         }
         // op
+        void abs_()
+        {
+            idx_type i = offset;
+            for(idx_type dim = 0;dim < dimensions.size();++dim)
+            {
+                for(idx_type step = 0; step < dimension[dim];++step)
+                {
+                    rep->data[i] = std::abs(rep->data[i]);
+                    i += strides[dim];
+                }
+            }
+        }
         // index
         T& item()
         {
