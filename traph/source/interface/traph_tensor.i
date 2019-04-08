@@ -58,13 +58,19 @@ public:
 template<class T>
 class TensorStorage
 {
-public:
+private:
     std::unique_ptr<T[]> data;
     idx_type len;
-
+public:
     TensorStorage();
-    void resize(idx_type size);
-    void resize(const DimVector& dimensions);
+    TensorStorage(const TensorStorage& other);
+    TensorStorage(TensorStorage&& other);
+    TensorStorage& operator=(const TensorStorage& other);
+    TensorStorage& operator=(TensorStorage&& other);
+
+    idx_type size() const;
+    size_type element_size() const;
+    void resize_(idx_type size);
 };
 
 template<class T>
@@ -87,5 +93,18 @@ public:
     T& index(const DimVector& dims);
 };
 
-%template(tensor_f32) Tensor<f32>;
-%template(tensor_f64) Tensor<f64>;
+%template(ByteTensor) Tensor<u8>;
+%template(CharTensor) Tensor<i8>;
+%template(ShortTensor) Tensor<i16>;
+%template(IntTensor) Tensor<i32>;
+%template(LongTensor) Tensor<i64>;
+%template(FloatTensor) Tensor<f32>;
+%template(DoubleTensor) Tensor<f64>;
+
+%template(ByteStorage) TensorStorage<u8>;
+%template(CharStorage) TensorStorage<i8>;
+%template(ShortStorage) TensorStorage<i16>;
+%template(IntStorage) TensorStorage<i32>;
+%template(LongStorage) TensorStorage<i64>;
+%template(FloatStorage) TensorStorage<f32>;
+%template(DoubleStorage) TensorStorage<f64>;
