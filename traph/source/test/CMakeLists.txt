@@ -8,7 +8,7 @@ SET(TEST_LIST
 	${SOURCE_PATH}/main.cpp
 )
 
-ADD_LIBRARY(${LIB_OUTNAME} SHARED ${TEST_LIST})
+add_executable(${LIB_OUTNAME} ${TEST_LIST})
 target_link_libraries(${LIB_OUTNAME} traph-core)
 
 

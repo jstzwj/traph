@@ -1,3 +1,7 @@
+#ifndef TRAPH_TENSOR
+#define TRAPH_TENSOR
+
+#include <initializer_list>
 #include <cmath>
 
 
@@ -150,19 +154,19 @@ namespace traph
             size_type stride = 1;
             if(order == layout_type::column_major)
             {
-                for(idx_type i = 0; i < dim_num; ++i)
-                {
-                    strides[i] = stride;
-                    stride *= dimensions[i];
-                }
+				for (idx_type i = dim_num - 1; i >= 0; --i)
+				{
+					strides[i] = stride;
+					stride *= dimensions[i];
+				}
             }
             else
             {
-                for(idx_type i = dim_num - 1; i >= 0; --i)
-                {
-                    strides[i] = stride;
-                    stride *= dimensions[i];
-                }
+				for (idx_type i = 0; i < dim_num; ++i)
+				{
+					strides[i] = stride;
+					stride *= dimensions[i];
+				}
             }
         }
     public:
@@ -185,6 +189,8 @@ namespace traph
             dimensions(dimensions), offset(0), strides(), order(layout_type::column_major), requires_grad(false)
         {
             auto_strides();
+			
+			rep->resize_(dimensions.flat_size());
         }
 
         explicit Tensor(const DimVector& dimensions, layout_type order)
@@ -192,6 +198,8 @@ namespace traph
             dimensions(dimensions), offset(0), strides(), order(order), requires_grad(false)
         {
             auto_strides();
+
+			rep->resize_(dimensions.flat_size());
         }
 
         explicit Tensor(const DimVector& dimensions, const DimVector& strides)
@@ -199,6 +207,8 @@ namespace traph
             dimensions(dimensions), offset(0), strides(strides), order(layout_type::column_major), requires_grad(false)
         {
             auto_strides();
+
+			rep->resize_(dimensions.flat_size());
         }
 
         explicit Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
@@ -206,6 +216,8 @@ namespace traph
             dimensions(dimensions), offset(0), strides(strides), order(order), requires_grad(false)
         {
             auto_strides();
+
+			rep->resize_(dimensions.flat_size());
         }
 
         Tensor(const T& t)
@@ -240,6 +252,37 @@ namespace traph
         {
 
         }
+		// info
+		idx_type data_offset() const
+		{
+			return offset;
+		}
+
+		layout_type layout() const
+		{
+			return order;
+		}
+
+		DimVector size() const
+		{
+			return dimensions;
+		}
+
+		const T* data() const
+		{
+			return rep->data.get();
+		}
+
+		T* data()
+		{
+			return rep->data.get();
+		}
+
+		DimVector stride() const
+		{
+			return strides;
+		}
+
         // type cast
         DoubleTensor to_double() const
         {
@@ -263,15 +306,10 @@ namespace traph
 
         void fill_(T value)
         {
-            idx_type i = offset;
-            for(idx_type dim = 0;dim < dimensions.size();++dim)
-            {
-                for(idx_type step = 0; step < dimension[dim];++step)
-                {
-                    rep->data[i] = value;
-                    i += strides[dim];
-                }
-            }
+			for (idx_type i = offset; i < rep->size(); ++i)
+			{
+				rep->data[i] = value;
+			}
         }
 
         void abs_()
@@ -314,4 +352,40 @@ namespace traph
             return rep->data[pos];
         }
     };
+
+    template<class T>
+    Tensor<T> zeros(std::initializer_list<idx_type> l)
+    {
+        DimVector dim;
+		for (auto i : l)
+			dim.push_back(i);
+
+        Tensor<T> result(dim);
+        result.fill_(0);
+
+        return result;
+    }
+
+    template<class T>
+    Tensor<T> ones(std::initializer_list<idx_type> l)
+    {
+		DimVector dim;
+		for (auto i : l)
+			dim.push_back(i);
+
+        Tensor<T> result(dim);
+        result.fill_(1);
+
+        return result;
+    }
+
+    using DoubleTensor = Tensor<f64>;
+    using FloatTensor = Tensor<f32>;
+    using LongTensor = Tensor<i64>;
+    using IntTensor = Tensor<i32>;
+    using ShortTensor = Tensor<i16>;
+    using CharTensor = Tensor<i8>;
+    using ByteTensor = Tensor<u8>;
 }
+
+#endif // !TRAPH_TENSOR

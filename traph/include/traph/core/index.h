@@ -132,6 +132,25 @@ namespace traph
 
         idx_type size() const { return this->dim_num; }
 
+		idx_type flat_size() const
+		{
+			idx_type flat_size = 1;
+
+			if (size() == 0)
+			{
+				flat_size = 0;
+			}
+			else
+			{
+				for (idx_type i = 0; i < size(); ++i)
+				{
+					flat_size *= this->operator[](i);
+				}
+			}
+			
+			return flat_size;
+		}
+
         idx_type& operator[](idx_type dim)
         {
             if(dim<0 || dim >= dim_num)

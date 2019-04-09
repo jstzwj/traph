@@ -5,10 +5,37 @@ SET(HEADER_PATH ${TRAPH_PATH_HEADER}/${LIB_NAME})
 SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 
 SET(CORE_LIST
+	${HEADER_PATH}/type.h
+	${HEADER_PATH}/utils.h
+	${HEADER_PATH}/slice.h
+	${HEADER_PATH}/index.h
+	${HEADER_PATH}/arithmetic.h
+	${SOURCE_PATH}/arithmetic.cpp
 	${HEADER_PATH}/tensor.h
 	${SOURCE_PATH}/tensor.cpp
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})
+
+
+
+IF(TRAPH_ACCELERATE EQUAL 1)
+	if (BLAS_FOUND)
+		target_link_libraries(${LIB_OUTNAME} ${BLAS_LIBRARIES})
+	endif()
+ELSEIF(TRAPH_ACCELERATE EQUAL 2)
+	if (BLAS_FOUND)
+		target_link_libraries(${LIB_OUTNAME} ${BLAS_LIBRARIES})
+	endif()
+ELSEIF(TRAPH_ACCELERATE EQUAL 3)
+	find_package(clBLAS CONFIG REQUIRED)
+	target_link_libraries(main PRIVATE clBLAS)
+ELSEIF(TRAPH_ACCELERATE EQUAL 4)
+	# find_package(clBLAS CONFIG REQUIRED)
+	# target_link_libraries(${LIB_OUTNAME} PRIVATE clBLAS)
+ELSE()
+	MESSAGE(FATAL_ERROR "Unsupported build platform: " ${OCTOON_BUILD_PLATFORM})
+ENDIF()
+
 
 
