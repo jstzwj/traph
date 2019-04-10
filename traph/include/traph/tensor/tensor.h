@@ -247,6 +247,14 @@ namespace traph
         {
 
         }
+
+        void resize(const DimVector& dims)
+        {
+            _dimensions = dims;
+            _rep->resize_(dims.flat_size());
+            auto_strides();
+        }
+
 		// info
 		idx_type offset() const
 		{

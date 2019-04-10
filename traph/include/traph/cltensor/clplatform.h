@@ -1,5 +1,5 @@
-#ifndef TRAPH_CLTENSOR_PLATFORM_H_
-#define TRAPH_CLTENSOR_PLATFORM_H_
+#ifndef TRAPH_CLTENSOR_CLPLATFORM_H_
+#define TRAPH_CLTENSOR_CLPLATFORM_H_
 
 #include <stdexcept>
 #include <vector>

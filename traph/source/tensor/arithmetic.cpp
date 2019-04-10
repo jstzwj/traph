@@ -4,15 +4,15 @@
 
 #include <traph/tensor/arithmetic.h>
 
-
-#ifdef TRAPH_BUILD_EIGEN
 #include <eigen3/Eigen/Dense>
-#elif defined TRAPH_BUILD_MKL
+
+
+#ifdef TRAPH_BUILD_MKL
 #include <mkl.h>
 #include <mkl_blas.h>
 #include <mkl_cblas.h>
 #elif defined TRAPH_BUILD_OPENBLAS
-#include <traph/core/openblas_backend.h>
+#include <openBLAS/cblas.h>
 #endif
 
 namespace traph

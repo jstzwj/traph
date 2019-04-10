@@ -7,8 +7,12 @@ SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 SET(CORE_LIST
 	${HEADER_PATH}/cltensor.h
 	${SOURCE_PATH}/cltensor.cpp
-	${HEADER_PATH}/device.h
-	${SOURCE_PATH}/device.cpp
+	${HEADER_PATH}/cldevice.h
+	${SOURCE_PATH}/cldevice.cpp
+	${HEADER_PATH}/clcontext.h
+	${SOURCE_PATH}/clcontext.cpp
+	${HEADER_PATH}/clplatform.h
+	${SOURCE_PATH}/clplatform.cpp
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})
