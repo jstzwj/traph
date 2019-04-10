@@ -7,5 +7,13 @@ endif()
 
 ADD_SUBDIRECTORY(core)
 ADD_SUBDIRECTORY(tensor)
+if(ENABLE_OPENCL)
+    ADD_SUBDIRECTORY(cltensor)
+endif()
+if(ENABLE_CUDA)
+    ADD_SUBDIRECTORY(cutensor)
+endif()
 ADD_SUBDIRECTORY(interface)
+
+
 ADD_SUBDIRECTORY(test)

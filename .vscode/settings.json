@@ -75,6 +75,9 @@
         "set": "cpp",
         "string_view": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "resumable": "cpp",
+        "future": "cpp",
+        "queue": "cpp"
     }
 }

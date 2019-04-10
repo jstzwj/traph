@@ -1,5 +1,5 @@
-#ifndef TRAPH_TENSOR
-#define TRAPH_TENSOR
+#ifndef TRAPH_TENSOR_TENSOR_H_
+#define TRAPH_TENSOR_TENSOR_H_
 
 #include <initializer_list>
 #include <cmath>

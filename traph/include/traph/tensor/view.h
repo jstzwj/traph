@@ -1,5 +1,5 @@
-#ifndef TRAPH_VIEW_H_
-#define TRAPH_VIEW_H_
+#ifndef TRAPH_TENSOR_VIEW_H_
+#define TRAPH_TENSOR_VIEW_H_
 
 #include <utility>
 

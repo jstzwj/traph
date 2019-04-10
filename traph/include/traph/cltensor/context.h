@@ -1,0 +1,76 @@
+#ifndef TRAPH_CLTENSOR_CONTEXT_H_
+#define TRAPH_CLTENSOR_CONTEXT_H_
+
+#include <stdexcept>
+#include <vector>
+
+#if defined(__APPLE__) || defined(__MACOSX)
+#include <OpenCL/cl.hpp>
+#else
+#include <CL/cl.h>
+#endif
+
+namespace traph
+{
+    class CLContext
+    {
+    private:
+        cl_context context;
+    public:
+        CLContext()
+            :context(nullptr)
+        {
+        }
+
+        void create_context(cl_context_properties* cprops)
+        {
+            cl_int status = 0;
+            context = clCreateContextFromType(
+                        cprops,
+                        CL_DEVICE_TYPE_GPU,
+                        NULL,
+                        NULL,
+                        &status);
+            if (status != CL_SUCCESS)
+            {
+                throw std::runtime_error("Error: Creating Context.(clCreateContexFromType)\n");
+            }
+        }
+
+        std::size_t device_num()
+        {
+            cl_int status = 0;
+            std::size_t deviceListSize = 0;
+            status = clGetContextInfo(context,
+                          CL_CONTEXT_DEVICES,
+                          0,
+                          NULL,
+                          &deviceListSize);
+            if (status != CL_SUCCESS)
+            {
+                throw std::runtime_error("Error: Getting Context Info device list size, clGetContextInfo)\n");
+            }
+            return deviceListSize;
+        }
+
+        std::vector<cl_device_id> get_device_list()
+        {
+            cl_int status = 0;
+            auto deviceListSize = device_num();
+            std::vector<cl_device_id> devices(deviceListSize);
+            status = clGetContextInfo(context,
+                                    CL_CONTEXT_DEVICES,
+                                    deviceListSize,
+                                    devices.data(),
+                                    NULL);
+            if (status != CL_SUCCESS)
+            {
+                throw std::runtime_error("Error: Getting Context Info (device list, clGetContextInfo)\n");
+            }
+
+            return devices;
+        }
+    };
+}
+
+#endif

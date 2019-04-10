@@ -1,5 +1,5 @@
-#ifndef TRAPH_SLICE_H_
-#define TRAPH_SLICE_H_
+#ifndef TRAPH_TENSOR_SLICE_H_
+#define TRAPH_TENSOR_SLICE_H_
 
 #include <utility>
 #include <variant>

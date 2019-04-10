@@ -1,5 +1,5 @@
-#ifndef TRAPH_INDEX_H
-#define TRAPH_INDEX_H
+#ifndef TRAPH_TENSOR_INDEX_H_
+#define TRAPH_TENSOR_INDEX_H_
 
 #include <cstdint>
 #include <cstring>

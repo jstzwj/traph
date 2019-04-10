@@ -1,5 +1,5 @@
-#ifndef TENSORA_UTILS_H_
-#define TENSORA_UTILS_H_
+#ifndef TENSORA_TENSOR_UTILS_H_
+#define TENSORA_TENSOR_UTILS_H_
 
 #include <initializer_list>
 

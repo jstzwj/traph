@@ -1,5 +1,5 @@
-#ifndef TRAPH_ARITHMETIC_H_
-#define TRAPH_ARITHMETIC_H_
+#ifndef TRAPH_TENSOR_ARITHMETIC_H_
+#define TRAPH_TENSOR_ARITHMETIC_H_
 
 #include <utility>
 #include <cmath>
