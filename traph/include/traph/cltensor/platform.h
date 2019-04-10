@@ -54,7 +54,7 @@ namespace traph
             return {};
         }
 
-        cl_platform_id select_first_device(const std::vector<cl_platform_id>& platforms)
+        cl_platform_id select_first_platform(const std::vector<cl_platform_id>& platforms)
         {
             cl_int status = 0;
             cl_platform_id platform = nullptr;

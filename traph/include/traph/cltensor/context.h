@@ -15,17 +15,17 @@ namespace traph
     class CLContext
     {
     private:
-        cl_context context;
+        cl_context _context;
     public:
         CLContext()
-            :context(nullptr)
+            :_context(nullptr)
         {
         }
 
         void create_context(cl_context_properties* cprops)
         {
             cl_int status = 0;
-            context = clCreateContextFromType(
+            _context = clCreateContextFromType(
                         cprops,
                         CL_DEVICE_TYPE_GPU,
                         NULL,
@@ -39,9 +39,11 @@ namespace traph
 
         std::size_t device_num()
         {
+            if(_context == nullptr)
+                return 0;
             cl_int status = 0;
             std::size_t deviceListSize = 0;
-            status = clGetContextInfo(context,
+            status = clGetContextInfo(_context,
                           CL_CONTEXT_DEVICES,
                           0,
                           NULL,
@@ -55,10 +57,13 @@ namespace traph
 
         std::vector<cl_device_id> get_device_list()
         {
+            if(_context == nullptr)
+                return {};
+
             cl_int status = 0;
             auto deviceListSize = device_num();
             std::vector<cl_device_id> devices(deviceListSize);
-            status = clGetContextInfo(context,
+            status = clGetContextInfo(_context,
                                     CL_CONTEXT_DEVICES,
                                     deviceListSize,
                                     devices.data(),
