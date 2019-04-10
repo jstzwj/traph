@@ -139,33 +139,33 @@ namespace traph
     class Tensor
     {
     private:
-        std::unique_ptr<TensorStorage<T>> rep;
-        DimVector dimensions;
-        idx_type offset;
-		DimVector strides;
-        layout_type order;
+        std::unique_ptr<TensorStorage<T>> _rep;
+        DimVector _dimensions;
+        idx_type _offset;
+		DimVector _strides;
+        layout_type _order;
 
-        bool requires_grad;
+        bool _requires_grad;
     private:
         void auto_strides()
         {
-            idx_type dim_num = dimensions.size();
-            strides.resize(dim_num);
+            idx_type dim_num = _dimensions.size();
+            _strides.resize(dim_num);
             size_type stride = 1;
-            if(order == layout_type::column_major)
+            if(_order == layout_type::column_major)
             {
 				for (idx_type i = dim_num - 1; i >= 0; --i)
 				{
-					strides[i] = stride;
-					stride *= dimensions[i];
+					_strides[i] = stride;
+					stride *= _dimensions[i];
 				}
             }
             else
             {
 				for (idx_type i = 0; i < dim_num; ++i)
 				{
-					strides[i] = stride;
-					stride *= dimensions[i];
+					_strides[i] = stride;
+					stride *= _dimensions[i];
 				}
             }
         }
@@ -179,72 +179,72 @@ namespace traph
         using ByteTensor = Tensor<u8>;
     public:
         Tensor()
-            :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(layout_type::column_major), requires_grad(false)
+            :_rep(new TensorStorage<T>),
+            _dimensions(), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
         {
         }
 
         explicit Tensor(const DimVector& dimensions)
-            :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(), order(layout_type::column_major), requires_grad(false)
+            :_rep(new TensorStorage<T>),
+            _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
         {
             auto_strides();
 			
-			rep->resize_(dimensions.flat_size());
+			_rep->resize_(_dimensions.flat_size());
         }
 
         explicit Tensor(const DimVector& dimensions, layout_type order)
-            :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(), order(order), requires_grad(false)
+            :_rep(new TensorStorage<T>),
+            _dimensions(dimensions), _offset(0), _strides(), _order(order), _requires_grad(false)
         {
             auto_strides();
 
-			rep->resize_(dimensions.flat_size());
+			_rep->resize_(_dimensions.flat_size());
         }
 
         explicit Tensor(const DimVector& dimensions, const DimVector& strides)
-            :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(strides), order(layout_type::column_major), requires_grad(false)
+            :_rep(new TensorStorage<T>),
+            _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major), _requires_grad(false)
         {
             auto_strides();
 
-			rep->resize_(dimensions.flat_size());
+			_rep->resize_(_dimensions.flat_size());
         }
 
         explicit Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
-            :rep(new TensorStorage<T>),
-            dimensions(dimensions), offset(0), strides(strides), order(order), requires_grad(false)
+            :_rep(new TensorStorage<T>),
+            _dimensions(dimensions), _offset(0), _strides(strides), _order(order), _requires_grad(false)
         {
             auto_strides();
 
-			rep->resize_(dimensions.flat_size());
+			_rep->resize_(_dimensions.flat_size());
         }
 
         Tensor(const T& t)
-            :rep(new TensorStorage<T>),
-            dimensions(), offset(0), strides(), order(order), requires_grad(false)
+            :_rep(new TensorStorage<T>),
+            _dimensions(), _offset(0), strides(), _order(order), _requires_grad(false)
         {
-            dimensions.resize(1);
+            _dimensions.resize(1);
             auto_strides();
         }
 
         Tensor(const Tensor& other)
-            :rep(new TensorStorage<T>(*other.rep.get())),
-            dimensions(other.dimensions),
-            offset(other.offset),
-            strides(other.strides),
-            order(other.order),
-            requires_grad(other.requires_grad)
+            :_rep(new TensorStorage<T>(*other._rep.get())),
+            _dimensions(other._dimensions),
+            _offset(other._offset),
+            _strides(other._strides),
+            _order(other._order),
+            _requires_grad(other._requires_grad)
         {
         }
 
         Tensor(Tensor&& other)
-            :rep(std::move(other.rep)),
-            dimensions(other.dimensions),
-            offset(other.offset),
-            strides(other.strides),
-            order(other.order),
-            requires_grad(other.requires_grad)
+            :_rep(std::move(other._rep)),
+            _dimensions(other._dimensions),
+            _offset(other._offset),
+            _strides(other._strides),
+            _order(other._order),
+            _requires_grad(other._requires_grad)
         {
         }
 
@@ -253,83 +253,83 @@ namespace traph
 
         }
 		// info
-		idx_type data_offset() const
+		idx_type offset() const
 		{
-			return offset;
+			return _offset;
 		}
 
 		layout_type layout() const
 		{
-			return order;
+			return _order;
 		}
 
 		DimVector size() const
 		{
-			return dimensions;
+			return _dimensions;
 		}
 
 		const T* data() const
 		{
-			return rep->data.get();
+			return _rep->data.get();
 		}
 
 		T* data()
 		{
-			return rep->data.get();
+			return _rep->data.get();
 		}
 
-		DimVector stride() const
+		DimVector strides() const
 		{
-			return strides;
+			return _strides;
 		}
 
         // type cast
         DoubleTensor to_double() const
         {
             DoubleTensor result(*this);
-            result.rep = result.rep.to_double();
+            result._rep = result._rep.to_double();
             return result;
         }
         // op
         void add_(T value)
         {
-            idx_type i = offset;
-            for(idx_type dim = 0;dim < dimensions.size();++dim)
+            idx_type i = _offset;
+            for(idx_type dim = 0;dim < _dimensions.size();++dim)
             {
                 for(idx_type step = 0; step < dimension[dim];++step)
                 {
-                    rep->data[i] = rep->data[i] + value;
-                    i += strides[dim];
+                    _rep->data[i] = _rep->data[i] + value;
+                    i += _strides[dim];
                 }
             }
         }
 
         void fill_(T value)
         {
-			for (idx_type i = offset; i < rep->size(); ++i)
+			for (idx_type i = _offset; i < _rep->size(); ++i)
 			{
-				rep->data[i] = value;
+				_rep->data[i] = value;
 			}
         }
 
         void abs_()
         {
-            idx_type i = offset;
-            for(idx_type dim = 0;dim < dimensions.size();++dim)
+            idx_type i = _offset;
+            for(idx_type dim = 0;dim < _dimensions.size();++dim)
             {
                 for(idx_type step = 0; step < dimension[dim];++step)
                 {
-                    rep->data[i] = std::abs(rep->data[i]);
-                    i += strides[dim];
+                    _rep->data[i] = std::abs(_rep->data[i]);
+                    i += _strides[dim];
                 }
             }
         }
         // index
         T& item()
         {
-            if(rep->size() > 0)
+            if(_rep->size() > 0)
             {
-                return rep->data[0]; 
+                return _rep->data[0]; 
             }
             else
             {
@@ -342,14 +342,14 @@ namespace traph
         {
             idx_type pos = 0;
 
-            for(idx_type i = 0; i < dimensions.size(); ++i)
+            for(idx_type i = 0; i < _dimensions.size(); ++i)
             {
-                pos += dimensions[i] * strides[i];
+                pos += _dimensions[i] * _strides[i];
             }
 
-            pos += offset;
+            pos += _offset;
 
-            return rep->data[pos];
+            return _rep->data[pos];
         }
     };
 

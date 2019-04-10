@@ -16,7 +16,7 @@ namespace traph
 	{
 		Tensor<T> result(t.size());
 		idx_type flat_size_end = t.size().flat_size();
-		for (idx_type i = t.data_offset(); i < flat_size_end; ++i)
+		for (idx_type i = t.offset(); i < flat_size_end; ++i)
 		{
 			result.data()[i] = std::abs(t.data()[i]);
 		}
@@ -29,7 +29,7 @@ namespace traph
 	{
 		Tensor<T> result(t.size());
 		idx_type flat_size_end = t.size().flat_size();
-		for (idx_type i = t.data_offset(); i < flat_size_end; ++i)
+		for (idx_type i = t.offset(); i < flat_size_end; ++i)
 		{
 			result.data()[i] = std::acos(t.data()[i]);
 		}
@@ -61,7 +61,7 @@ namespace traph
 	{
 		Tensor<T> result(t.size());
 		idx_type flat_size_end = t.size().flat_size();
-		for (idx_type i = t.data_offset(); i < flat_size_end; ++i)
+		for (idx_type i = t.offset(); i < flat_size_end; ++i)
 		{
 			result.data()[i] = std::asin(t.data()[i]);
 		}
@@ -74,7 +74,7 @@ namespace traph
 	{
 		Tensor<T> result(t.size());
 		idx_type flat_size_end = t.size().flat_size();
-		for (idx_type i = t.data_offset(); i < flat_size_end; ++i)
+		for (idx_type i = t.offset(); i < flat_size_end; ++i)
 		{
 			result.data()[i] = std::atan(t.data()[i]);
 		}
