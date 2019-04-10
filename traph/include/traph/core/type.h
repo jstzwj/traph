@@ -17,6 +17,12 @@ namespace traph
     using u64 = std::uint64_t;
     using idx_type = i32;
     using size_type = i32;
+
+    enum layout_type
+    {
+        row_major,
+        column_major
+    };
 }
 
 #endif

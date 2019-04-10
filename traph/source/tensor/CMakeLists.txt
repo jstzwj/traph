@@ -5,9 +5,6 @@ SET(HEADER_PATH ${TRAPH_PATH_HEADER}/${LIB_NAME})
 SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 
 SET(CORE_LIST
-	${HEADER_PATH}/utils.h
-	${HEADER_PATH}/slice.h
-	${HEADER_PATH}/index.h
 	${HEADER_PATH}/arithmetic.h
 	${SOURCE_PATH}/arithmetic.cpp
 	${HEADER_PATH}/tensor.h

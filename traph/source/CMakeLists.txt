@@ -13,6 +13,7 @@ endif()
 if(ENABLE_CUDA)
     ADD_SUBDIRECTORY(cutensor)
 endif()
+ADD_SUBDIRECTORY(nn)
 ADD_SUBDIRECTORY(interface)
 
 
