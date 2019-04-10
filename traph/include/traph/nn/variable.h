@@ -20,17 +20,18 @@ namespace traph
         bool _requires_grad;
     public:
         Variable()
+            :_data(new Tensor<T>), _grad(nullptr), _requires_grad(false)
         {
 
         }
 
         Variable(const DimVector& dim)
-            :_data(new Tensor<T>(dim)), _grad(new Tensor<T>(dim)), _requires_grad(false)
+            :_data(new Tensor<T>(dim)), _grad(nullptr), _requires_grad(false)
         {
         }
 
         Variable(std::initializer_list<idx_type> l)
-            :_data(new Tensor<T>()), _grad(new Tensor<T>()), _requires_grad(false)
+            :_data(new Tensor<T>()), _grad(nullptr), _requires_grad(false)
         {
             DimVector dim;
             for (auto i : l)
@@ -43,6 +44,26 @@ namespace traph
         ~Variable()
         {
 
+        }
+
+        virtual platform_type platform() override
+        {
+            return _data->platform();
+        }
+
+        virtual device_id device() override
+        {
+            return _data->device();
+        }
+
+        virtual TensorBase<T> * tensor_data() override
+        {
+            return _data.get();
+        }
+
+        virtual TensorBase<T> * tensor_grad() override
+        {
+            return _grad.get();
         }
 
         virtual void reshape(const DimVector& dims) override

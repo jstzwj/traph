@@ -3,6 +3,7 @@
 
 #include <initializer_list>
 #include <cmath>
+#include <functional>
 
 
 #include<traph/core/type.h>
@@ -24,7 +25,6 @@ namespace traph
         using ShortStorage = TensorStorage<i16>;
         using CharStorage = TensorStorage<i8>;
         using ByteStorage = TensorStorage<u8>;
-        // using HalfStorage = TensorStorage<f16>;
     public:
         std::unique_ptr<T[]> data;
         idx_type len;
@@ -62,10 +62,10 @@ namespace traph
         }
 
         // size
-        idx_type size() const {return len;}
-        size_type element_size() const {return sizeof(T);}
+        virtual idx_type size() const override {return len;}
+        virtual size_type element_size() const override {return sizeof(T);}
 
-        void resize_(idx_type size)
+        virtual void resize_(idx_type size) override
         {
             if(size < 0 || size == len)
                 return;
@@ -77,56 +77,14 @@ namespace traph
             len = size;
         }
 
-        // type cast
-        FloatStorage to_float() const
-        {
-            FloatStorage result;
-            result.resize_(size());
-            for(idx_type i = 0; i < size(); ++i)
-            {
-                result.data[i] = static_cast<f32>(data[i]);
-            }
-            return result;
-        }
-
-        DoubleStorage to_double() const
-        {
-            DoubleStorage result;
-            result.resize_(size());
-            for(idx_type i = 0; i < size(); ++i)
-            {
-                result.data[i] = static_cast<f64>(data[i]);
-            }
-            return result;
-        }
-
         // fill
-        void fill_(T v)
+        virtual void fill_(T v) override
         {
             for(idx_type i = 0; i < size(); ++i)
             {
                 data[i] = v;
             }
         }
-        /*
-        void resize(const DimVector& dimensions)
-        {
-            idx_type size = 1;
-            for(idx_type i = 0; i < dimensions.size(); ++i)
-            {
-                size *= dimensions[i];
-            }
-
-            if(size < 0 || size == len)
-                return;
-            idx_type move_size = (size > len ? len: size);
-            std::unique_ptr<T[]> temp(new idx_type[size]);
-            std::memcpy(temp.get(), data.get(), move_size * sizeof(idx_type));
-            data = std::move(temp);
-
-            len = size;
-        }
-        */
     };
 
     // ndarray
@@ -134,19 +92,27 @@ namespace traph
     class Tensor: public TensorBase<T>
     {
     private:
-        std::unique_ptr<TensorStorage<T>> _rep;
+        std::shared_ptr<TensorStorage<T>> _rep;
         DimVector _dimensions;
         idx_type _offset;
 		DimVector _strides;
         layout_type _order;
 
         bool _requires_grad;
+    public:
+        using DoubleTensor = Tensor<f64>;
+        using FloatTensor = Tensor<f32>;
+        using LongTensor = Tensor<i64>;
+        using IntTensor = Tensor<i32>;
+        using ShortTensor = Tensor<i16>;
+        using CharTensor = Tensor<i8>;
+        using ByteTensor = Tensor<u8>;
     private:
         void auto_strides()
         {
             idx_type dim_num = _dimensions.size();
             _strides.resize(dim_num);
-            size_type stride = 1;
+			idx_type stride = 1;
             if(_order == layout_type::column_major)
             {
 				for (idx_type i = dim_num - 1; i >= 0; --i)
@@ -164,14 +130,40 @@ namespace traph
 				}
             }
         }
-    public:
-        using DoubleTensor = Tensor<f64>;
-        using FloatTensor = Tensor<f32>;
-        using LongTensor = Tensor<i64>;
-        using IntTensor = Tensor<i32>;
-        using ShortTensor = Tensor<i16>;
-        using CharTensor = Tensor<i8>;
-        using ByteTensor = Tensor<u8>;
+
+        void apply_dim(idx_type dim, idx_type idx, std::function<T(T)> f)
+        {
+            idx_type dim_size = _dimensions.size();
+
+            idx_type step_len = _strides[dim];
+            idx_type step_num = _dimensions[dim];
+            
+            for(idx_type i = 0; i < step_num; ++i)
+            {
+                if(dim == dim_size - 1)
+                    _rep->data[idx] = f(_rep->data[idx]);
+                else
+                    apply_dim(dim + 1, idx, f);
+                idx += step_len;
+            }
+        }
+
+        void reduce_dim(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const
+        {
+            idx_type dim_size = _dimensions.size();
+
+            idx_type step_len = _strides[dim];
+            idx_type step_num = _dimensions[dim];
+
+            for(idx_type i = 0; i < step_num; ++i)
+            {
+                if(dim == dim_size - 1)
+                    result = f(result, _rep->data[idx]);
+                else
+                    reduce_dim(result, dim + 1, idx, f);
+                idx += step_len;
+            }
+        }
     public:
         Tensor()
             :_rep(new TensorStorage<T>),
@@ -243,126 +235,48 @@ namespace traph
         {
         }
 
-        virtual platform_type platform() override
+        virtual void apply_(std::function<T(T)> f) override
         {
-            return platform_type::none;
+            apply_dim(0, _offset, f);
         }
-
-        virtual device_id device() override
+        virtual void cos_() override
         {
-            return 0;
+			apply_([](T a)->T {return std::cos(a); });
         }
-
+        virtual device_id device() override { return 0; }
+        virtual void fill_(T value) override
+        {
+			apply_([&value](T a)->T {return value; });
+        }
+		virtual idx_type offset() const override { return _offset; }
+		virtual layout_type order() const override { return _order; }
+        virtual platform_type platform() override { return platform_type::none; }
+        virtual T reduce_(std::function<T(T,T)> f) const override
+        {
+            T result{0.f};
+            reduce_dim(result, 0, _offset, f);
+            return result;
+        }
         virtual void reshape(const DimVector& dims) override
         {
 
         }
-
         virtual void resize(const DimVector& dims) override
         {
             _dimensions = dims;
             _rep->resize_(dims.flat_size());
             auto_strides();
         }
-
-		// info
-		idx_type offset() const
-		{
-			return _offset;
-		}
-
-		layout_type layout() const
-		{
-			return _order;
-		}
-
-		DimVector size() const
-		{
-			return _dimensions;
-		}
-
-		const T* data() const
-		{
-			return _rep->data.get();
-		}
-
-		T* data()
-		{
-			return _rep->data.get();
-		}
-
-		DimVector strides() const
-		{
-			return _strides;
-		}
-
-        // type cast
-        DoubleTensor to_double() const
+        virtual void sin_() override
         {
-            DoubleTensor result(*this);
-            result._rep = result._rep.to_double();
-            return result;
+			apply_([](T a)->T {return std::sin(a); });
         }
-        // op
-        void add_(T value)
+		virtual DimVector size() const override { return _dimensions;}
+        virtual StorageBase<T>& storage() const override { return *(_rep.get()); }
+		virtual DimVector stride() const override { return _strides; }
+        virtual T sum() const override
         {
-            idx_type i = _offset;
-            for(idx_type dim = 0;dim < _dimensions.size();++dim)
-            {
-                for(idx_type step = 0; step < dimension[dim];++step)
-                {
-                    _rep->data[i] = _rep->data[i] + value;
-                    i += _strides[dim];
-                }
-            }
-        }
-
-        void fill_(T value)
-        {
-			for (idx_type i = _offset; i < _rep->size(); ++i)
-			{
-				_rep->data[i] = value;
-			}
-        }
-
-        void abs_()
-        {
-            idx_type i = _offset;
-            for(idx_type dim = 0;dim < _dimensions.size();++dim)
-            {
-                for(idx_type step = 0; step < dimension[dim];++step)
-                {
-                    _rep->data[i] = std::abs(_rep->data[i]);
-                    i += _strides[dim];
-                }
-            }
-        }
-        // index
-        T& item()
-        {
-            if(_rep->size() > 0)
-            {
-                return _rep->data[0]; 
-            }
-            else
-            {
-                // error
-            }
-            
-        }
-
-        T& index(const DimVector& dims)
-        {
-            idx_type pos = 0;
-
-            for(idx_type i = 0; i < _dimensions.size(); ++i)
-            {
-                pos += _dimensions[i] * _strides[i];
-            }
-
-            pos += _offset;
-
-            return _rep->data[pos];
+			return reduce_([](T a, T b)->T {return a + b; });
         }
     };
 

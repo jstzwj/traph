@@ -3,6 +3,8 @@
 #include <traph/tensor/arithmetic.h>
 #include <traph/nn/variable.h>
 
+#include <iostream>
+
 int main()
 {
 	/*
@@ -17,10 +19,16 @@ int main()
 	traph::Tensor<traph::f32> c = traph::matmul(a, b);
 	*/
 
+	/*
 	auto a = traph::Variable<traph::f32>({2, 3});
 	auto c = traph::mul(traph::mul(a, a), 3);
 	auto out = traph::mean(c);
 	out.backward();
-		
+	*/
+
+	traph::Tensor<float> a = traph::ones<float>({ 10000, 10000 });
+
+	auto b = a.sum();
+	std::cout << b;
     return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef TRAPH_CORE_VARIABLE_H_
 #define TRAPH_CORE_VARIABLE_H_
 
+#include <traph/core/type.h>
+#include <traph/core/tensor.h>
 
 namespace traph
 {
@@ -11,7 +13,11 @@ namespace traph
         virtual platform_type platform() = 0;
 
         virtual device_id device() = 0;
-        
+
+        virtual TensorBase<T> * tensor_data() = 0;
+
+        virtual TensorBase<T> * tensor_grad() = 0;
+
         virtual void reshape(const DimVector& dims) = 0;
 
         virtual void resize(const DimVector& dims) = 0;

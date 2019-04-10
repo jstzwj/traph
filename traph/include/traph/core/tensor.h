@@ -2,6 +2,7 @@
 #define TRAPH_CORE_TENSOR_H_
 
 #include <algorithm>
+#include <functional>
 
 #include <traph/core/type.h>
 #include <traph/core/index.h>
@@ -10,37 +11,45 @@
 namespace traph
 {
     template<class T>
-    class ContiguousStorageBase
+    class StorageBase
     {
     public:
-        virtual idx_type size() const = 0;
         virtual size_type element_size() const = 0;
-
+        virtual void fill_(T v) = 0;
         virtual void resize_(idx_type size) = 0;
+        virtual idx_type size() const = 0;
+
+    };
+
+    template<class T>
+    class ContiguousStorageBase: public StorageBase<T>
+    {
+    public:
+        virtual size_type element_size() const = 0;
+        virtual void fill_(T v) = 0;
+        virtual void resize_(idx_type size) = 0;
+        virtual idx_type size() const = 0;
     };
 
     template<class T>
     class TensorBase
     {
     public:
-        virtual platform_type platform() = 0;
-
+        virtual void apply_(std::function<T(T)> f) = 0;
+        virtual void cos_() = 0;
         virtual device_id device() = 0;
-
+        virtual void fill_(T value) = 0;
+        virtual idx_type offset() const = 0;
+		virtual layout_type order() const = 0;
+        virtual platform_type platform() = 0;
+        virtual T reduce_(std::function<T(T,T)> f) const = 0;
         virtual void reshape(const DimVector& dims) = 0;
-
         virtual void resize(const DimVector& dims) = 0;
-
-		virtual idx_type offset() const = 0;
-
-		virtual layout_type layout() const = 0;
-
+        virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
-
-		virtual const T* data() const = 0;
-		virtual T* data() = 0;
-
-		virtual DimVector strides() const = 0;
+        virtual StorageBase<T>& storage() const = 0;
+		virtual DimVector stride() const = 0;
+        virtual T sum() const = 0;
     };
 
     template<class T>
