@@ -4,16 +4,15 @@
 
 #include <traph/tensor/arithmetic.h>
 
+
+#ifdef TRAPH_BUILD_EIGEN
 #include <eigen3/Eigen/Dense>
-
-#ifdef TRAPH_BUILD_OPENBLAS
-#include <traph/core/openblas_backend.h>
-#endif
-
-#ifdef TRAPH_BUILD_MKL
+#elif defined TRAPH_BUILD_MKL
 #include <mkl.h>
 #include <mkl_blas.h>
 #include <mkl_cblas.h>
+#elif defined TRAPH_BUILD_OPENBLAS
+#include <traph/core/openblas_backend.h>
 #endif
 
 namespace traph
@@ -21,7 +20,13 @@ namespace traph
 	Tensor<f32> add(const Tensor<f32> &t, f32 v)
 	{
 		Tensor<f32> result(t.size());
-#ifdef TRAPH_BUILD_MKL
+#ifdef TRAPH_BUILD_EIGEN
+		idx_type flat_size_end = t.size().flat_size();
+		for (idx_type i = 0; i < flat_size_end; ++i)
+		{
+			result.data()[i] = t.data()[i] + v;
+		}
+#elif defined TRAPH_BUILD_MKL
 		result.fill_(v);
 		cblas_saxpy(t.size().flat_size(), 1.f, t.data(), 1, result.data(), 1);
 #endif
@@ -31,7 +36,13 @@ namespace traph
 	Tensor<f64> add(const Tensor<f64> &t, f64 v)
 	{
 		Tensor<f64> result(t.size());
-#ifdef TRAPH_BUILD_MKL
+#ifdef TRAPH_BUILD_EIGEN
+		idx_type flat_size_end = t.size().flat_size();
+		for (idx_type i = 0; i < flat_size_end; ++i)
+		{
+			result.data()[i] = t.data()[i] + v;
+		}
+#elif defined TRAPH_BUILD_MKL
 		result.fill_(v);
 		cblas_daxpy(t.size().flat_size(), 1.f, t.data(), 1, result.data(), 1);
 #endif
@@ -130,7 +141,15 @@ namespace traph
 		// result
 		Tensor<f32> result = zeros<f32>({ a.size()[0], b.size()[1] });
 
-	#ifdef TRAPH_BUILD_MKL
+#ifdef TRAPH_BUILD_EIGEN
+		// copy data
+		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data() + b.offset(), b.size()[0], b.size()[1]);
+
+		Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
+		// copy to result
+		std::copy(eigen_c.data(), eigen_c.data() + a.size()[0] * b.size()[1], result.data());
+#elif defined TRAPH_BUILD_MKL
 		CBLAS_LAYOUT a_layout = a.layout() == layout_type::column_major ? CBLAS_LAYOUT::CblasColMajor : CBLAS_LAYOUT::CblasRowMajor;
 
 		cblas_sgemm(a_layout,
@@ -147,7 +166,7 @@ namespace traph
 			0.f,
 			result.data(),
 			result.size()[0]);
-	#endif
+#endif
 		return result;
 	}
 
@@ -158,7 +177,15 @@ namespace traph
 		// result
 		Tensor<f64> result = zeros<f64>({ a.size()[0], b.size()[1] });
 
-#ifdef TRAPH_BUILD_MKL
+#ifdef TRAPH_BUILD_EIGEN
+		// copy data
+		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data() + b.offset(), b.size()[0], b.size()[1]);
+
+		Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
+		// copy to result
+		std::copy(eigen_c.data(), eigen_c.data() + a.size()[0] * b.size()[1], result.data());
+#elif defined TRAPH_BUILD_MKL
 		CBLAS_LAYOUT a_layout = a.layout() == layout_type::column_major ? CBLAS_LAYOUT::CblasColMajor : CBLAS_LAYOUT::CblasRowMajor;
 
 		cblas_dgemm(a_layout,

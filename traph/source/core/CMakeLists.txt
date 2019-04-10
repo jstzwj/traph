@@ -14,23 +14,4 @@ ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})
 
 
 
-IF(TRAPH_ACCELERATE EQUAL 1)
-	if (BLAS_FOUND)
-		target_link_libraries(${LIB_OUTNAME} ${BLAS_LIBRARIES})
-	endif()
-ELSEIF(TRAPH_ACCELERATE EQUAL 2)
-	if (BLAS_FOUND)
-		target_link_libraries(${LIB_OUTNAME} ${BLAS_LIBRARIES})
-	endif()
-ELSEIF(TRAPH_ACCELERATE EQUAL 3)
-	find_package(clBLAS CONFIG REQUIRED)
-	target_link_libraries(main PRIVATE clBLAS)
-ELSEIF(TRAPH_ACCELERATE EQUAL 4)
-	# find_package(clBLAS CONFIG REQUIRED)
-	# target_link_libraries(${LIB_OUTNAME} PRIVATE clBLAS)
-ELSE()
-	MESSAGE(FATAL_ERROR "Unsupported build platform: " ${OCTOON_BUILD_PLATFORM})
-ENDIF()
-
-
 
