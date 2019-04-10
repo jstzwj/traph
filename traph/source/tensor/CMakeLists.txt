@@ -1,18 +1,24 @@
-SET(LIB_NAME core)
+SET(LIB_NAME tensor)
 SET(LIB_OUTNAME traph-${LIB_NAME})
 
 SET(HEADER_PATH ${TRAPH_PATH_HEADER}/${LIB_NAME})
 SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 
 SET(CORE_LIST
-	${HEADER_PATH}/type.h
-	${HEADER_PATH}/log.h
-	${SOURCE_PATH}/log.cpp
+	${HEADER_PATH}/utils.h
+	${HEADER_PATH}/slice.h
+	${HEADER_PATH}/index.h
+	${HEADER_PATH}/arithmetic.h
+	${SOURCE_PATH}/arithmetic.cpp
+	${HEADER_PATH}/tensor.h
+	${SOURCE_PATH}/tensor.cpp
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})
 
-
+IF(Boost_FOUND)
+	target_link_libraries(${LIB_OUTNAME} ${Boost_LIBRARIES})
+ENDIF()
 
 IF(TRAPH_ACCELERATE EQUAL 1)
 	if (BLAS_FOUND)

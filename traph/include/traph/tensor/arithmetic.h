@@ -5,9 +5,9 @@
 #include <cmath>
 
 #include <traph/core/type.h>
-#include <traph/core/index.h>
-#include <traph/core/utils.h>
-#include <traph/core/tensor.h>
+#include <traph/tensor/index.h>
+#include <traph/tensor/utils.h>
+#include <traph/tensor/tensor.h>
 
 namespace traph
 {
@@ -37,6 +37,7 @@ namespace traph
 		return result;
 	}
 
+	// add fallback
 	template<class T>
 	Tensor<T> add(const Tensor<T> &t, T v)
 	{
@@ -50,10 +51,8 @@ namespace traph
 		return result;
 	}
 
-	template<>
 	Tensor<f32> add(const Tensor<f32> &t, f32 v);
 
-	template<>
 	Tensor<f64> add(const Tensor<f64> &t, f64 v);
 
 	template<class T>
@@ -102,6 +101,7 @@ namespace traph
 		}
 	}
 
+	// matmull fallback
 	template<class T>
 	Tensor<T> matmul(const Tensor<T> &a, const Tensor<T> &b)
 	{
@@ -131,10 +131,18 @@ namespace traph
 		return result;
 	}
 
-	template<>
+	Tensor<u8> matmul(const Tensor<u8> &a, const Tensor<u8> &b);
+
+	Tensor<i8> matmul(const Tensor<i8> &a, const Tensor<i8> &b);
+
+	Tensor<i16> matmul(const Tensor<i16> &a, const Tensor<i16> &b);
+
+	Tensor<i32> matmul(const Tensor<i32> &a, const Tensor<i32> &b);
+
+	Tensor<i64> matmul(const Tensor<i64> &a, const Tensor<i64> &b);
+
 	Tensor<f32> matmul(const Tensor<f32> &a, const Tensor<f32> &b);
 
-	template<>
 	Tensor<f64> matmul(const Tensor<f64> &a, const Tensor<f64> &b);
 }
 

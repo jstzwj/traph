@@ -1,8 +1,8 @@
 %module traph_tensor
 %{
     #include<traph/core/type.h>
-    #include<traph/core/tensor.h>
-    #include<traph/core/index.h>
+    #include<traph/tensor/tensor.h>
+    #include<traph/tensor/index.h>
     using namespace traph;
 %}
 

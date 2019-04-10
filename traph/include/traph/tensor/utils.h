@@ -4,7 +4,7 @@
 #include <initializer_list>
 
 #include <traph/core/type.h>
-#include <traph/core/index.h>
+#include <traph/tensor/index.h>
 
 namespace traph
 {

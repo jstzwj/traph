@@ -6,8 +6,8 @@
 
 
 #include<traph/core/type.h>
-#include<traph/core/index.h>
-#include<traph/core/utils.h>
+#include<traph/tensor/index.h>
+#include<traph/tensor/utils.h>
 
 namespace traph
 {

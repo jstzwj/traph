@@ -1,5 +1,5 @@
-#ifndef TRAPH_TYPE_H
-#define TRAPH_TYPE_H
+#ifndef TRAPH_CORE_TYPE_H_
+#define TRAPH_CORE_TYPE_H_
 
 #include <cstdint>
 

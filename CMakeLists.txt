@@ -16,6 +16,11 @@ SET(TRAPH_PATH_HEADER ${TRAPH_PATH_INCLUDE}/traph CACHE STRING "Adds a path to T
 SET(TRAPH_PATH_SOURCE ${TRAPH_PATH}/traph/source CACHE STRING "Adds a path to TRAPH source" FORCE)
 SET(TRAPH_PATH_DEPENDENCIES ${TRAPH_PATH}/traph/contrib CACHE STRING "Adds a path to TRAPH dependencies" FORCE)
 
+find_package(Boost)
+if(Boost_FOUND)
+	message(STATUS Boost found: ${Boost_INCLUDE_DIRS})
+endif()
+
 SET(TRAPH_ACCELERATE 1 CACHE STRING
 "Specify the feature Possible values:
 1 - mkl

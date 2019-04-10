@@ -1,5 +1,5 @@
-#include <traph/core/tensor.h>
-#include <traph/core/arithmetic.h>
+#include <traph/tensor/tensor.h>
+#include <traph/tensor/arithmetic.h>
 
 int main()
 {
@@ -9,10 +9,10 @@ int main()
     traph::Tensor<float> result = traph::matmul(a, w);
 	*/
 	// traph::Tensor<float> result2 = traph::add(a, 1.f);
-	/*
-	traph::Tensor<int> a = traph::zeros<int>({ 1000, 1000 });
-	a.fill_(-1);
-	traph::Tensor<int> b = traph::abs(a);
-	*/
+	
+	traph::Tensor<traph::f32> a = traph::zeros<traph::f32>({ 5000, 5000 });
+	traph::Tensor<traph::f32> b = traph::zeros<traph::f32>({ 5000, 5000 });
+	traph::Tensor<traph::f32> c = traph::matmul(a, b);
+	
     return 0;
 }
