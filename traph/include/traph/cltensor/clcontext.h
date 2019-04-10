@@ -2,6 +2,7 @@
 #define TRAPH_CLTENSOR_CLCONTEXT_H_
 
 #include <stdexcept>
+#include <cstring>
 #include <vector>
 
 #if defined(__APPLE__) || defined(__MACOSX)
@@ -17,12 +18,8 @@ namespace traph
     private:
         cl_context _context;
     public:
-        CLContext()
+        CLContext(cl_context_properties* cprops)
             :_context(nullptr)
-        {
-        }
-
-        void create_context(cl_context_properties* cprops)
         {
             cl_int status = 0;
             _context = clCreateContextFromType(
@@ -74,6 +71,48 @@ namespace traph
             }
 
             return devices;
+        }
+
+        cl_program create_program(const char* kernelSourceCode)
+        {
+            if(_context == nullptr)
+                return {};
+
+            cl_int status = 0;
+
+            size_t sourceSize[] = {strlen(kernelSourceCode)};
+            cl_program program = clCreateProgramWithSource(_context,
+                                1,
+                                &kernelSourceCode,
+                                sourceSize,
+                                &status);
+            if (status != CL_SUCCESS)
+            {
+                throw std::runtime_error("Error: Loading Binary into cl_program (clCreateProgramWithBinary)\n");
+            }
+
+            return program;
+        }
+
+        cl_mem create_buffer(std::size_t size)
+        {
+            if(_context == nullptr)
+                return {};
+
+            cl_int status = 0;
+
+            cl_mem outputBuffer = clCreateBuffer(
+									_context,
+									CL_MEM_ALLOC_HOST_PTR,
+									size,
+									NULL,
+									&status);
+            if (status != CL_SUCCESS)
+            {
+                throw std::runtime_error("Error: Create Buffer, outputBuffer. (clCreateBuffer)\n");
+            }
+
+            return outputBuffer;
         }
     };
 }

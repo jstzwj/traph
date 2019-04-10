@@ -23,6 +23,10 @@ namespace traph
     class TensorBase
     {
     public:
+        virtual platform_type platform() = 0;
+
+        virtual device_id device() = 0;
+
         virtual void reshape(const DimVector& dims) = 0;
 
         virtual void resize(const DimVector& dims) = 0;

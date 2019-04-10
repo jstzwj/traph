@@ -243,12 +243,22 @@ namespace traph
         {
         }
 
-        void reshape(const DimVector& dims)
+        virtual platform_type platform() override
+        {
+            return platform_type::none;
+        }
+
+        virtual device_id device() override
+        {
+            return 0;
+        }
+
+        virtual void reshape(const DimVector& dims) override
         {
 
         }
 
-        void resize(const DimVector& dims)
+        virtual void resize(const DimVector& dims) override
         {
             _dimensions = dims;
             _rep->resize_(dims.flat_size());

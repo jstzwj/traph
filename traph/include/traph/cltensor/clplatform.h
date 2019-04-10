@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include <traph/cltensor/clcontext.h>
 
 #if defined(__APPLE__) || defined(__MACOSX)
 #include <OpenCL/cl.hpp>
@@ -16,12 +17,7 @@ namespace traph
     class CLPlatform
     {
     public:
-        CLPlatform()
-        {
-
-        }
-
-        int platform_num()
+        static int platform_num()
         {
             cl_int status = 0;
             cl_uint numPlatforms;
@@ -35,7 +31,7 @@ namespace traph
             return numPlatforms;
         }
 
-        std::vector<cl_platform_id> get_all_platforms()
+        static std::vector<cl_platform_id> get_all_platforms()
         {
             cl_int status = 0;
 			cl_uint numPlatforms = platform_num();
@@ -54,7 +50,7 @@ namespace traph
             return {};
         }
 
-        cl_platform_id select_first_platform(const std::vector<cl_platform_id>& platforms)
+        static cl_platform_id select_first_platform(const std::vector<cl_platform_id>& platforms)
         {
             cl_int status = 0;
             cl_platform_id platform = nullptr;
@@ -72,7 +68,7 @@ namespace traph
             }
         }
 
-        cl_context_properties* get_context_property(cl_platform_id platform)
+        static cl_context_properties* get_context_property(cl_platform_id platform)
         {
             cl_context_properties cps[3] = {
                 CL_CONTEXT_PLATFORM,
@@ -82,6 +78,13 @@ namespace traph
 
             cl_context_properties *cprops = (nullptr == platform) ? nullptr : cps;
             return cps;
+        }
+
+        static CLContext create_context()
+        {
+            auto platforms = get_all_platforms();
+            auto selected = select_first_platform(platforms);
+            return CLContext(get_context_property(selected));
         }
     };
 }
