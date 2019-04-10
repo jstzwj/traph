@@ -2,9 +2,12 @@
 #define TRAPH_CORE_TENSOR_H_
 
 #include <traph/core/type.h>
+#include <traph/core/index.h>
+
 
 namespace traph
 {
+    template<class T>
     class ContiguousStorageBase
     {
     public:
@@ -14,6 +17,7 @@ namespace traph
         virtual void resize_(idx_type size) = 0;
     };
 
+    template<class T>
     class TensorBase
     {
     public:

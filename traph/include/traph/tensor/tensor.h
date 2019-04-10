@@ -8,12 +8,13 @@
 #include<traph/core/type.h>
 #include<traph/core/index.h>
 #include<traph/core/utils.h>
+#include<traph/core/tensor.h>
 
 namespace traph
 {
     // The real representation of all tensors.
     template<typename T>
-    class TensorStorage
+    class TensorStorage: public ContiguousStorageBase<T>
     {
     public:
         using DoubleStorage = TensorStorage<f64>;
@@ -130,7 +131,7 @@ namespace traph
 
     // ndarray
     template<typename T>
-    class Tensor
+    class Tensor: public TensorBase<T>
     {
     private:
         std::unique_ptr<TensorStorage<T>> _rep;
