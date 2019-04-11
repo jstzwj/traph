@@ -8,6 +8,7 @@ SET(CORE_LIST
 	${HEADER_PATH}/autograd.h
 	${HEADER_PATH}/variable.h
 	${SOURCE_PATH}/variable.cpp
+	${HEADER_PATH}/graph.h
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})

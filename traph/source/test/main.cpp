@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <traph/core/tensor.h>
 #include <traph/tensor/tensor.h>
 #include <traph/tensor/arithmetic.h>
@@ -25,10 +27,20 @@ int main()
 	auto out = traph::mean(c);
 	out.backward();
 	*/
-
+	/*
 	traph::Tensor<float> a = traph::ones<float>({ 10000, 10000 });
 
 	auto b = a.sum();
 	std::cout << b;
+	*/
+	// auto a = traph::Variable<traph::f32>({ 2, 3 });
+	auto a = traph::ones<traph::f32>({ 2,3 });
+	a->requires_grad_(true);
+	auto b = a->sum();
+
+	// b->backward();
+
+	std::cout << b->item();
+
     return 0;
 }

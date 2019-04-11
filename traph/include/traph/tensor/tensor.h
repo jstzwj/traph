@@ -3,7 +3,9 @@
 
 #include <initializer_list>
 #include <cmath>
+#include <memory>
 #include <functional>
+#include <stdexcept>
 
 
 #include<traph/core/type.h>
@@ -100,6 +102,10 @@ namespace traph
 
         bool _requires_grad;
     public:
+        using TensorPtr = std::shared_ptr<Tensor<T>>;
+        using TensorRef = Tensor<T>&;
+        using TensorConstRef = const Tensor<T>&;
+
         using DoubleTensor = Tensor<f64>;
         using FloatTensor = Tensor<f32>;
         using LongTensor = Tensor<i64>;
@@ -131,7 +137,7 @@ namespace traph
             }
         }
 
-        void apply_dim(idx_type dim, idx_type idx, std::function<T(T)> f)
+        void apply_impl(idx_type dim, idx_type idx, std::function<T(T)> f)
         {
             idx_type dim_size = _dimensions.size();
 
@@ -143,12 +149,12 @@ namespace traph
                 if(dim == dim_size - 1)
                     _rep->data[idx] = f(_rep->data[idx]);
                 else
-                    apply_dim(dim + 1, idx, f);
+                    apply_impl(dim + 1, idx, f);
                 idx += step_len;
             }
         }
 
-        void reduce_dim(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const
+        void reduce_impl(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const
         {
             idx_type dim_size = _dimensions.size();
 
@@ -160,8 +166,48 @@ namespace traph
                 if(dim == dim_size - 1)
                     result = f(result, _rep->data[idx]);
                 else
-                    reduce_dim(result, dim + 1, idx, f);
+                    reduce_impl(result, dim + 1, idx, f);
                 idx += step_len;
+            }
+        }
+
+        T reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<T(T,T)> f) const
+        {
+            T result{};
+            for(idx_type i = 0; i < step_num; ++i)
+            {
+                result = f(result, _rep->data[begin]);
+                begin += step_len;
+            }
+            return result;
+        }
+
+        void reduce_dim_impl(Tensor<T>& result, idx_type dim, idx_type reduce_dim,
+            idx_type this_idx, idx_type result_idx,
+            std::function<T(T,T)> f) const
+        {
+            idx_type dim_size = _dimensions.size();
+
+            if(dim == dim_size)
+            {
+                result._rep->data[result_idx] = 
+                    reduce_dim_kernel(this_idx, _strides[reduce_dim], _dimensions[reduce_dim], f);
+                return;
+            }
+
+            if(dim == reduce_dim)
+            {
+                reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
+            }
+            else
+            {
+                for(idx_type i = 0; i < _dimensions[dim]; ++i)
+                {
+                    reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
+                        
+                    this_idx += _strides[dim];
+                    result_idx += result._strides[dim];
+                }
             }
         }
     public:
@@ -237,16 +283,31 @@ namespace traph
 
         virtual void apply_(std::function<T(T)> f) override
         {
-            apply_dim(0, _offset, f);
+            apply_impl(0, _offset, f);
         }
         virtual void cos_() override
         {
 			apply_([](T a)->T {return std::cos(a); });
         }
+        virtual TensorBasePtr create_grad() override
+        {
+            return std::shared_ptr<TensorBase<T>>(new Tensor<T>(_dimensions));
+        }
         virtual device_id device() override { return 0; }
         virtual void fill_(T value) override
         {
 			apply_([&value](T a)->T {return value; });
+        }
+        virtual T item() const override
+        {
+            if(_dimensions.flat_size() == 1)
+            {
+                return _rep->data[_offset];
+            }
+            else
+            {
+                throw std::runtime_error("item: only one element tensors can be converted to scalars");
+            }
         }
 		virtual idx_type offset() const override { return _offset; }
 		virtual layout_type order() const override { return _order; }
@@ -254,14 +315,23 @@ namespace traph
         virtual T reduce_(std::function<T(T,T)> f) const override
         {
             T result{0.f};
-            reduce_dim(result, 0, _offset, f);
+            reduce_impl(result, 0, _offset, f);
             return result;
         }
-        virtual void reshape(const DimVector& dims) override
+        virtual TensorBasePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override
+        {
+            DimVector reduced_dim = _dimensions;
+            reduced_dim.erase(dim); // check dim?
+            TensorBasePtr result(new Tensor<T>(reduced_dim));
+            TensorPtr raw_result = std::dynamic_pointer_cast<Tensor<T>>(result);
+			reduce_dim_impl(*(raw_result.get()), 0, dim, _offset, raw_result->_offset, f);
+            return result;
+        }
+        virtual void reshape_(const DimVector& dims) override
         {
 
         }
-        virtual void resize(const DimVector& dims) override
+        virtual void resize_(const DimVector& dims) override
         {
             _dimensions = dims;
             _rep->resize_(dims.flat_size());
@@ -274,12 +344,18 @@ namespace traph
 		virtual DimVector size() const override { return _dimensions;}
         virtual StorageBase<T>& storage() const override { return *(_rep.get()); }
 		virtual DimVector stride() const override { return _strides; }
-        virtual T sum() const override
+        virtual TensorBasePtr sum() const override
         {
-			return reduce_([](T a, T b)->T {return a + b; });
+            DimVector d(1);
+            d[0] = 1;
+
+            TensorPtr result(new Tensor<T>(d));
+            result->_rep->data[0] = reduce_([](T a, T b)->T {return a + b; });
+			return std::dynamic_pointer_cast<TensorBase<T>>(result);
         }
     };
 
+    /*
     template<class T>
     Tensor<T> zeros(std::initializer_list<idx_type> l)
     {
@@ -305,6 +381,7 @@ namespace traph
 
         return result;
     }
+    */
 
     using DoubleTensor = Tensor<f64>;
     using FloatTensor = Tensor<f32>;

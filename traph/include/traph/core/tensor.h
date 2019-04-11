@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <memory>
 
 #include <traph/core/type.h>
 #include <traph/core/index.h>
@@ -35,22 +36,44 @@ namespace traph
     class TensorBase
     {
     public:
+        using TensorBasePtr = std::shared_ptr<TensorBase<T>>;
+        using TensorBaseRef = TensorBase<T>&;
+        using TensorBaseConstRef = const TensorBase<T>&;
+
+        using DoubleTensorBase = TensorBase<f64>;
+        using FloatTensorBase = TensorBase<f32>;
+        using LongTensorBase = TensorBase<i64>;
+        using IntTensorBase = TensorBase<i32>;
+        using ShortTensorBase = TensorBase<i16>;
+        using CharTensorBase = TensorBase<i8>;
+        using ByteTensorBase = TensorBase<u8>;
+    public:
         virtual void apply_(std::function<T(T)> f) = 0;
         virtual void cos_() = 0;
+        virtual TensorBasePtr create_grad() = 0;
         virtual device_id device() = 0;
         virtual void fill_(T value) = 0;
+        virtual T item() const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;
         virtual T reduce_(std::function<T(T,T)> f) const = 0;
-        virtual void reshape(const DimVector& dims) = 0;
-        virtual void resize(const DimVector& dims) = 0;
+        virtual TensorBasePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const = 0;
+        virtual void reshape_(const DimVector& dims) = 0;
+        virtual void resize_(const DimVector& dims) = 0;
         virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
         virtual StorageBase<T>& storage() const = 0;
 		virtual DimVector stride() const = 0;
-        virtual T sum() const = 0;
+        virtual TensorBasePtr sum() const = 0;
     };
+
+    template<class T>
+    using TensorBasePtr = std::shared_ptr<TensorBase<T>>;
+    template<class T>
+    using TensorBaseRef = TensorBase<T>&;
+    template<class T>
+    using TensorBaseConstRef = const TensorBase<T>&;
 
     template<class T>
     bool broadcastable(const TensorBase<T> &lhs, const TensorBase<T> & rhs)

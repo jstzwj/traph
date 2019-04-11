@@ -14,33 +14,7 @@
 
 namespace traph
 {
-    template<class T>
-    class OperationBase
-    {
-    public:
-        virtual name() = 0;
-    };
-
-    template<class T>
-    class OperationOneParam
-    {
-    public:
-        virtual name() = 0;
-    };
-
-    template<class T>
-    class OperationTwoParam
-    {
-    public:
-        virtual name() = 0;
-    };
-
-    template<class T>
-    class OperationThreeParam
-    {
-    public:
-        virtual name() = 0;
-    };
+    
 }
 
 #endif

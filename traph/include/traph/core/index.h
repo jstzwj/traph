@@ -93,6 +93,18 @@ namespace traph
             return *this;
         }
 
+        void erase(idx_type idx)
+        {
+            if(idx > 0 && idx < dim_num)
+            {
+                for(idx_type i = idx + 1; i < dim_num;++i)
+                {
+                    this->operator[](i - 1) = this->operator[](i);
+                }
+                resize(size() - 1);
+            }
+        }
+
         void push_back(idx_type idx)
         {
             resize(size() + 1);

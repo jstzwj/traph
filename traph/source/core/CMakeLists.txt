@@ -11,6 +11,8 @@ SET(CORE_LIST
 	${HEADER_PATH}/type.h
 	${HEADER_PATH}/log.h
 	${SOURCE_PATH}/log.cpp
+	${HEADER_PATH}/tensor.h
+	${HEADER_PATH}/variable.h
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})
