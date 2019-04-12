@@ -2,7 +2,8 @@
 
 #include <traph/core/tensor.h>
 #include <traph/tensor/tensor.h>
-#include <traph/tensor/arithmetic.h>
+#include <traph/nn/arithmetic.h>
+#include <traph/core/variable.h>
 #include <traph/nn/variable.h>
 
 #include <iostream>
@@ -36,9 +37,9 @@ int main()
 	// auto a = traph::Variable<traph::f32>({ 2, 3 });
 	auto a = traph::ones<traph::f32>({ 2,3 });
 	a->requires_grad_(true);
-	auto b = a->sum();
+	auto b = traph::sum<traph::f32>(a);
 
-	// b->backward();
+	b->backward();
 
 	std::cout << b->item();
 

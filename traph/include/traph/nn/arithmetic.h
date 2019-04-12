@@ -8,25 +8,35 @@
 #include <traph/core/index.h>
 #include <traph/core/utils.h>
 #include <traph/core/variable.h>
-#include <traph/tensor/tensor.h>
 #include <traph/nn/variable.h>
+#include <traph/core/tensor.h>
+#include <traph/tensor/tensor.h>
+#include <traph/nn/operation.h>
 
 namespace traph
 {
     template<class T>
-	Variable<T> abs(const Variable<T> &t)
+	VariablePtr<T> sum(VariablePtr<T> input)
     {
-        Variable<T> result;
-        // operator
-        TensorBase<T> * base = t.tensor_data();
-        if(t.platform() == platform_type::none)
+        VariablePtr<T> result(new Variable<T>);
+        std::shared_ptr<SumOp<T>> op(new SumOp<T>);
+        if(input->_requires_grad)
         {
-            Tensor<T> * down = dynamic_cast<Tensor<T> *>(base);
-            abs(*down);
+			std::vector<VariableInterfacePtr> result_inputs { std::dynamic_pointer_cast<VariableInterface>(input) };
+            result->_data = op->forward({input->_data});
+            result->_requires_grad = true;
+            result->_leaf = false;
+            result->_grad_fn = op;
+            result->_inputs = result_inputs;
         }
-        
-        // record
+        else
+        {
+            result->_data = op->forward({input->_data});
+            result->_requires_grad = false;
+            result->_leaf = false;
+        }
 
+        return result;
     }
 
 }

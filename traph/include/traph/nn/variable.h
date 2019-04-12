@@ -35,7 +35,7 @@ namespace traph
         bool _requires_grad;
         bool _leaf;
         std::shared_ptr<OpInterface<T>> _grad_fn;
-        std::vector<VariableInterface> _inputs;
+        std::vector<VariableInterfacePtr> _inputs;
     public:
         Variable()
             :_data(new Tensor<T>), _grad(nullptr),
@@ -87,36 +87,25 @@ namespace traph
 				_grad->resize_(dim);
         }
 
-		Variable(const Variable& other)
-			:_data(new Tensor<T>(other._data)), _grad(nullptr),
-            _requires_grad(false), _leaf(false), _grad_fn(nullptr)
-		{
+		Variable(const Variable& other) = delete;
 
-		}
+		Variable(Variable&& other) = delete;
 
-		Variable(Variable&& other)
-			:_data(new Tensor<T>(other._data)), _grad(nullptr),
-            _requires_grad(false), _leaf(false), _grad_fn(nullptr)
-		{
+        Variable& operator= (const Variable& other) = delete;
 
-		}
+        Variable& operator= (Variable&& other) = delete;
 
         ~Variable()
         {
 
         }
 
-        virtual void apply_(std::function<T(T)> f) override
-        {
-            _data->apply_(f);
-        }
+		template<class T>
+		friend std::shared_ptr<Variable<T>> sum(std::shared_ptr<Variable<T>> input);
+
         virtual void backward() override
         {
 
-        }
-        virtual void cos_() override
-        {
-            _data->cos_();
         }
         virtual device_id device() override
         {
@@ -124,7 +113,7 @@ namespace traph
         }
         virtual void fill_(T value) override
         {
-            _data->fill_(value);
+            return _data->fill_(value);
         }
         virtual T item() const override
         {
@@ -142,13 +131,14 @@ namespace traph
         {
             return _data->platform();
         }
-        virtual T reduce_(std::function<T(T,T)> f) const override
-        {
-            return _data->reduce_(f);
-        }
         virtual void requires_grad_(bool requires_grad) override
         {
             _requires_grad = requires_grad;
+            if(requires_grad)
+                _grad = _data->create_grad();
+            else
+                _grad = std::shared_ptr<TensorBase<T>>(nullptr);
+            
         }
         virtual void reshape_(const DimVector& dims) override
         {
@@ -157,10 +147,6 @@ namespace traph
         virtual void resize_(const DimVector& dims) override
         {
             _data->resize_(dims);
-        }
-        virtual void sin_() override
-        {
-            _data->sin_();
         }
 		virtual DimVector size() const override
         {
@@ -174,13 +160,7 @@ namespace traph
         {
             return _data->stride();
         }
-        virtual VariableBasePtr sum() const override
-        {
-            VariablePtr result(new Variable<T>);
-            result->_data = _data->sum();
-
-			return std::dynamic_pointer_cast<VariableBase<T>>(result);
-        }
+        
     };
 
     template<class T>

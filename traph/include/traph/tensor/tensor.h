@@ -261,25 +261,13 @@ namespace traph
             auto_strides();
         }
 
-        Tensor(const Tensor& other)
-            :_rep(new TensorStorage<T>(*other._rep.get())),
-            _dimensions(other._dimensions),
-            _offset(other._offset),
-            _strides(other._strides),
-            _order(other._order),
-            _requires_grad(other._requires_grad)
-        {
-        }
+        Tensor(const Tensor& other) = delete;
 
-        Tensor(Tensor&& other)
-            :_rep(std::move(other._rep)),
-            _dimensions(other._dimensions),
-            _offset(other._offset),
-            _strides(other._strides),
-            _order(other._order),
-            _requires_grad(other._requires_grad)
-        {
-        }
+        Tensor(Tensor&& other) = delete;
+
+        Tensor& operator= (const Tensor& other) = delete;
+
+        Tensor& operator= (Tensor&& other) = delete;
 
         virtual void apply_(std::function<T(T)> f) override
         {

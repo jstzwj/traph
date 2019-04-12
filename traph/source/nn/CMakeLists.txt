@@ -9,6 +9,8 @@ SET(CORE_LIST
 	${HEADER_PATH}/variable.h
 	${SOURCE_PATH}/variable.cpp
 	${HEADER_PATH}/graph.h
+	${HEADER_PATH}/operation.h
+	${HEADER_PATH}/arithmetic.h
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})

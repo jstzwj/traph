@@ -11,5 +11,6 @@ SET(TEST_LIST
 add_executable(${LIB_OUTNAME} ${TEST_LIST})
 target_link_libraries(${LIB_OUTNAME} traph-core)
 target_link_libraries(${LIB_OUTNAME} traph-tensor)
+target_link_libraries(${LIB_OUTNAME} traph-nn)
 
 
