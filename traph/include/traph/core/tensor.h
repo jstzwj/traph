@@ -32,8 +32,30 @@ namespace traph
         virtual idx_type size() const = 0;
     };
 
+    class TensorInterface
+    {
+    public:
+        using TensorInterfacePtr = std::shared_ptr<TensorInterface>;
+        using TensorInterfaceRef = TensorInterface&;
+        using TensorInterfaceConstRef = const TensorInterface&;
+
+    public:
+        virtual device_id device() = 0;
+        virtual idx_type offset() const = 0;
+		virtual layout_type order() const = 0;
+        virtual platform_type platform() = 0;
+        virtual void reshape_(const DimVector& dims) = 0;
+        virtual void resize_(const DimVector& dims) = 0;
+		virtual DimVector size() const = 0;
+		virtual DimVector stride() const = 0;
+    };
+
+    using TensorInterfacePtr = std::shared_ptr<TensorInterface>;
+    using TensorInterfaceRef = TensorInterface&;
+    using TensorInterfaceConstRef = const TensorInterface&;
+
     template<class T>
-    class TensorBase
+    class TensorBase: public TensorInterface
     {
     public:
         using TensorBasePtr = std::shared_ptr<TensorBase<T>>;

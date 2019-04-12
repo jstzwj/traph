@@ -8,6 +8,30 @@
 
 namespace traph
 {
+    class VariableInterface
+    {
+    public:
+        using VariableInterfacePtr = std::shared_ptr<VariableInterface>;
+        using VariableInterfaceRef = VariableInterface&;
+        using VariableInterfaceConstRef = const VariableInterface&;
+
+    public:
+        virtual void backward() = 0;
+        virtual device_id device() = 0;
+        virtual idx_type offset() const = 0;
+		virtual layout_type order() const = 0;
+        virtual platform_type platform() = 0;
+        virtual void requires_grad_(bool requires_grad) = 0;
+        virtual void reshape_(const DimVector& dims) = 0;
+        virtual void resize_(const DimVector& dims) = 0;
+		virtual DimVector size() const = 0;
+		virtual DimVector stride() const = 0;
+    };
+
+    using VariableInterfacePtr = std::shared_ptr<VariableInterface>;
+    using VariableInterfaceRef = VariableInterface&;
+    using VariableInterfaceConstRef = const VariableInterface&;
+
     template<class T>
     class VariableBase
     {

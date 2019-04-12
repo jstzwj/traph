@@ -4,11 +4,13 @@
 #include <memory>
 #include <functional>
 #include <initializer_list>
+#include <vector>
 
 #include <traph/core/index.h>
 #include <traph/core/tensor.h>
 #include <traph/core/variable.h>
 #include <traph/tensor/tensor.h>
+#include <traph/nn/operation.h>
 
 namespace traph
 {
@@ -32,11 +34,12 @@ namespace traph
         std::shared_ptr<TensorBase<T>> _grad;
         bool _requires_grad;
         bool _leaf;
-        std::function<TensorBasePtr<T>(TensorBasePtr<T>)> _grad_fn;
+        std::shared_ptr<OpInterface<T>> _grad_fn;
+        std::vector<VariableInterface> _inputs;
     public:
         Variable()
             :_data(new Tensor<T>), _grad(nullptr),
-            _requires_grad(false), _leaf(is_leaf),
+            _requires_grad(false), _leaf(false),
             _grad_fn(nullptr)
         {
 
