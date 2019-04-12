@@ -28,6 +28,8 @@ namespace traph
             result->_leaf = false;
             result->_grad_fn = op;
             result->_inputs = result_inputs;
+            
+            input->_outputs.push_back(result);
         }
         else
         {

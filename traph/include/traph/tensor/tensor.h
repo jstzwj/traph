@@ -277,9 +277,9 @@ namespace traph
         {
 			apply_([](T a)->T {return std::cos(a); });
         }
-        virtual TensorBasePtr create_grad() override
+        virtual std::shared_ptr<TensorBase<f32>> create_grad() override
         {
-            return std::shared_ptr<TensorBase<T>>(new Tensor<T>(_dimensions));
+            return std::shared_ptr<TensorBase<f32>>(new Tensor<f32>(_dimensions));
         }
         virtual device_id device() override { return 0; }
         virtual void fill_(T value) override

@@ -72,7 +72,7 @@ namespace traph
     public:
         virtual void apply_(std::function<T(T)> f) = 0;
         virtual void cos_() = 0;
-        virtual TensorBasePtr create_grad() = 0;
+        virtual std::shared_ptr<TensorBase<f32>> create_grad() = 0;
         virtual device_id device() = 0;
         virtual void fill_(T value) = 0;
         virtual T item() const = 0;

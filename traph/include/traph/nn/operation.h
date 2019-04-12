@@ -39,6 +39,7 @@ namespace traph
     {
     public:
         OpContext context;
+        virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) = 0;
     };
 
     template<class T>
@@ -46,7 +47,7 @@ namespace traph
     {
     public:
         virtual TensorBasePtr<T> forward(std::vector<TensorBasePtr<T>> inputs) = 0;
-        virtual std::vector<TensorBasePtr<T>> backward(TensorBasePtr<T> output_grad) = 0;
+        virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) = 0;
     };
 
     template<class T>
@@ -63,7 +64,7 @@ namespace traph
 			return result;
         }
 
-        virtual std::vector<TensorBasePtr<T>> backward(TensorBasePtr<T> output_grad) override
+        virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
         {
             return {output_grad};
         }

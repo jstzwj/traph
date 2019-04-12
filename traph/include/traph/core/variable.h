@@ -18,8 +18,11 @@ namespace traph
     public:
         virtual void backward() = 0;
         virtual device_id device() = 0;
+        virtual TensorBasePtr<f32> grad() = 0;
+        virtual std::vector<VariableInterfacePtr>& inputs() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
+        virtual std::vector<std::weak_ptr<VariableInterface>>& outputs() = 0;
         virtual platform_type platform() = 0;
         virtual void requires_grad_(bool requires_grad) = 0;
         virtual void reshape_(const DimVector& dims) = 0;
@@ -51,9 +54,12 @@ namespace traph
         virtual void backward() = 0;
         virtual device_id device() = 0;
         virtual void fill_(T value) = 0;
+        virtual TensorBasePtr<f32> grad() = 0;
+        virtual std::vector<VariableInterfacePtr>& inputs() = 0;
         virtual T item() const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
+        virtual std::vector<std::weak_ptr<VariableInterface>>& outputs() = 0;
         virtual platform_type platform() = 0;
         virtual void requires_grad_(bool requires_grad) = 0;
         virtual void reshape_(const DimVector& dims) = 0;
