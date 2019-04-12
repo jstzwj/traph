@@ -55,6 +55,7 @@ namespace traph
         virtual TensorBasePtr<f32> grad() override;
         virtual std::shared_ptr<OpBase> grad_fn() override;
         virtual std::vector<VariableInterfacePtr>& inputs() override;
+        virtual bool is_leaf() const override;
         virtual T item() const override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
@@ -162,6 +163,7 @@ namespace traph
 		for (int i = sorted_node.size() - 1; i >= 0; --i)
 		{
 			VariableInterface* cur_node = sorted_node[i];
+			if (cur_node->is_leaf()) continue;
 			std::vector<TensorBasePtr<f32>> back_grad = cur_node->grad_fn()->backward(cur_node->grad());
 
 			assert(back_grad.size() == _inputs.size());
@@ -202,6 +204,12 @@ namespace traph
 	{
 		return _inputs;
 	}
+
+    template<typename T>
+    bool Variable<T>::is_leaf() const
+    {
+        return _leaf;
+    }
 
 	template<typename T>
 	T Variable<T>::item() const

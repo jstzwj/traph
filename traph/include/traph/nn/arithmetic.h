@@ -24,6 +24,7 @@ namespace traph
         {
 			std::vector<VariableInterfacePtr> result_inputs { std::dynamic_pointer_cast<VariableInterface>(input) };
             result->_data = std::dynamic_pointer_cast<TensorBase<T>>(op->forward({ input->_data }));
+			result->_grad = result->_data->create_grad();
             result->_requires_grad = true;
             result->_leaf = false;
             result->_grad_fn = op;

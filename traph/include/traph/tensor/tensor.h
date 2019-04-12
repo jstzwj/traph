@@ -106,271 +106,51 @@ namespace traph
         using TensorRef = Tensor<T>&;
         using TensorConstRef = const Tensor<T>&;
 
-        using DoubleTensor = Tensor<f64>;
-        using FloatTensor = Tensor<f32>;
-        using LongTensor = Tensor<i64>;
-        using IntTensor = Tensor<i32>;
-        using ShortTensor = Tensor<i16>;
-        using CharTensor = Tensor<i8>;
-        using ByteTensor = Tensor<u8>;
     private:
-        void auto_strides()
-        {
-            idx_type dim_num = _dimensions.size();
-            _strides.resize(dim_num);
-			idx_type stride = 1;
-            if(_order == layout_type::column_major)
-            {
-				for (idx_type i = dim_num - 1; i >= 0; --i)
-				{
-					_strides[i] = stride;
-					stride *= _dimensions[i];
-				}
-            }
-            else
-            {
-				for (idx_type i = 0; i < dim_num; ++i)
-				{
-					_strides[i] = stride;
-					stride *= _dimensions[i];
-				}
-            }
-        }
+        void auto_strides();
 
-        void apply_impl(idx_type dim, idx_type idx, std::function<T(T)> f)
-        {
-            idx_type dim_size = _dimensions.size();
+        void apply_impl(idx_type dim, idx_type idx, std::function<T(T)> f);
 
-            idx_type step_len = _strides[dim];
-            idx_type step_num = _dimensions[dim];
-            
-            for(idx_type i = 0; i < step_num; ++i)
-            {
-                if(dim == dim_size - 1)
-                    _rep->data[idx] = f(_rep->data[idx]);
-                else
-                    apply_impl(dim + 1, idx, f);
-                idx += step_len;
-            }
-        }
+        void reduce_impl(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const;
 
-        void reduce_impl(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const
-        {
-            idx_type dim_size = _dimensions.size();
-
-            idx_type step_len = _strides[dim];
-            idx_type step_num = _dimensions[dim];
-
-            for(idx_type i = 0; i < step_num; ++i)
-            {
-                if(dim == dim_size - 1)
-                    result = f(result, _rep->data[idx]);
-                else
-                    reduce_impl(result, dim + 1, idx, f);
-                idx += step_len;
-            }
-        }
-
-        T reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<T(T,T)> f) const
-        {
-            T result{};
-            for(idx_type i = 0; i < step_num; ++i)
-            {
-                result = f(result, _rep->data[begin]);
-                begin += step_len;
-            }
-            return result;
-        }
+        T reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<T(T,T)> f) const;
 
         void reduce_dim_impl(Tensor<T>& result, idx_type dim, idx_type reduce_dim,
             idx_type this_idx, idx_type result_idx,
-            std::function<T(T,T)> f) const
-        {
-            idx_type dim_size = _dimensions.size();
-
-            if(dim == dim_size)
-            {
-                result._rep->data[result_idx] = 
-                    reduce_dim_kernel(this_idx, _strides[reduce_dim], _dimensions[reduce_dim], f);
-                return;
-            }
-
-            if(dim == reduce_dim)
-            {
-                reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
-            }
-            else
-            {
-                for(idx_type i = 0; i < _dimensions[dim]; ++i)
-                {
-                    reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
-                        
-                    this_idx += _strides[dim];
-                    result_idx += result._strides[dim];
-                }
-            }
-        }
+            std::function<T(T,T)> f) const;
     public:
-        Tensor()
-            :_rep(new TensorStorage<T>),
-            _dimensions(), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
-        {
-        }
-
-        explicit Tensor(const DimVector& dimensions)
-            :_rep(new TensorStorage<T>),
-            _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
-        {
-            auto_strides();
-			
-			_rep->resize_(_dimensions.flat_size());
-        }
-
-        explicit Tensor(const DimVector& dimensions, layout_type order)
-            :_rep(new TensorStorage<T>),
-            _dimensions(dimensions), _offset(0), _strides(), _order(order), _requires_grad(false)
-        {
-            auto_strides();
-
-			_rep->resize_(_dimensions.flat_size());
-        }
-
-        explicit Tensor(const DimVector& dimensions, const DimVector& strides)
-            :_rep(new TensorStorage<T>),
-            _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major), _requires_grad(false)
-        {
-            auto_strides();
-
-			_rep->resize_(_dimensions.flat_size());
-        }
-
-        explicit Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
-            :_rep(new TensorStorage<T>),
-            _dimensions(dimensions), _offset(0), _strides(strides), _order(order), _requires_grad(false)
-        {
-            auto_strides();
-
-			_rep->resize_(_dimensions.flat_size());
-        }
-
-        Tensor(const T& t)
-            :_rep(new TensorStorage<T>),
-            _dimensions(), _offset(0), strides(), _order(order), _requires_grad(false)
-        {
-            _dimensions.resize(1);
-            auto_strides();
-        }
+        Tensor();
+        explicit Tensor(const DimVector& dimensions);
+        explicit Tensor(const DimVector& dimensions, layout_type order);
+        explicit Tensor(const DimVector& dimensions, const DimVector& strides);
+        explicit Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order);
+        Tensor(const T& t);
 
         Tensor(const Tensor& other) = delete;
         Tensor(Tensor&& other) = delete;
         Tensor& operator= (const Tensor& other) = delete;
         Tensor& operator= (Tensor&& other) = delete;
 
-        virtual void add_(TensorInterfacePtr other) override
-        {
-
-        }
-        virtual void apply_(std::function<T(T)> f) override
-        {
-            apply_impl(0, _offset, f);
-        }
-        virtual void cos_() override
-        {
-			apply_([](T a)->T {return std::cos(a); });
-        }
-        virtual std::shared_ptr<TensorBase<f32>> create_grad() override
-        {
-            return std::shared_ptr<TensorBase<f32>>(new Tensor<f32>(_dimensions));
-        }
-        virtual device_id device() override { return 0; }
-        virtual void fill_(T value) override
-        {
-			apply_([&value](T a)->T {return value; });
-        }
-        virtual T item() const override
-        {
-            if(_dimensions.flat_size() == 1)
-            {
-                return _rep->data[_offset];
-            }
-            else
-            {
-                throw std::runtime_error("item: only one element tensors can be converted to scalars");
-            }
-        }
-		virtual idx_type offset() const override { return _offset; }
-		virtual layout_type order() const override { return _order; }
-        virtual platform_type platform() override { return platform_type::none; }
-        virtual T reduce_(std::function<T(T,T)> f) const override
-        {
-            T result{};
-            reduce_impl(result, 0, _offset, f);
-            return result;
-        }
-        virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override
-        {
-            DimVector reduced_dim = _dimensions;
-            reduced_dim.erase(dim); // check dim?
-            TensorBasePtr result(new Tensor<T>(reduced_dim));
-            TensorPtr raw_result = std::dynamic_pointer_cast<Tensor<T>>(result);
-			reduce_dim_impl(*(raw_result.get()), 0, dim, _offset, raw_result->_offset, f);
-            return std::dynamic_pointer_cast<TensorInterface>(result);
-        }
-        virtual void reshape_(const DimVector& dims) override
-        {
-
-        }
-        virtual void resize_(const DimVector& dims) override
-        {
-            _dimensions = dims;
-            _rep->resize_(dims.flat_size());
-            auto_strides();
-        }
-        virtual void sin_() override
-        {
-			apply_([](T a)->T {return std::sin(a); });
-        }
-		virtual DimVector size() const override { return _dimensions;}
-        virtual StorageBase<T>& storage() const override { return *(_rep.get()); }
-		virtual DimVector stride() const override { return _strides; }
-        virtual TensorInterfacePtr sum() const override
-        {
-            DimVector d(1);
-            d[0] = 1;
-
-            TensorPtr result(new Tensor<T>(d));
-            result->_rep->data[0] = reduce_([](T a, T b)->T {return a + b; });
-			return std::dynamic_pointer_cast<TensorInterface>(result);
-        }
+        virtual void add_(TensorInterfacePtr other) override;
+        virtual void apply_(std::function<T(T)> f) override;
+        virtual void cos_() override;
+        virtual std::shared_ptr<TensorBase<f32>> create_grad() override;
+        virtual device_id device() override;
+        virtual void fill_(T value) override;
+        virtual T item() const override;
+		virtual idx_type offset() const override;
+		virtual layout_type order() const override;
+        virtual platform_type platform() override;
+        virtual T reduce_(std::function<T(T,T)> f) const override;
+        virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override;
+        virtual void reshape_(const DimVector& dims) override;
+        virtual void resize_(const DimVector& dims) override;
+        virtual void sin_() override;
+		virtual DimVector size() const override;
+        virtual StorageBase<T>& storage() const override;
+		virtual DimVector stride() const override;
+        virtual TensorInterfacePtr sum() const override;
     };
-
-    /*
-    template<class T>
-    Tensor<T> zeros(std::initializer_list<idx_type> l)
-    {
-        DimVector dim;
-		for (auto i : l)
-			dim.push_back(i);
-
-        Tensor<T> result(dim);
-        result.fill_(0);
-
-        return result;
-    }
-
-    template<class T>
-    Tensor<T> ones(std::initializer_list<idx_type> l)
-    {
-		DimVector dim;
-		for (auto i : l)
-			dim.push_back(i);
-
-        Tensor<T> result(dim);
-        result.fill_(1);
-
-        return result;
-    }
-    */
 
     using DoubleTensor = Tensor<f64>;
     using FloatTensor = Tensor<f32>;
@@ -379,6 +159,263 @@ namespace traph
     using ShortTensor = Tensor<i16>;
     using CharTensor = Tensor<i8>;
     using ByteTensor = Tensor<u8>;
+
+	// definition
+    // private
+    template<typename T>
+    void Tensor<T>::auto_strides()
+    {
+        idx_type dim_num = _dimensions.size();
+        _strides.resize(dim_num);
+        idx_type stride = 1;
+        if(_order == layout_type::column_major)
+        {
+            for (idx_type i = dim_num - 1; i >= 0; --i)
+            {
+                _strides[i] = stride;
+                stride *= _dimensions[i];
+            }
+        }
+        else
+        {
+            for (idx_type i = 0; i < dim_num; ++i)
+            {
+                _strides[i] = stride;
+                stride *= _dimensions[i];
+            }
+        }
+    }
+
+    template<typename T>
+    void Tensor<T>::apply_impl(idx_type dim, idx_type idx, std::function<T(T)> f)
+    {
+        idx_type dim_size = _dimensions.size();
+
+        idx_type step_len = _strides[dim];
+        idx_type step_num = _dimensions[dim];
+        
+        for(idx_type i = 0; i < step_num; ++i)
+        {
+            if(dim == dim_size - 1)
+                _rep->data[idx] = f(_rep->data[idx]);
+            else
+                apply_impl(dim + 1, idx, f);
+            idx += step_len;
+        }
+    }
+
+    template<typename T>
+    void Tensor<T>::reduce_impl(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const
+    {
+        idx_type dim_size = _dimensions.size();
+
+        idx_type step_len = _strides[dim];
+        idx_type step_num = _dimensions[dim];
+
+        for(idx_type i = 0; i < step_num; ++i)
+        {
+            if(dim == dim_size - 1)
+                result = f(result, _rep->data[idx]);
+            else
+                reduce_impl(result, dim + 1, idx, f);
+            idx += step_len;
+        }
+    }
+
+    template<typename T>
+    T Tensor<T>::reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<T(T,T)> f) const
+    {
+        T result{};
+        for(idx_type i = 0; i < step_num; ++i)
+        {
+            result = f(result, _rep->data[begin]);
+            begin += step_len;
+        }
+        return result;
+    }
+
+    template<typename T>
+    void Tensor<T>::reduce_dim_impl(Tensor<T>& result, idx_type dim, idx_type reduce_dim,
+        idx_type this_idx, idx_type result_idx,
+        std::function<T(T,T)> f) const
+    {
+        idx_type dim_size = _dimensions.size();
+
+        if(dim == dim_size)
+        {
+            result._rep->data[result_idx] = 
+                reduce_dim_kernel(this_idx, _strides[reduce_dim], _dimensions[reduce_dim], f);
+            return;
+        }
+
+        if(dim == reduce_dim)
+        {
+            reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
+        }
+        else
+        {
+            for(idx_type i = 0; i < _dimensions[dim]; ++i)
+            {
+                reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
+                    
+                this_idx += _strides[dim];
+                result_idx += result._strides[dim];
+            }
+        }
+    }
+    // public
+    template<typename T>
+    Tensor<T>::Tensor()
+        :_rep(new TensorStorage<T>),
+        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
+    {
+    }
+
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
+    {
+        auto_strides();
+        
+        _rep->resize_(_dimensions.flat_size());
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions, layout_type order)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(), _order(order), _requires_grad(false)
+    {
+        auto_strides();
+
+        _rep->resize_(_dimensions.flat_size());
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major), _requires_grad(false)
+    {
+        auto_strides();
+
+        _rep->resize_(_dimensions.flat_size());
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(order), _requires_grad(false)
+    {
+        auto_strides();
+
+        _rep->resize_(_dimensions.flat_size());
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const T& t)
+        :_rep(new TensorStorage<T>),
+        _dimensions(), _offset(0), strides(), _order(order), _requires_grad(false)
+    {
+        _dimensions.resize(1);
+        auto_strides();
+    }
+
+    template<typename T>
+    void Tensor<T>::add_(TensorInterfacePtr other)
+    {
+        
+    }
+    template<typename T>
+    void Tensor<T>::apply_(std::function<T(T)> f)
+    {
+        apply_impl(0, _offset, f);
+    }
+    template<typename T>
+    void Tensor<T>::cos_()
+    {
+        apply_([](T a)->T {return std::cos(a); });
+    }
+    template<typename T>
+    std::shared_ptr<TensorBase<f32>> Tensor<T>::create_grad()
+    {
+        return std::shared_ptr<TensorBase<f32>>(new Tensor<f32>(_dimensions));
+    }
+    template<typename T>
+    device_id Tensor<T>::device() { return 0; }
+    template<typename T>
+    void Tensor<T>::fill_(T value)
+    {
+        apply_([&value](T a)->T {return value; });
+    }
+    template<typename T>
+    T Tensor<T>::item() const
+    {
+        if(_dimensions.flat_size() == 1)
+        {
+            return _rep->data[_offset];
+        }
+        else
+        {
+            throw std::runtime_error("item: only one element tensors can be converted to scalars");
+        }
+    }
+    template<typename T>
+    idx_type Tensor<T>::offset() const { return _offset; }
+    template<typename T>
+    layout_type Tensor<T>::order() const { return _order; }
+    template<typename T>
+    platform_type Tensor<T>::platform() { return platform_type::none; }
+    template<typename T>
+    T Tensor<T>::reduce_(std::function<T(T,T)> f) const
+    {
+        T result{};
+        reduce_impl(result, 0, _offset, f);
+        return result;
+    }
+    template<typename T>
+    TensorInterfacePtr Tensor<T>::reduce_dim(idx_type dim, std::function<T(T,T)> f) const
+    {
+        DimVector reduced_dim = _dimensions;
+        reduced_dim.erase(dim); // check dim?
+        TensorBasePtr result(new Tensor<T>(reduced_dim));
+        TensorPtr raw_result = std::dynamic_pointer_cast<Tensor<T>>(result);
+        reduce_dim_impl(*(raw_result.get()), 0, dim, _offset, raw_result->_offset, f);
+        return std::dynamic_pointer_cast<TensorInterface>(result);
+    }
+    template<typename T>
+    void Tensor<T>::reshape_(const DimVector& dims)
+    {
+
+    }
+    template<typename T>
+    void Tensor<T>::resize_(const DimVector& dims)
+    {
+        _dimensions = dims;
+        _rep->resize_(dims.flat_size());
+        auto_strides();
+    }
+    template<typename T>
+    void Tensor<T>::sin_()
+    {
+        apply_([](T a)->T {return std::sin(a); });
+    }
+    template<typename T>
+    DimVector Tensor<T>::size() const { return _dimensions;}
+    template<typename T>
+    StorageBase<T>& Tensor<T>::storage() const { return *(_rep.get()); }
+    template<typename T>
+    DimVector Tensor<T>::stride() const { return _strides; }
+    template<typename T>
+    TensorInterfacePtr Tensor<T>::sum() const
+    {
+        DimVector d(1);
+        d[0] = 1;
+
+        TensorPtr result(new Tensor<T>(d));
+        result->_rep->data[0] = reduce_([](T a, T b)->T {return a + b; });
+        return std::dynamic_pointer_cast<TensorInterface>(result);
+    }
 }
 
 #endif // !TRAPH_TENSOR

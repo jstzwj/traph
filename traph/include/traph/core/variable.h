@@ -23,6 +23,7 @@ namespace traph
         virtual TensorBasePtr<f32> grad() = 0;
         virtual std::shared_ptr<OpBase> grad_fn() = 0;
         virtual std::vector<VariableInterfacePtr>& inputs() = 0;
+        virtual bool is_leaf() const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;
@@ -38,7 +39,7 @@ namespace traph
     using VariableInterfaceConstRef = const VariableInterface&;
 
     template<class T>
-    class VariableBase
+    class VariableBase: public VariableInterface
     {
     public:
         using VariableBasePtr = std::shared_ptr<VariableBase<T>>;
@@ -59,6 +60,7 @@ namespace traph
         virtual TensorBasePtr<f32> grad() = 0;
         virtual std::shared_ptr<OpBase> grad_fn() = 0;
         virtual std::vector<VariableInterfacePtr>& inputs() = 0;
+        virtual bool is_leaf() const = 0;
         virtual T item() const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
