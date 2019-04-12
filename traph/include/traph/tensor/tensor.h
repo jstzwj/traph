@@ -262,13 +262,14 @@ namespace traph
         }
 
         Tensor(const Tensor& other) = delete;
-
         Tensor(Tensor&& other) = delete;
-
         Tensor& operator= (const Tensor& other) = delete;
-
         Tensor& operator= (Tensor&& other) = delete;
 
+        virtual void add_(TensorInterfacePtr other) override
+        {
+
+        }
         virtual void apply_(std::function<T(T)> f) override
         {
             apply_impl(0, _offset, f);
@@ -302,18 +303,18 @@ namespace traph
         virtual platform_type platform() override { return platform_type::none; }
         virtual T reduce_(std::function<T(T,T)> f) const override
         {
-            T result{0.f};
+            T result{};
             reduce_impl(result, 0, _offset, f);
             return result;
         }
-        virtual TensorBasePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override
+        virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override
         {
             DimVector reduced_dim = _dimensions;
             reduced_dim.erase(dim); // check dim?
             TensorBasePtr result(new Tensor<T>(reduced_dim));
             TensorPtr raw_result = std::dynamic_pointer_cast<Tensor<T>>(result);
 			reduce_dim_impl(*(raw_result.get()), 0, dim, _offset, raw_result->_offset, f);
-            return result;
+            return std::dynamic_pointer_cast<TensorInterface>(result);
         }
         virtual void reshape_(const DimVector& dims) override
         {
@@ -332,14 +333,14 @@ namespace traph
 		virtual DimVector size() const override { return _dimensions;}
         virtual StorageBase<T>& storage() const override { return *(_rep.get()); }
 		virtual DimVector stride() const override { return _strides; }
-        virtual TensorBasePtr sum() const override
+        virtual TensorInterfacePtr sum() const override
         {
             DimVector d(1);
             d[0] = 1;
 
             TensorPtr result(new Tensor<T>(d));
             result->_rep->data[0] = reduce_([](T a, T b)->T {return a + b; });
-			return std::dynamic_pointer_cast<TensorBase<T>>(result);
+			return std::dynamic_pointer_cast<TensorInterface>(result);
         }
     };
 

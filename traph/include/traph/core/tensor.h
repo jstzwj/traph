@@ -32,6 +32,9 @@ namespace traph
         virtual idx_type size() const = 0;
     };
 
+	template<class T>
+	class TensorBase;
+
     class TensorInterface
     {
     public:
@@ -40,14 +43,19 @@ namespace traph
         using TensorInterfaceConstRef = const TensorInterface&;
 
     public:
+        virtual void add_(TensorInterfacePtr other) = 0;
+        virtual void cos_() = 0;
+        virtual std::shared_ptr<TensorBase<f32>> create_grad() = 0;
         virtual device_id device() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;
+        virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
 		virtual DimVector stride() const = 0;
+        virtual TensorInterfacePtr sum() const = 0;
     };
 
     using TensorInterfacePtr = std::shared_ptr<TensorInterface>;
@@ -70,6 +78,7 @@ namespace traph
         using CharTensorBase = TensorBase<i8>;
         using ByteTensorBase = TensorBase<u8>;
     public:
+        virtual void add_(TensorInterfacePtr other) = 0;
         virtual void apply_(std::function<T(T)> f) = 0;
         virtual void cos_() = 0;
         virtual std::shared_ptr<TensorBase<f32>> create_grad() = 0;
@@ -80,14 +89,14 @@ namespace traph
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;
         virtual T reduce_(std::function<T(T,T)> f) const = 0;
-        virtual TensorBasePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const = 0;
+        virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;
         virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
         virtual StorageBase<T>& storage() const = 0;
 		virtual DimVector stride() const = 0;
-        virtual TensorBasePtr sum() const = 0;
+        virtual TensorInterfacePtr sum() const = 0;
     };
 
     template<class T>

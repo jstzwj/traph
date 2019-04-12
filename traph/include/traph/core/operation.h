@@ -1,5 +1,5 @@
-#ifndef TRAPH_NN_OPERATION_H_
-#define TRAPH_NN_OPERATION_H_
+#ifndef TRAPH_CORE_OPERATION_H_
+#define TRAPH_CORE_OPERATION_H_
 
 #include <utility>
 #include <cmath>
@@ -10,12 +10,8 @@
 
 #include <traph/core/type.h>
 #include <traph/core/index.h>
-#include <traph/core/utils.h>
-#include <traph/core/variable.h>
-#include <traph/nn/variable.h>
 #include <traph/core/tensor.h>
 #include <traph/tensor/tensor.h>
-#include <traph/nn/graph.h>
 
 namespace traph
 {
@@ -39,27 +35,20 @@ namespace traph
     {
     public:
         OpContext context;
+        
+        virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) = 0;
         virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) = 0;
     };
 
-    template<class T>
-    class OpInterface: public OpBase
+    class SumOp: public OpBase
     {
     public:
-        virtual TensorBasePtr<T> forward(std::vector<TensorBasePtr<T>> inputs) = 0;
-        virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) = 0;
-    };
-
-    template<class T>
-    class SumOp: public OpInterface<T>
-    {
-    public:
-        virtual TensorBasePtr<T> forward(std::vector<TensorBasePtr<T>> inputs) override
+        virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) override
         {
             assert(inputs.size() == 1);
             
-            TensorBasePtr<T> input = inputs[0];
-            TensorBasePtr<T> result = input->sum();
+			TensorInterfacePtr input = inputs[0];
+			TensorInterfacePtr result = input->sum();
 
 			return result;
         }

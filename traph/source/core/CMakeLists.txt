@@ -13,6 +13,8 @@ SET(CORE_LIST
 	${SOURCE_PATH}/log.cpp
 	${HEADER_PATH}/tensor.h
 	${HEADER_PATH}/variable.h
+	${HEADER_PATH}/operation.h
+	${SOURCE_PATH}/operation.cpp
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})

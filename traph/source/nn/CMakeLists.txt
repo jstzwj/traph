@@ -4,16 +4,17 @@ SET(LIB_OUTNAME traph-${LIB_NAME})
 SET(HEADER_PATH ${TRAPH_PATH_HEADER}/${LIB_NAME})
 SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 
-SET(CORE_LIST
+SET(NN_LIST
 	${HEADER_PATH}/autograd.h
 	${HEADER_PATH}/variable.h
 	${SOURCE_PATH}/variable.cpp
 	${HEADER_PATH}/graph.h
-	${HEADER_PATH}/operation.h
+	${HEADER_PATH}/executor.h
+	${SOURCE_PATH}/executor.cpp
 	${HEADER_PATH}/arithmetic.h
 )
 
-ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})
+ADD_LIBRARY(${LIB_OUTNAME} ${NN_LIST})
 
 IF(Boost_FOUND)
 	target_link_libraries(${LIB_OUTNAME} ${Boost_LIBRARIES})
