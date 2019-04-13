@@ -64,7 +64,7 @@ namespace traph
         virtual void reshape_(const DimVector& dims) override;
         virtual void resize_(const DimVector& dims) override;
 		virtual DimVector size() const override;
-        virtual StorageBase<T>& storage() const override;
+        virtual std::shared_ptr<StorageBase<T>> storage() const override;
 		virtual DimVector stride() const override;
     };
 
@@ -160,7 +160,7 @@ namespace traph
 		_grad->fill_(1);
 
 		std::vector<VariableInterface*> sorted_node = Executor::topology_sort(dynamic_cast<VariableInterface*>(this));
-		for (int i = sorted_node.size() - 1; i >= 0; --i)
+		for (int i = static_cast<int>(sorted_node.size()) - 1; i >= 0; --i)
 		{
 			VariableInterface* cur_node = sorted_node[i];
 			if (cur_node->is_leaf()) continue;
@@ -269,7 +269,7 @@ namespace traph
 	}
 
 	template<typename T>
-	StorageBase<T>& Variable<T>::storage() const
+	std::shared_ptr<StorageBase<T>> Variable<T>::storage() const
 	{
 		return _data->storage();
 	}

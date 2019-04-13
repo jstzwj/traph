@@ -15,6 +15,7 @@ namespace traph
     class StorageBase
     {
     public:
+        virtual T* data_ptr() = 0;
         virtual size_type element_size() const = 0;
         virtual void fill_(T v) = 0;
         virtual void resize_(idx_type size) = 0;
@@ -26,6 +27,7 @@ namespace traph
     class ContiguousStorageBase: public StorageBase<T>
     {
     public:
+        virtual T* data_ptr() = 0;
         virtual size_type element_size() const = 0;
         virtual void fill_(T v) = 0;
         virtual void resize_(idx_type size) = 0;
@@ -54,7 +56,9 @@ namespace traph
         virtual void resize_(const DimVector& dims) = 0;
         virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
+		virtual idx_type size(idx_type i) const = 0;
 		virtual DimVector stride() const = 0;
+		virtual idx_type stride(idx_type i) const = 0;
         virtual TensorInterfacePtr sum() const = 0;
     };
 
@@ -94,8 +98,10 @@ namespace traph
         virtual void resize_(const DimVector& dims) = 0;
         virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
-        virtual StorageBase<T>& storage() const = 0;
+		virtual idx_type size(idx_type i) const = 0;
+        virtual std::shared_ptr<StorageBase<T>> storage() const = 0;
 		virtual DimVector stride() const = 0;
+		virtual idx_type stride(idx_type i) const = 0;
         virtual TensorInterfacePtr sum() const = 0;
     };
 
@@ -115,18 +121,32 @@ namespace traph
             return false;
 
         idx_type min = std::min(lhs_dim.size(), rhs_dim.size());
-        for(idx_type i = 0; i<min;++i)
-        {
-            if(lhs_dim[i] != rhs_dim[i] &&
-                lhs_dim[i] != 1 &&
-                rhs_dim[i] != 1)
-            {
-                return false;
-            }
-        }
+		for (idx_type i = -1; i >= -min; --i)
+			if (lhs.size(i) != rhs.size(i) && lhs.size(i) != 1 && rhs.size(i) != 1)
+				return false;    
 
         return true;
     }
+
+	template<class T>
+	DimVector broadcast_shape(const TensorBase<T> &lhs, const TensorBase<T> & rhs)
+	{
+		bool is_broadcastable = broadcastable(lhs, rhs);
+		if (!is_broadcastable)
+			throw std::runtime_error("The size of tensor a must match the size of tensor b");
+		DimVector lhs_dim = lhs.size();
+		DimVector rhs_dim = rhs.size();
+		auto max_size = std::max(lhs_dim.size(), rhs_dim.size());
+		DimVector result_dim(max_size);
+
+		for (idx_type i = -1; i >= -max_size; --i)
+		{
+			idx_type lhs_size = i >= -lhs_dim.size() ? lhs.size(i) : 1;
+			idx_type rhs_size = i >= -rhs_dim.size() ? rhs.size(i) : 1;
+			result_dim[max_size + i] = std::max(lhs_size, rhs_size);
+		}
+		return result_dim;
+	}
 
     template<class T>
     bool strict_same_shape(const TensorBase<T> &lhs, const TensorBase<T> & rhs)
