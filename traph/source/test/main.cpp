@@ -35,13 +35,14 @@ int main()
 	std::cout << b;
 	*/
 	// auto a = traph::Variable<traph::f32>({ 2, 3 });
+
 	auto a = traph::ones<traph::f32>({ 2,3 });
 	a->requires_grad_(true);
 	auto b = traph::sum<traph::f32>(a);
 
 	b->backward();
 
-	std::cout << b->item();
+	std::cout << a->grad()->to_string();
 
     return 0;
 }

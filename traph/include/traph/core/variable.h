@@ -19,6 +19,7 @@ namespace traph
 
     public:
         virtual void backward() = 0;
+        virtual TensorInterfacePtr data() = 0;
         virtual device_id device() = 0;
         virtual TensorBasePtr<f32> grad() = 0;
         virtual std::shared_ptr<OpBase> grad_fn() = 0;
@@ -55,6 +56,7 @@ namespace traph
         using ByteVariableBase = VariableBase<u8>;
     public:
         virtual void backward() = 0;
+        virtual TensorInterfacePtr data() = 0;
         virtual device_id device() = 0;
         virtual void fill_(T value) = 0;
         virtual TensorBasePtr<f32> grad() = 0;

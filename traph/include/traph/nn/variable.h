@@ -50,6 +50,7 @@ namespace traph
 		friend std::shared_ptr<Variable<T>> sum(std::shared_ptr<Variable<T>> input);
 
         virtual void backward() override;
+        virtual TensorInterfacePtr data() override;
         virtual device_id device() override;
         virtual void fill_(T value) override;
         virtual TensorBasePtr<f32> grad() override;
@@ -174,6 +175,12 @@ namespace traph
 		}
 
 	}
+
+    template<typename T>
+    TensorInterfacePtr Variable<T>::data()
+    {
+        return std::dynamic_pointer_cast<TensorInterface>(_data);
+    }
 
 	template<typename T>
 	device_id Variable<T>::device()
