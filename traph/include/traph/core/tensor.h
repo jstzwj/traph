@@ -15,6 +15,7 @@ namespace traph
     class StorageBase
     {
     public:
+        virtual std::shared_ptr<StorageBase<T>> clone() const = 0;
         virtual T* data_ptr() = 0;
         virtual const T* data_ptr() const = 0;
         virtual size_type element_size() const = 0;
@@ -27,6 +28,7 @@ namespace traph
     class ContiguousStorageBase: public StorageBase<T>
     {
     public:
+        virtual std::shared_ptr<StorageBase<T>> clone() const = 0;
         virtual T* data_ptr() = 0;
         virtual const T* data_ptr() const = 0;
         virtual size_type element_size() const = 0;
@@ -47,6 +49,7 @@ namespace traph
 
     public:
         virtual void add_(TensorInterfacePtr other) = 0;
+        virtual TensorInterfacePtr clone() const = 0;
         virtual void cos_() = 0;
         virtual std::shared_ptr<TensorBase<f32>> create_grad() = 0;
         virtual device_id device() = 0;
@@ -86,6 +89,7 @@ namespace traph
     public:
         virtual void add_(TensorInterfacePtr other) = 0;
         virtual void apply_(std::function<T(T)> f) = 0;
+        virtual TensorInterfacePtr clone() const = 0;
         virtual void cos_() = 0;
         virtual std::shared_ptr<TensorBase<f32>> create_grad() = 0;
         virtual T* data_ptr() = 0;

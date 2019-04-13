@@ -14,10 +14,14 @@ namespace traph
             {
                 std::vector<VariableInterfacePtr> cur_inputs = (*it)->inputs();
 				std::vector<VariableInterface*> cur_raw_inputs;
+
+				std::set<VariableInterface*> sorted_cur_raw_inputs(cur_raw_inputs.begin(), cur_raw_inputs.end());
+				std::set<VariableInterface*> sorted_visited_nodes(visited_nodes.begin(), visited_nodes.end());
+
 				for (auto &each : cur_inputs)
 					cur_raw_inputs.push_back(each.get());
                 std::vector<VariableInterface*> cur_inputs_no_visited;
-                std::set_difference(cur_raw_inputs.begin(), cur_raw_inputs.end(), visited_nodes.begin(), visited_nodes.end(),
+                std::set_difference(sorted_cur_raw_inputs.begin(), sorted_cur_raw_inputs.end(), sorted_visited_nodes.begin(), sorted_visited_nodes.end(),
                         std::inserter(cur_inputs_no_visited, cur_inputs_no_visited.begin()));
                 if(cur_inputs_no_visited.empty())
                 {

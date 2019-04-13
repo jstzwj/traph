@@ -64,6 +64,15 @@ namespace traph
             return *this;
         }
 
+        virtual std::shared_ptr<StorageBase<T>> clone() const override
+        {
+            std::shared_ptr<TensorStorage<T>> cloned_storage(new TensorStorage<T>);
+            cloned_storage->data = std::unique_ptr<T[]>(new T[len]);
+            std::memcpy(cloned_storage->data.get(), data.get(), len * sizeof(T));
+            cloned_storage->len = len;
+
+            return std::dynamic_pointer_cast<StorageBase<T>>(cloned_storage);
+        }
         virtual T* data_ptr() override {return data.get();}
         virtual const T* data_ptr() const override {return data.get();}
         virtual idx_type size() const override {return len;}
@@ -101,8 +110,6 @@ namespace traph
         idx_type _offset;
 		DimVector _strides;
         layout_type _order;
-
-        bool _requires_grad;
     public:
         using TensorPtr = std::shared_ptr<Tensor<T>>;
         using TensorRef = Tensor<T>&;
@@ -135,6 +142,7 @@ namespace traph
 
         virtual void add_(TensorInterfacePtr other) override;
         virtual void apply_(std::function<T(T)> f) override;
+        virtual TensorInterfacePtr clone() const override;
         virtual void cos_() override;
         virtual std::shared_ptr<TensorBase<f32>> create_grad() override;
         virtual T* data_ptr() override;
@@ -274,7 +282,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor()
         :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
+        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major)
     {
     }
 
@@ -282,7 +290,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major), _requires_grad(false)
+        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major)
     {
         auto_strides();
         
@@ -292,7 +300,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions, layout_type order)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(order), _requires_grad(false)
+        _dimensions(dimensions), _offset(0), _strides(), _order(order)
     {
         auto_strides();
 
@@ -302,7 +310,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major), _requires_grad(false)
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major)
     {
         auto_strides();
 
@@ -312,7 +320,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(order), _requires_grad(false)
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(order)
     {
         auto_strides();
 
@@ -322,7 +330,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const T& t)
         :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), strides(), _order(order), _requires_grad(false)
+        _dimensions(), _offset(0), strides(), _order(order)
     {
         _dimensions.resize(1);
         auto_strides();
@@ -371,6 +379,18 @@ namespace traph
     void Tensor<T>::apply_(std::function<T(T)> f)
     {
         apply_impl(0, _offset, f);
+    }
+    template<typename T>
+    TensorInterfacePtr Tensor<T>::clone() const
+    {
+        std::shared_ptr<Tensor<T>> cloned_tensor(new Tensor<T>);
+        cloned_tensor->_rep = std::dynamic_pointer_cast<TensorStorage<T>>(_rep->clone());
+        cloned_tensor->_dimensions = _dimensions;
+        cloned_tensor->_offset = _offset;
+        cloned_tensor->_strides = _strides;
+        cloned_tensor->_order = _order;
+        
+        return cloned_tensor;
     }
     template<typename T>
     void Tensor<T>::cos_()

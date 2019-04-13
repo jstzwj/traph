@@ -38,9 +38,11 @@ int main()
 
 	auto a = traph::ones<traph::f32>({ 2,3 });
 	a->requires_grad_(true);
-	auto b = traph::sum<traph::f32>(a);
+	auto b = traph::ones<traph::f32>({ 2,3 });
+	auto c = traph::add<traph::f32>(a, b);
+	auto d = traph::sum<traph::f32>(c);
 
-	b->backward();
+	d->backward();
 
 	std::cout << a->grad()->to_string();
 

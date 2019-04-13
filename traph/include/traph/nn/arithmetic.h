@@ -40,6 +40,32 @@ namespace traph
         return result;
     }
 
+	template<class T>
+	VariablePtr<T> add(VariablePtr<T> left, VariablePtr<T> right)
+	{
+		VariablePtr<T> result(new Variable<T>);
+		std::shared_ptr<AddOp> op(new AddOp);
+		if (left->_requires_grad || right->_requires_grad)
+		{
+			std::vector<VariableInterfacePtr> result_inputs{ left, right };
+			result->_data = std::dynamic_pointer_cast<TensorBase<T>>(op->forward({ left->_data, right->_data }));
+			result->_grad = result->_data->create_grad();
+			result->_grad->fill_(0);
+			result->_requires_grad = true;
+			result->_leaf = false;
+			result->_grad_fn = op;
+			result->_inputs = result_inputs;
+		}
+		else
+		{
+			result->_data = std::dynamic_pointer_cast<TensorBase<T>>(op->forward({ left->_data, right->_data }));
+			result->_requires_grad = false;
+			result->_leaf = false;
+		}
+
+		return result;
+	}
+
 }
 
 #endif

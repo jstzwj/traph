@@ -49,6 +49,9 @@ namespace traph
 		template<class T>
 		friend std::shared_ptr<Variable<T>> sum(std::shared_ptr<Variable<T>> input);
 
+		template<class T>
+		friend std::shared_ptr<Variable<T>> add(std::shared_ptr<Variable<T>> left, std::shared_ptr<Variable<T>> right);
+
         virtual void backward() override;
         virtual TensorInterfacePtr data() override;
         virtual device_id device() override;
@@ -130,6 +133,7 @@ namespace traph
 			_requires_grad = true;
 
 			_grad = _data->create_grad();
+			_grad->fill_(0);
 		}
 	}
 
@@ -155,6 +159,7 @@ namespace traph
 
 	}
 
+	// fixme: remove no requires_grad
 	template<typename T>
 	void Variable<T>::backward()
 	{
@@ -167,7 +172,7 @@ namespace traph
 			if (cur_node->is_leaf()) continue;
 			std::vector<TensorBasePtr<f32>> back_grad = cur_node->grad_fn()->backward(cur_node->grad());
 
-			assert(back_grad.size() == _inputs.size());
+			assert(back_grad.size() == cur_node->inputs().size());
 			for (int i = 0; i < cur_node->inputs().size(); ++i)
 			{
 				cur_node->inputs()[i]->grad()->add_(back_grad[i]);

@@ -33,6 +33,17 @@ namespace traph
         vulkan,
         opengl
     };
+
+    enum dtype
+    {
+        BYTE,
+        CHAR,
+        SHORT,
+        INT,
+        LONG,
+        FLOAT,
+        DOUBLE
+    };
 }
 
 #endif
