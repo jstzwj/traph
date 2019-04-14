@@ -79,6 +79,28 @@ namespace traph
 			return { output_grad, output_grad };
 		}
 	};
+
+	class SinOp : public OpBase
+	{
+	public:
+		virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) override
+		{
+			assert(inputs.size() == 1);
+
+			TensorInterfacePtr input = inputs[0];
+			TensorInterfacePtr result = input->clone();
+			result->sin_();
+
+			return result;
+		}
+
+		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
+		{
+			TensorBasePtr<f32> result = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->clone());
+			result->cos_();
+			return { result };
+		}
+	};
 }
 
 #endif

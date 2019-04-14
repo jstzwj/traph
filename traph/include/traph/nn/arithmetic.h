@@ -66,6 +66,32 @@ namespace traph
 		return result;
 	}
 
+	template<class T>
+	VariablePtr<T> sin(VariablePtr<T> input)
+	{
+		VariablePtr<T> result(new Variable<T>);
+		std::shared_ptr<SinOp> op(new SinOp);
+
+		std::vector<VariableInterfacePtr> result_inputs{ input };
+		result->_data = std::dynamic_pointer_cast<TensorBase<T>>(op->forward({ input->_data }));
+		result->_leaf = false;
+
+		if (input->requires_grad())
+		{
+			result->_grad = result->_data->create_grad();
+			result->_grad->fill_(0);
+			result->_requires_grad = true;
+			result->_grad_fn = op;
+			result->_inputs = result_inputs;
+		}
+		else
+		{
+			result->_requires_grad = false;
+		}
+
+		return result;
+	}
+
 }
 
 #endif

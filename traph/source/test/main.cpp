@@ -36,13 +36,15 @@ int main()
 	*/
 	// auto a = traph::Variable<traph::f32>({ 2, 3 });
 
-	auto a = traph::ones<traph::f32>({ 2,3 });
+	auto a = traph::ones<traph::f32>({ 2,3,2 });
 	a->requires_grad_(true);
-	auto b = traph::ones<traph::f32>({ 2,3 });
-	auto c = traph::add<traph::f32>(a, b);
-	auto d = traph::sum<traph::f32>(c);
+	auto b = traph::sin<traph::f32>(a);
+	auto c = traph::ones<traph::f32>({ 2,3,2 });
+	c->requires_grad_(true);
+	auto d = traph::add<traph::f32>(b, c);
+	auto e = traph::sum<traph::f32>(d);
 
-	d->backward();
+	e->backward();
 
 	std::cout << a->grad()->to_string();
 

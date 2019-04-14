@@ -53,7 +53,8 @@ namespace traph
             std::vector<VariableInterfacePtr>& cur_inputs(cur->inputs());
             for(int i = 0; i<cur_inputs.size(); ++i)
             {
-                variable_queue.push_back(cur_inputs[i].get());
+                if(cur_inputs[i]->requires_grad())
+                    variable_queue.push_back(cur_inputs[i].get());
             }
         }
 
