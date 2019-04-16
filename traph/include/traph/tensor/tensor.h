@@ -14,106 +14,31 @@
 #include<traph/core/utils.h>
 #include<traph/core/tensor.h>
 
+#include<traph/tensor/tensor_storage.h>
+
 namespace traph
 {
-    // The real representation of all tensors.
-    template<typename T>
-    class TensorStorage: public ContiguousStorageBase<T>
-    {
-    public:
-        using DoubleStorage = TensorStorage<f64>;
-        using FloatStorage = TensorStorage<f32>;
-        using LongStorage = TensorStorage<i64>;
-        using IntStorage = TensorStorage<i32>;
-        using ShortStorage = TensorStorage<i16>;
-        using CharStorage = TensorStorage<i8>;
-        using ByteStorage = TensorStorage<u8>;
-    public:
-        std::unique_ptr<T[]> data;
-        idx_type len;
-        TensorStorage()
-            :data(nullptr), len(0)
-        {
-        }
-
-        TensorStorage(const TensorStorage& other)
-            :data(new T[other.len]), len(other.len)
-        {
-            std::memcpy(data.get(), other.data.get(), other.len * sizeof(T));
-        }
-
-        TensorStorage(TensorStorage&& other)
-            :data(std::move(other.data)), len(other.len)
-        {
-        }
-
-        TensorStorage& operator=(const TensorStorage& other)
-        {
-            data = std::make_unique(new T[other.len]);
-            std::memcpy(data.get(), other.data.get(), other.len * sizeof(T));
-            len = other.len;
-
-            return *this;
-        }
-
-        TensorStorage& operator=(TensorStorage&& other)
-        {
-            data = std::move(other.data);
-            len = other.len;
-
-            return *this;
-        }
-
-        virtual std::shared_ptr<StorageBase<T>> clone() const override
-        {
-            std::shared_ptr<TensorStorage<T>> cloned_storage(new TensorStorage<T>);
-            cloned_storage->data = std::unique_ptr<T[]>(new T[len]);
-            std::memcpy(cloned_storage->data.get(), data.get(), len * sizeof(T));
-            cloned_storage->len = len;
-
-            return std::dynamic_pointer_cast<StorageBase<T>>(cloned_storage);
-        }
-        virtual T* data_ptr() override {return data.get();}
-        virtual const T* data_ptr() const override {return data.get();}
-        virtual idx_type size() const override {return len;}
-        virtual size_type element_size() const override {return sizeof(T);}
-
-        virtual void resize_(idx_type size) override
-        {
-            if(size < 0 || size == len)
-                return;
-            idx_type move_size = (size > len ? len: size);
-            std::unique_ptr<T[]> temp(new T[size]);
-            std::memcpy(temp.get(), data.get(), move_size * sizeof(T));
-            data = std::move(temp);
-
-            len = size;
-        }
-
-        // fill
-        virtual void fill_(T v) override
-        {
-            for(idx_type i = 0; i < size(); ++i)
-            {
-                data[i] = v;
-            }
-        }
-    };
-
     // ndarray
     template<typename T>
     class Tensor: public TensorBase<T>
     {
+    public:
+        using value_type = T;
+        using self_type = Tensor<T>;
+        using base_type = TensorBase<T>;
+        using storage_type = TensorStorage<value_type>;
+
+        using raw_pointer = self_type*;
+        using raw_const_pointer = const self_type*;
+        using shared_pointer = std::shared_ptr<self_type>;
+        using reference = self_type&;
+        using const_reference = const self_type&;
     private:
         std::shared_ptr<TensorStorage<T>> _rep;
         DimVector _dimensions;
         idx_type _offset;
 		DimVector _strides;
         layout_type _order;
-    public:
-        using TensorPtr = std::shared_ptr<Tensor<T>>;
-        using TensorRef = Tensor<T>&;
-        using TensorConstRef = const Tensor<T>&;
 
     private:
         void auto_strides();
@@ -174,6 +99,13 @@ namespace traph
     using ShortTensor = Tensor<i16>;
     using CharTensor = Tensor<i8>;
     using ByteTensor = Tensor<u8>;
+
+	template<typename T>
+	using TensorPtr = std::shared_ptr<Tensor<T>>;
+	template<typename T>
+	using TensorRef = Tensor<T> &;
+	template<typename T>
+	using TensorConstRef = const Tensor<T>&;
 
 	// definition
     // private
@@ -449,8 +381,8 @@ namespace traph
     {
         DimVector reduced_dim = _dimensions;
         reduced_dim.erase(dim); // check dim?
-        TensorBasePtr result(new Tensor<T>(reduced_dim));
-        TensorPtr raw_result = std::dynamic_pointer_cast<Tensor<T>>(result);
+        TensorBasePtr<T> result(new Tensor<T>(reduced_dim));
+        TensorPtr<T> raw_result = std::dynamic_pointer_cast<Tensor<T>>(result);
         reduce_dim_impl(*(raw_result.get()), 0, dim, _offset, raw_result->_offset, f);
         return std::dynamic_pointer_cast<TensorInterface>(result);
     }
@@ -505,7 +437,7 @@ namespace traph
         DimVector d(1);
         d[0] = 1;
 
-        TensorPtr result(new Tensor<T>(d));
+        TensorPtr<T> result(new Tensor<T>(d));
         result->_rep->data[0] = reduce_([](T a, T b)->T {return a + b; });
         return std::dynamic_pointer_cast<TensorInterface>(result);
     }

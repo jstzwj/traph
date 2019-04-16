@@ -8,48 +8,27 @@
 #include <traph/core/type.h>
 #include <traph/core/index.h>
 
+#include <traph/core/tensor_storage.h>
 
 namespace traph
 {
-    template<class T>
-    class StorageBase
-    {
-    public:
-        virtual std::shared_ptr<StorageBase<T>> clone() const = 0;
-        virtual T* data_ptr() = 0;
-        virtual const T* data_ptr() const = 0;
-        virtual size_type element_size() const = 0;
-        virtual void fill_(T v) = 0;
-        virtual void resize_(idx_type size) = 0;
-        virtual idx_type size() const = 0;
-    };
-
-    template<class T>
-    class ContiguousStorageBase: public StorageBase<T>
-    {
-    public:
-        virtual std::shared_ptr<StorageBase<T>> clone() const = 0;
-        virtual T* data_ptr() = 0;
-        virtual const T* data_ptr() const = 0;
-        virtual size_type element_size() const = 0;
-        virtual void fill_(T v) = 0;
-        virtual void resize_(idx_type size) = 0;
-        virtual idx_type size() const = 0;
-    };
-
 	template<class T>
 	class TensorBase;
 
     class TensorInterface
     {
     public:
-        using TensorInterfacePtr = std::shared_ptr<TensorInterface>;
-        using TensorInterfaceRef = TensorInterface&;
-        using TensorInterfaceConstRef = const TensorInterface&;
+        using self_type = TensorInterface;
+
+        using raw_pointer = self_type*;
+        using raw_const_pointer = const self_type*;
+        using shared_pointer = std::shared_ptr<self_type>;
+        using reference = self_type&;
+        using const_reference = const self_type&;
 
     public:
-        virtual void add_(TensorInterfacePtr other) = 0;
-        virtual TensorInterfacePtr clone() const = 0;
+        virtual void add_(shared_pointer other) = 0;
+        virtual shared_pointer clone() const = 0;
         virtual void cos_() = 0;
         virtual std::shared_ptr<TensorBase<f32>> create_grad() = 0;
         virtual device_id device() = 0;
@@ -63,7 +42,7 @@ namespace traph
 		virtual idx_type size(idx_type i) const = 0;
 		virtual DimVector stride() const = 0;
 		virtual idx_type stride(idx_type i) const = 0;
-        virtual TensorInterfacePtr sum() const = 0;
+        virtual shared_pointer sum() const = 0;
         virtual std::string to_string() const = 0;
     };
 
@@ -75,17 +54,16 @@ namespace traph
     class TensorBase: public TensorInterface
     {
     public:
-        using TensorBasePtr = std::shared_ptr<TensorBase<T>>;
-        using TensorBaseRef = TensorBase<T>&;
-        using TensorBaseConstRef = const TensorBase<T>&;
+        using value_type = T;
+        using self_type = TensorBase<T>;
+        using base_type = TensorInterface;
 
-        using DoubleTensorBase = TensorBase<f64>;
-        using FloatTensorBase = TensorBase<f32>;
-        using LongTensorBase = TensorBase<i64>;
-        using IntTensorBase = TensorBase<i32>;
-        using ShortTensorBase = TensorBase<i16>;
-        using CharTensorBase = TensorBase<i8>;
-        using ByteTensorBase = TensorBase<u8>;
+        using raw_pointer = self_type*;
+        using raw_const_pointer = const self_type*;
+        using shared_pointer = std::shared_ptr<self_type>;
+        using reference = self_type&;
+        using const_reference = const self_type&;
+        
     public:
         virtual void add_(TensorInterfacePtr other) = 0;
         virtual void apply_(std::function<T(T)> f) = 0;
@@ -113,6 +91,14 @@ namespace traph
         virtual TensorInterfacePtr sum() const = 0;
         virtual std::string to_string() const = 0;
     };
+
+    using DoubleTensorBase = TensorBase<f64>;
+    using FloatTensorBase = TensorBase<f32>;
+    using LongTensorBase = TensorBase<i64>;
+    using IntTensorBase = TensorBase<i32>;
+    using ShortTensorBase = TensorBase<i16>;
+    using CharTensorBase = TensorBase<i8>;
+    using ByteTensorBase = TensorBase<u8>;
 
     template<class T>
     using TensorBasePtr = std::shared_ptr<TensorBase<T>>;
