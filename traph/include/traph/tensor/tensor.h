@@ -83,6 +83,7 @@ namespace traph
         virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override;
         virtual void reshape_(const DimVector& dims) override;
         virtual void resize_(const DimVector& dims) override;
+        virtual std::shared_ptr<TensorInterface> select(const SliceVector& slice) const override;
         virtual void sin_() override;
 		virtual DimVector size() const override;
 		virtual idx_type size(idx_type i) const override;
@@ -400,9 +401,46 @@ namespace traph
         auto_strides();
     }
     template<typename T>
+    std::shared_ptr<TensorInterface> Tensor<T>::select(const SliceVector& slice) const
+    {
+        std::shared_ptr<Tensor<T>> result(new Tensor<T>);
+        result->_rep = _rep;
+        auto compute_offset = [](){
+
+        };
+
+        // dimension
+        DimVector dim;
+        for(auto& each:slice)
+        {
+            dim.push_back(std::ceil((each.end - each.start)/(float)each.step));
+        }
+        result->_dimensions = dim;
+
+        // offset
+        idx_type new_offset =1;
+        for(idx_type i = 0; i < slice.size(); ++i)
+        {
+            new_offset *= _strides[i] * slice[i].start;
+        }
+        result->_offset = _offset + new_offset;
+
+        // strides
+        DimVector strides;
+        for(idx_type i = 0; i < slice.size(); ++i)
+        {
+            strides.push_back(_strides[i] * slice[i].step);
+        }
+        result->_strides = strides;
+
+        result->_order = _order;
+
+        return std::dynamic_pointer_cast<TensorInterface>(result);
+    }
+    template<typename T>
     void Tensor<T>::sin_()
     {
-        apply_([](T a)->T {return std::sin(a); });
+        apply_([](T a)->T { return std::sin(a); });
     }
     template<typename T>
     DimVector Tensor<T>::size() const { return _dimensions;}

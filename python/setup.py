@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name = "pytraph",
     version = "0.0.1",
-    keywords = ("pip", "deep learning"),
+    keywords = ["pip", "deep learning"],
     description = "Deep learning framework",
     long_description = "Deep learning framework",
     license = "MIT Licence",

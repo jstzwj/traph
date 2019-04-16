@@ -7,6 +7,7 @@
 
 #include <traph/core/type.h>
 #include <traph/core/index.h>
+#include <traph/core/slice.h>
 
 #include <traph/core/tensor_storage.h>
 
@@ -37,6 +38,7 @@ namespace traph
         virtual platform_type platform() = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;
+        virtual std::shared_ptr<TensorInterface> select(const SliceVector& slice) const = 0;
         virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
 		virtual idx_type size(idx_type i) const = 0;
@@ -82,6 +84,7 @@ namespace traph
         virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;
+        virtual std::shared_ptr<TensorInterface> select(const SliceVector& slice) const = 0;
         virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
 		virtual idx_type size(idx_type i) const = 0;

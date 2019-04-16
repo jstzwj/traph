@@ -1,0 +1,1 @@
+include pytraph/core/_traph_tensor.pyd

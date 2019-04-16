@@ -36,3 +36,6 @@ build/
 .vscode
 *.pyc
 *.pyd
+*.whl
+python/pytraph.egg-info/
+python/dist
