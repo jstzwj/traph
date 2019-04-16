@@ -23,7 +23,7 @@ endif()
 
 
 # languge feature
-set(ENABLE_PYTHON FALSE CACHE BOOL "Language: Python")
+set(ENABLE_PYTHON True CACHE BOOL "Language: Python")
 
 # gpgpu feature
 set(ENABLE_CUDA FALSE CACHE BOOL "Feature: OPENCL")

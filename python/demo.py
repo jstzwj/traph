@@ -1,4 +1,5 @@
-import pytraph as pt
+import pytraph
  
-t = pt.float
-a = pt.zeros(4,2)
+
+a = pytraph.core.tensor.ones((4,2))
+print(a)

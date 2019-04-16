@@ -7,6 +7,7 @@
 #include <functional>
 #include <stdexcept>
 #include <algorithm>
+#include <string>
 
 
 #include<traph/core/type.h>
@@ -262,7 +263,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const T& t)
         :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), strides(), _order(order)
+        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major)
     {
         _dimensions.resize(1);
         auto_strides();

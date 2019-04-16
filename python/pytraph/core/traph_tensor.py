@@ -109,6 +109,9 @@ class DimVector(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def erase(self, idx):
+        return _traph_tensor.DimVector_erase(self, idx)
+
     def push_back(self, idx):
         return _traph_tensor.DimVector_push_back(self, idx)
 
@@ -117,178 +120,13 @@ class DimVector(_object):
 
     def size(self):
         return _traph_tensor.DimVector_size(self)
+
+    def flat_size(self):
+        return _traph_tensor.DimVector_flat_size(self)
     __swig_destroy__ = _traph_tensor.delete_DimVector
     __del__ = lambda self: None
 DimVector_swigregister = _traph_tensor.DimVector_swigregister
 DimVector_swigregister(DimVector)
-
-class ByteTensor(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, ByteTensor, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, ByteTensor, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _traph_tensor.new_ByteTensor(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def reshape(self, dims):
-        return _traph_tensor.ByteTensor_reshape(self, dims)
-
-    def index(self, dims):
-        return _traph_tensor.ByteTensor_index(self, dims)
-    __swig_destroy__ = _traph_tensor.delete_ByteTensor
-    __del__ = lambda self: None
-ByteTensor_swigregister = _traph_tensor.ByteTensor_swigregister
-ByteTensor_swigregister(ByteTensor)
-
-class CharTensor(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, CharTensor, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, CharTensor, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _traph_tensor.new_CharTensor(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def reshape(self, dims):
-        return _traph_tensor.CharTensor_reshape(self, dims)
-
-    def index(self, dims):
-        return _traph_tensor.CharTensor_index(self, dims)
-    __swig_destroy__ = _traph_tensor.delete_CharTensor
-    __del__ = lambda self: None
-CharTensor_swigregister = _traph_tensor.CharTensor_swigregister
-CharTensor_swigregister(CharTensor)
-
-class ShortTensor(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, ShortTensor, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, ShortTensor, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _traph_tensor.new_ShortTensor(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def reshape(self, dims):
-        return _traph_tensor.ShortTensor_reshape(self, dims)
-
-    def index(self, dims):
-        return _traph_tensor.ShortTensor_index(self, dims)
-    __swig_destroy__ = _traph_tensor.delete_ShortTensor
-    __del__ = lambda self: None
-ShortTensor_swigregister = _traph_tensor.ShortTensor_swigregister
-ShortTensor_swigregister(ShortTensor)
-
-class IntTensor(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, IntTensor, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, IntTensor, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _traph_tensor.new_IntTensor(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def reshape(self, dims):
-        return _traph_tensor.IntTensor_reshape(self, dims)
-
-    def index(self, dims):
-        return _traph_tensor.IntTensor_index(self, dims)
-    __swig_destroy__ = _traph_tensor.delete_IntTensor
-    __del__ = lambda self: None
-IntTensor_swigregister = _traph_tensor.IntTensor_swigregister
-IntTensor_swigregister(IntTensor)
-
-class LongTensor(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, LongTensor, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, LongTensor, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _traph_tensor.new_LongTensor(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def reshape(self, dims):
-        return _traph_tensor.LongTensor_reshape(self, dims)
-
-    def index(self, dims):
-        return _traph_tensor.LongTensor_index(self, dims)
-    __swig_destroy__ = _traph_tensor.delete_LongTensor
-    __del__ = lambda self: None
-LongTensor_swigregister = _traph_tensor.LongTensor_swigregister
-LongTensor_swigregister(LongTensor)
-
-class FloatTensor(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, FloatTensor, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, FloatTensor, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _traph_tensor.new_FloatTensor(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def reshape(self, dims):
-        return _traph_tensor.FloatTensor_reshape(self, dims)
-
-    def index(self, dims):
-        return _traph_tensor.FloatTensor_index(self, dims)
-    __swig_destroy__ = _traph_tensor.delete_FloatTensor
-    __del__ = lambda self: None
-FloatTensor_swigregister = _traph_tensor.FloatTensor_swigregister
-FloatTensor_swigregister(FloatTensor)
-
-class DoubleTensor(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, DoubleTensor, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, DoubleTensor, name)
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _traph_tensor.new_DoubleTensor(*args)
-        try:
-            self.this.append(this)
-        except __builtin__.Exception:
-            self.this = this
-
-    def reshape(self, dims):
-        return _traph_tensor.DoubleTensor_reshape(self, dims)
-
-    def index(self, dims):
-        return _traph_tensor.DoubleTensor_index(self, dims)
-    __swig_destroy__ = _traph_tensor.delete_DoubleTensor
-    __del__ = lambda self: None
-DoubleTensor_swigregister = _traph_tensor.DoubleTensor_swigregister
-DoubleTensor_swigregister(DoubleTensor)
 
 class ByteStorage(_object):
     __swig_setmethods__ = {}
@@ -304,6 +142,12 @@ class ByteStorage(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def clone(self):
+        return _traph_tensor.ByteStorage_clone(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.ByteStorage_data_ptr(self, *args)
+
     def size(self):
         return _traph_tensor.ByteStorage_size(self)
 
@@ -312,6 +156,9 @@ class ByteStorage(_object):
 
     def resize_(self, size):
         return _traph_tensor.ByteStorage_resize_(self, size)
+
+    def fill_(self, v):
+        return _traph_tensor.ByteStorage_fill_(self, v)
     __swig_destroy__ = _traph_tensor.delete_ByteStorage
     __del__ = lambda self: None
 ByteStorage_swigregister = _traph_tensor.ByteStorage_swigregister
@@ -331,6 +178,12 @@ class CharStorage(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def clone(self):
+        return _traph_tensor.CharStorage_clone(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.CharStorage_data_ptr(self, *args)
+
     def size(self):
         return _traph_tensor.CharStorage_size(self)
 
@@ -339,6 +192,9 @@ class CharStorage(_object):
 
     def resize_(self, size):
         return _traph_tensor.CharStorage_resize_(self, size)
+
+    def fill_(self, v):
+        return _traph_tensor.CharStorage_fill_(self, v)
     __swig_destroy__ = _traph_tensor.delete_CharStorage
     __del__ = lambda self: None
 CharStorage_swigregister = _traph_tensor.CharStorage_swigregister
@@ -358,6 +214,12 @@ class ShortStorage(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def clone(self):
+        return _traph_tensor.ShortStorage_clone(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.ShortStorage_data_ptr(self, *args)
+
     def size(self):
         return _traph_tensor.ShortStorage_size(self)
 
@@ -366,6 +228,9 @@ class ShortStorage(_object):
 
     def resize_(self, size):
         return _traph_tensor.ShortStorage_resize_(self, size)
+
+    def fill_(self, v):
+        return _traph_tensor.ShortStorage_fill_(self, v)
     __swig_destroy__ = _traph_tensor.delete_ShortStorage
     __del__ = lambda self: None
 ShortStorage_swigregister = _traph_tensor.ShortStorage_swigregister
@@ -385,6 +250,12 @@ class IntStorage(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def clone(self):
+        return _traph_tensor.IntStorage_clone(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.IntStorage_data_ptr(self, *args)
+
     def size(self):
         return _traph_tensor.IntStorage_size(self)
 
@@ -393,6 +264,9 @@ class IntStorage(_object):
 
     def resize_(self, size):
         return _traph_tensor.IntStorage_resize_(self, size)
+
+    def fill_(self, v):
+        return _traph_tensor.IntStorage_fill_(self, v)
     __swig_destroy__ = _traph_tensor.delete_IntStorage
     __del__ = lambda self: None
 IntStorage_swigregister = _traph_tensor.IntStorage_swigregister
@@ -412,6 +286,12 @@ class LongStorage(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def clone(self):
+        return _traph_tensor.LongStorage_clone(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.LongStorage_data_ptr(self, *args)
+
     def size(self):
         return _traph_tensor.LongStorage_size(self)
 
@@ -420,6 +300,9 @@ class LongStorage(_object):
 
     def resize_(self, size):
         return _traph_tensor.LongStorage_resize_(self, size)
+
+    def fill_(self, v):
+        return _traph_tensor.LongStorage_fill_(self, v)
     __swig_destroy__ = _traph_tensor.delete_LongStorage
     __del__ = lambda self: None
 LongStorage_swigregister = _traph_tensor.LongStorage_swigregister
@@ -439,6 +322,12 @@ class FloatStorage(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def clone(self):
+        return _traph_tensor.FloatStorage_clone(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.FloatStorage_data_ptr(self, *args)
+
     def size(self):
         return _traph_tensor.FloatStorage_size(self)
 
@@ -447,6 +336,9 @@ class FloatStorage(_object):
 
     def resize_(self, size):
         return _traph_tensor.FloatStorage_resize_(self, size)
+
+    def fill_(self, v):
+        return _traph_tensor.FloatStorage_fill_(self, v)
     __swig_destroy__ = _traph_tensor.delete_FloatStorage
     __del__ = lambda self: None
 FloatStorage_swigregister = _traph_tensor.FloatStorage_swigregister
@@ -466,6 +358,12 @@ class DoubleStorage(_object):
         except __builtin__.Exception:
             self.this = this
 
+    def clone(self):
+        return _traph_tensor.DoubleStorage_clone(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.DoubleStorage_data_ptr(self, *args)
+
     def size(self):
         return _traph_tensor.DoubleStorage_size(self)
 
@@ -474,10 +372,601 @@ class DoubleStorage(_object):
 
     def resize_(self, size):
         return _traph_tensor.DoubleStorage_resize_(self, size)
+
+    def fill_(self, v):
+        return _traph_tensor.DoubleStorage_fill_(self, v)
     __swig_destroy__ = _traph_tensor.delete_DoubleStorage
     __del__ = lambda self: None
 DoubleStorage_swigregister = _traph_tensor.DoubleStorage_swigregister
 DoubleStorage_swigregister(DoubleStorage)
+
+class ByteTensor(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ByteTensor, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ByteTensor, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        this = _traph_tensor.new_ByteTensor(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def add_(self, other):
+        return _traph_tensor.ByteTensor_add_(self, other)
+
+    def apply_(self, f):
+        return _traph_tensor.ByteTensor_apply_(self, f)
+
+    def clone(self):
+        return _traph_tensor.ByteTensor_clone(self)
+
+    def cos_(self):
+        return _traph_tensor.ByteTensor_cos_(self)
+
+    def create_grad(self):
+        return _traph_tensor.ByteTensor_create_grad(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.ByteTensor_data_ptr(self, *args)
+
+    def device(self):
+        return _traph_tensor.ByteTensor_device(self)
+
+    def fill_(self, value):
+        return _traph_tensor.ByteTensor_fill_(self, value)
+
+    def item(self):
+        return _traph_tensor.ByteTensor_item(self)
+
+    def offset(self):
+        return _traph_tensor.ByteTensor_offset(self)
+
+    def order(self):
+        return _traph_tensor.ByteTensor_order(self)
+
+    def platform(self):
+        return _traph_tensor.ByteTensor_platform(self)
+
+    def reduce_(self, f):
+        return _traph_tensor.ByteTensor_reduce_(self, f)
+
+    def reduce_dim(self, dim, f):
+        return _traph_tensor.ByteTensor_reduce_dim(self, dim, f)
+
+    def reshape_(self, dims):
+        return _traph_tensor.ByteTensor_reshape_(self, dims)
+
+    def resize_(self, dims):
+        return _traph_tensor.ByteTensor_resize_(self, dims)
+
+    def sin_(self):
+        return _traph_tensor.ByteTensor_sin_(self)
+
+    def size(self, *args):
+        return _traph_tensor.ByteTensor_size(self, *args)
+
+    def storage(self):
+        return _traph_tensor.ByteTensor_storage(self)
+
+    def stride(self, *args):
+        return _traph_tensor.ByteTensor_stride(self, *args)
+
+    def sum(self):
+        return _traph_tensor.ByteTensor_sum(self)
+
+    def to_string(self):
+        return _traph_tensor.ByteTensor_to_string(self)
+    __swig_destroy__ = _traph_tensor.delete_ByteTensor
+    __del__ = lambda self: None
+ByteTensor_swigregister = _traph_tensor.ByteTensor_swigregister
+ByteTensor_swigregister(ByteTensor)
+
+class CharTensor(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, CharTensor, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, CharTensor, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        this = _traph_tensor.new_CharTensor(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def add_(self, other):
+        return _traph_tensor.CharTensor_add_(self, other)
+
+    def apply_(self, f):
+        return _traph_tensor.CharTensor_apply_(self, f)
+
+    def clone(self):
+        return _traph_tensor.CharTensor_clone(self)
+
+    def cos_(self):
+        return _traph_tensor.CharTensor_cos_(self)
+
+    def create_grad(self):
+        return _traph_tensor.CharTensor_create_grad(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.CharTensor_data_ptr(self, *args)
+
+    def device(self):
+        return _traph_tensor.CharTensor_device(self)
+
+    def fill_(self, value):
+        return _traph_tensor.CharTensor_fill_(self, value)
+
+    def item(self):
+        return _traph_tensor.CharTensor_item(self)
+
+    def offset(self):
+        return _traph_tensor.CharTensor_offset(self)
+
+    def order(self):
+        return _traph_tensor.CharTensor_order(self)
+
+    def platform(self):
+        return _traph_tensor.CharTensor_platform(self)
+
+    def reduce_(self, f):
+        return _traph_tensor.CharTensor_reduce_(self, f)
+
+    def reduce_dim(self, dim, f):
+        return _traph_tensor.CharTensor_reduce_dim(self, dim, f)
+
+    def reshape_(self, dims):
+        return _traph_tensor.CharTensor_reshape_(self, dims)
+
+    def resize_(self, dims):
+        return _traph_tensor.CharTensor_resize_(self, dims)
+
+    def sin_(self):
+        return _traph_tensor.CharTensor_sin_(self)
+
+    def size(self, *args):
+        return _traph_tensor.CharTensor_size(self, *args)
+
+    def storage(self):
+        return _traph_tensor.CharTensor_storage(self)
+
+    def stride(self, *args):
+        return _traph_tensor.CharTensor_stride(self, *args)
+
+    def sum(self):
+        return _traph_tensor.CharTensor_sum(self)
+
+    def to_string(self):
+        return _traph_tensor.CharTensor_to_string(self)
+    __swig_destroy__ = _traph_tensor.delete_CharTensor
+    __del__ = lambda self: None
+CharTensor_swigregister = _traph_tensor.CharTensor_swigregister
+CharTensor_swigregister(CharTensor)
+
+class ShortTensor(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ShortTensor, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ShortTensor, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        this = _traph_tensor.new_ShortTensor(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def add_(self, other):
+        return _traph_tensor.ShortTensor_add_(self, other)
+
+    def apply_(self, f):
+        return _traph_tensor.ShortTensor_apply_(self, f)
+
+    def clone(self):
+        return _traph_tensor.ShortTensor_clone(self)
+
+    def cos_(self):
+        return _traph_tensor.ShortTensor_cos_(self)
+
+    def create_grad(self):
+        return _traph_tensor.ShortTensor_create_grad(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.ShortTensor_data_ptr(self, *args)
+
+    def device(self):
+        return _traph_tensor.ShortTensor_device(self)
+
+    def fill_(self, value):
+        return _traph_tensor.ShortTensor_fill_(self, value)
+
+    def item(self):
+        return _traph_tensor.ShortTensor_item(self)
+
+    def offset(self):
+        return _traph_tensor.ShortTensor_offset(self)
+
+    def order(self):
+        return _traph_tensor.ShortTensor_order(self)
+
+    def platform(self):
+        return _traph_tensor.ShortTensor_platform(self)
+
+    def reduce_(self, f):
+        return _traph_tensor.ShortTensor_reduce_(self, f)
+
+    def reduce_dim(self, dim, f):
+        return _traph_tensor.ShortTensor_reduce_dim(self, dim, f)
+
+    def reshape_(self, dims):
+        return _traph_tensor.ShortTensor_reshape_(self, dims)
+
+    def resize_(self, dims):
+        return _traph_tensor.ShortTensor_resize_(self, dims)
+
+    def sin_(self):
+        return _traph_tensor.ShortTensor_sin_(self)
+
+    def size(self, *args):
+        return _traph_tensor.ShortTensor_size(self, *args)
+
+    def storage(self):
+        return _traph_tensor.ShortTensor_storage(self)
+
+    def stride(self, *args):
+        return _traph_tensor.ShortTensor_stride(self, *args)
+
+    def sum(self):
+        return _traph_tensor.ShortTensor_sum(self)
+
+    def to_string(self):
+        return _traph_tensor.ShortTensor_to_string(self)
+    __swig_destroy__ = _traph_tensor.delete_ShortTensor
+    __del__ = lambda self: None
+ShortTensor_swigregister = _traph_tensor.ShortTensor_swigregister
+ShortTensor_swigregister(ShortTensor)
+
+class IntTensor(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, IntTensor, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, IntTensor, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        this = _traph_tensor.new_IntTensor(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def add_(self, other):
+        return _traph_tensor.IntTensor_add_(self, other)
+
+    def apply_(self, f):
+        return _traph_tensor.IntTensor_apply_(self, f)
+
+    def clone(self):
+        return _traph_tensor.IntTensor_clone(self)
+
+    def cos_(self):
+        return _traph_tensor.IntTensor_cos_(self)
+
+    def create_grad(self):
+        return _traph_tensor.IntTensor_create_grad(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.IntTensor_data_ptr(self, *args)
+
+    def device(self):
+        return _traph_tensor.IntTensor_device(self)
+
+    def fill_(self, value):
+        return _traph_tensor.IntTensor_fill_(self, value)
+
+    def item(self):
+        return _traph_tensor.IntTensor_item(self)
+
+    def offset(self):
+        return _traph_tensor.IntTensor_offset(self)
+
+    def order(self):
+        return _traph_tensor.IntTensor_order(self)
+
+    def platform(self):
+        return _traph_tensor.IntTensor_platform(self)
+
+    def reduce_(self, f):
+        return _traph_tensor.IntTensor_reduce_(self, f)
+
+    def reduce_dim(self, dim, f):
+        return _traph_tensor.IntTensor_reduce_dim(self, dim, f)
+
+    def reshape_(self, dims):
+        return _traph_tensor.IntTensor_reshape_(self, dims)
+
+    def resize_(self, dims):
+        return _traph_tensor.IntTensor_resize_(self, dims)
+
+    def sin_(self):
+        return _traph_tensor.IntTensor_sin_(self)
+
+    def size(self, *args):
+        return _traph_tensor.IntTensor_size(self, *args)
+
+    def storage(self):
+        return _traph_tensor.IntTensor_storage(self)
+
+    def stride(self, *args):
+        return _traph_tensor.IntTensor_stride(self, *args)
+
+    def sum(self):
+        return _traph_tensor.IntTensor_sum(self)
+
+    def to_string(self):
+        return _traph_tensor.IntTensor_to_string(self)
+    __swig_destroy__ = _traph_tensor.delete_IntTensor
+    __del__ = lambda self: None
+IntTensor_swigregister = _traph_tensor.IntTensor_swigregister
+IntTensor_swigregister(IntTensor)
+
+class LongTensor(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LongTensor, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, LongTensor, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        this = _traph_tensor.new_LongTensor(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def add_(self, other):
+        return _traph_tensor.LongTensor_add_(self, other)
+
+    def apply_(self, f):
+        return _traph_tensor.LongTensor_apply_(self, f)
+
+    def clone(self):
+        return _traph_tensor.LongTensor_clone(self)
+
+    def cos_(self):
+        return _traph_tensor.LongTensor_cos_(self)
+
+    def create_grad(self):
+        return _traph_tensor.LongTensor_create_grad(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.LongTensor_data_ptr(self, *args)
+
+    def device(self):
+        return _traph_tensor.LongTensor_device(self)
+
+    def fill_(self, value):
+        return _traph_tensor.LongTensor_fill_(self, value)
+
+    def item(self):
+        return _traph_tensor.LongTensor_item(self)
+
+    def offset(self):
+        return _traph_tensor.LongTensor_offset(self)
+
+    def order(self):
+        return _traph_tensor.LongTensor_order(self)
+
+    def platform(self):
+        return _traph_tensor.LongTensor_platform(self)
+
+    def reduce_(self, f):
+        return _traph_tensor.LongTensor_reduce_(self, f)
+
+    def reduce_dim(self, dim, f):
+        return _traph_tensor.LongTensor_reduce_dim(self, dim, f)
+
+    def reshape_(self, dims):
+        return _traph_tensor.LongTensor_reshape_(self, dims)
+
+    def resize_(self, dims):
+        return _traph_tensor.LongTensor_resize_(self, dims)
+
+    def sin_(self):
+        return _traph_tensor.LongTensor_sin_(self)
+
+    def size(self, *args):
+        return _traph_tensor.LongTensor_size(self, *args)
+
+    def storage(self):
+        return _traph_tensor.LongTensor_storage(self)
+
+    def stride(self, *args):
+        return _traph_tensor.LongTensor_stride(self, *args)
+
+    def sum(self):
+        return _traph_tensor.LongTensor_sum(self)
+
+    def to_string(self):
+        return _traph_tensor.LongTensor_to_string(self)
+    __swig_destroy__ = _traph_tensor.delete_LongTensor
+    __del__ = lambda self: None
+LongTensor_swigregister = _traph_tensor.LongTensor_swigregister
+LongTensor_swigregister(LongTensor)
+
+class FloatTensor(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FloatTensor, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, FloatTensor, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        this = _traph_tensor.new_FloatTensor(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def add_(self, other):
+        return _traph_tensor.FloatTensor_add_(self, other)
+
+    def apply_(self, f):
+        return _traph_tensor.FloatTensor_apply_(self, f)
+
+    def clone(self):
+        return _traph_tensor.FloatTensor_clone(self)
+
+    def cos_(self):
+        return _traph_tensor.FloatTensor_cos_(self)
+
+    def create_grad(self):
+        return _traph_tensor.FloatTensor_create_grad(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.FloatTensor_data_ptr(self, *args)
+
+    def device(self):
+        return _traph_tensor.FloatTensor_device(self)
+
+    def fill_(self, value):
+        return _traph_tensor.FloatTensor_fill_(self, value)
+
+    def item(self):
+        return _traph_tensor.FloatTensor_item(self)
+
+    def offset(self):
+        return _traph_tensor.FloatTensor_offset(self)
+
+    def order(self):
+        return _traph_tensor.FloatTensor_order(self)
+
+    def platform(self):
+        return _traph_tensor.FloatTensor_platform(self)
+
+    def reduce_(self, f):
+        return _traph_tensor.FloatTensor_reduce_(self, f)
+
+    def reduce_dim(self, dim, f):
+        return _traph_tensor.FloatTensor_reduce_dim(self, dim, f)
+
+    def reshape_(self, dims):
+        return _traph_tensor.FloatTensor_reshape_(self, dims)
+
+    def resize_(self, dims):
+        return _traph_tensor.FloatTensor_resize_(self, dims)
+
+    def sin_(self):
+        return _traph_tensor.FloatTensor_sin_(self)
+
+    def size(self, *args):
+        return _traph_tensor.FloatTensor_size(self, *args)
+
+    def storage(self):
+        return _traph_tensor.FloatTensor_storage(self)
+
+    def stride(self, *args):
+        return _traph_tensor.FloatTensor_stride(self, *args)
+
+    def sum(self):
+        return _traph_tensor.FloatTensor_sum(self)
+
+    def to_string(self):
+        return _traph_tensor.FloatTensor_to_string(self)
+    __swig_destroy__ = _traph_tensor.delete_FloatTensor
+    __del__ = lambda self: None
+FloatTensor_swigregister = _traph_tensor.FloatTensor_swigregister
+FloatTensor_swigregister(FloatTensor)
+
+class DoubleTensor(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, DoubleTensor, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, DoubleTensor, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, *args):
+        this = _traph_tensor.new_DoubleTensor(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def add_(self, other):
+        return _traph_tensor.DoubleTensor_add_(self, other)
+
+    def apply_(self, f):
+        return _traph_tensor.DoubleTensor_apply_(self, f)
+
+    def clone(self):
+        return _traph_tensor.DoubleTensor_clone(self)
+
+    def cos_(self):
+        return _traph_tensor.DoubleTensor_cos_(self)
+
+    def create_grad(self):
+        return _traph_tensor.DoubleTensor_create_grad(self)
+
+    def data_ptr(self, *args):
+        return _traph_tensor.DoubleTensor_data_ptr(self, *args)
+
+    def device(self):
+        return _traph_tensor.DoubleTensor_device(self)
+
+    def fill_(self, value):
+        return _traph_tensor.DoubleTensor_fill_(self, value)
+
+    def item(self):
+        return _traph_tensor.DoubleTensor_item(self)
+
+    def offset(self):
+        return _traph_tensor.DoubleTensor_offset(self)
+
+    def order(self):
+        return _traph_tensor.DoubleTensor_order(self)
+
+    def platform(self):
+        return _traph_tensor.DoubleTensor_platform(self)
+
+    def reduce_(self, f):
+        return _traph_tensor.DoubleTensor_reduce_(self, f)
+
+    def reduce_dim(self, dim, f):
+        return _traph_tensor.DoubleTensor_reduce_dim(self, dim, f)
+
+    def reshape_(self, dims):
+        return _traph_tensor.DoubleTensor_reshape_(self, dims)
+
+    def resize_(self, dims):
+        return _traph_tensor.DoubleTensor_resize_(self, dims)
+
+    def sin_(self):
+        return _traph_tensor.DoubleTensor_sin_(self)
+
+    def size(self, *args):
+        return _traph_tensor.DoubleTensor_size(self, *args)
+
+    def storage(self):
+        return _traph_tensor.DoubleTensor_storage(self)
+
+    def stride(self, *args):
+        return _traph_tensor.DoubleTensor_stride(self, *args)
+
+    def sum(self):
+        return _traph_tensor.DoubleTensor_sum(self)
+
+    def to_string(self):
+        return _traph_tensor.DoubleTensor_to_string(self)
+    __swig_destroy__ = _traph_tensor.delete_DoubleTensor
+    __del__ = lambda self: None
+DoubleTensor_swigregister = _traph_tensor.DoubleTensor_swigregister
+DoubleTensor_swigregister(DoubleTensor)
 
 # This file is compatible with both classic and new-style classes.
 

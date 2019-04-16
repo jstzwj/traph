@@ -1,6 +1,7 @@
 #ifndef TRAPH_TENSOR_TENSOR_STORAGE_H_
 #define TRAPH_TENSOR_TENSOR_STORAGE_H_
 
+#include<traph/core/type.h>
 #include<traph/core/tensor_storage.h>
 
 namespace traph

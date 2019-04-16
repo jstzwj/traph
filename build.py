@@ -7,7 +7,7 @@ import subprocess
 def main(argv):
     system_type = platform.system()
     machine_type = platform.machine()
-    is_debug = True
+    is_debug = False
 
     traph_build = argv[0]
     traph_root, build_file = os.path.split(traph_build)
@@ -16,17 +16,21 @@ def main(argv):
     os.chdir(traph_root + "/build")
     
     if machine_type == 'AMD64':
+        # -DCMAKE_BUILD_TYPE=Debug
         if is_debug:
             subprocess.run("cmake -DCMAKE_BUILD_TYPE=Debug -G \"Visual Studio 15 2017 Win64\" ../")
+            subprocess.run("cmake --build . --config Debug")
         else:
             subprocess.run("cmake -DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 15 2017 Win64\" ../")
-        subprocess.run("cmake --build .")
+            subprocess.run("cmake --build . --config Release")
+        
     elif machine_type == 'x86':
         if is_debug:
             subprocess.run("cmake -DCMAKE_BUILD_TYPE=Debug -G \"Visual Studio 15 2017\" ../")
+            subprocess.run("cmake --build . --config Debug")
         else:
             subprocess.run("cmake -DCMAKE_BUILD_TYPE=Release -G \"Visual Studio 15 2017\" ../")
-        subprocess.run("cmake --build .")
+            subprocess.run("cmake --build . --config Release")
     else:
         print('unsupport machine')
 

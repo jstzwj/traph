@@ -20,5 +20,7 @@ IF(ENABLE_PYTHON)
     SWIG_ADD_LIBRARY(traph_tensor LANGUAGE python SOURCES traph_tensor.i)
     SWIG_LINK_LIBRARIES(traph_tensor ${PYTHON_LIBRARIES})
     SWIG_LINK_LIBRARIES(traph_tensor traph-core)
+    SWIG_LINK_LIBRARIES(traph_tensor traph-tensor)
+    SWIG_LINK_LIBRARIES(traph_tensor traph-nn)
 ENDIF()
 
