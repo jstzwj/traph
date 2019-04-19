@@ -80,6 +80,30 @@ namespace traph
 		}
 	};
 
+	class SelectOp : public OpBase
+	{
+	public:
+		SliceVector slice;
+		void set_slice(const SliceVector& s)
+		{
+			slice = s;
+		}
+		virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) override
+		{
+			assert(inputs.size() == 1);
+
+			TensorInterfacePtr input = inputs[0];
+			
+			return input->select(slice);
+		}
+
+		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
+		{
+			TensorBasePtr<f32> result = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->select(slice));
+			return { result };
+		}
+	};
+
 	class SinOp : public OpBase
 	{
 	public:

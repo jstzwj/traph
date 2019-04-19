@@ -35,7 +35,7 @@ int main()
 	std::cout << b;
 	*/
 	// auto a = traph::Variable<traph::f32>({ 2, 3 });
-
+/*
 	auto a = traph::ones<traph::f32>({ 2,3,2 });
 	a->requires_grad_(true);
 	auto b = traph::sin<traph::f32>(a);
@@ -47,6 +47,11 @@ int main()
 	e->backward();
 
 	std::cout << a->grad()->to_string();
-
+*/
+	auto a = traph::ones<traph::f32>({ 2,3 });
+	traph::SliceVector slice;
+	slice.push_back(traph::Slice(0, 1, 1));
+	slice.push_back(traph::Slice(0, 1, 2));
+	auto b = traph::select(a, slice);
     return 0;
 }

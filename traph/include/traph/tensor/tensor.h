@@ -405,9 +405,6 @@ namespace traph
     {
         std::shared_ptr<Tensor<T>> result(new Tensor<T>);
         result->_rep = _rep;
-        auto compute_offset = [](){
-
-        };
 
         // dimension
         DimVector dim;

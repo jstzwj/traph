@@ -37,6 +37,11 @@ namespace traph
         idx_type start;
         idx_type step;
         idx_type end;
+
+		Slice(idx_type start, idx_type step, idx_type end)
+			:start(start), step(step), end(end)
+		{
+		}
     };
 
     using SliceVector = std::vector<Slice>;

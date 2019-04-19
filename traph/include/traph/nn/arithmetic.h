@@ -66,6 +66,35 @@ namespace traph
 		return result;
 	}
 
+	
+	template<class T>
+	VariablePtr<T> select(VariablePtr<T> input, const SliceVector& slice)
+	{
+		VariablePtr<T> result(new Variable<T>);
+		std::shared_ptr<SelectOp> op(new SelectOp);
+		op->set_slice(slice);
+
+		std::vector<VariableInterfacePtr> result_inputs{ input };
+		result->_data = std::dynamic_pointer_cast<TensorBase<T>>(op->forward({ input->_data }));
+		result->_leaf = false;
+
+		if (input->requires_grad())
+		{
+			result->_grad = result->_data->create_grad();
+			result->_grad->fill_(0);
+			result->_requires_grad = true;
+			result->_grad_fn = op;
+			result->_inputs = result_inputs;
+		}
+		else
+		{
+			result->_requires_grad = false;
+		}
+
+		return result;
+	}
+
+
 	template<class T>
 	VariablePtr<T> sin(VariablePtr<T> input)
 	{

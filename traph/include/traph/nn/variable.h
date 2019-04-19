@@ -53,6 +53,9 @@ namespace traph
 		friend std::shared_ptr<Variable<T>> add(std::shared_ptr<Variable<T>> left, std::shared_ptr<Variable<T>> right);
 
 		template<class T>
+		friend std::shared_ptr<Variable<T>> select(std::shared_ptr<Variable<T>> input, const SliceVector& slice);
+
+		template<class T>
 		friend std::shared_ptr<Variable<T>> sin(std::shared_ptr<Variable<T>> input);
 
         virtual void backward() override;
@@ -310,7 +313,7 @@ namespace traph
 		for (auto i : l)
 			dim.push_back(i);
 
-        std::shared_ptr<Variable<T>> result(new Variable<T>(dim, true));
+        std::shared_ptr<Variable<T>> result(new Variable<T>(dim, false));
         result->fill_(0);
 
         return result;
@@ -323,7 +326,7 @@ namespace traph
 		for (auto i : l)
 			dim.push_back(i);
 
-        std::shared_ptr<Variable<T>> result(new Variable<T>(dim, true));
+        std::shared_ptr<Variable<T>> result(new Variable<T>(dim, false));
         result->fill_(1);
 
         return result;
