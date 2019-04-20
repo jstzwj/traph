@@ -408,9 +408,12 @@ namespace traph
 
         // dimension
         DimVector dim;
-        for(auto& each:slice)
+        for(idx_type i = 0; i<slice.size(); ++i)
         {
-            dim.push_back(std::ceil((each.end - each.start)/(float)each.step));
+			auto& each = slice[i];
+            dim.push_back(
+				std::ceil((each.end.value_or(_dimensions[i]) - each.start.value_or(0))/(float)each.step.value_or(1))
+			);
         }
         result->_dimensions = dim;
 
@@ -418,7 +421,7 @@ namespace traph
         idx_type new_offset =1;
         for(idx_type i = 0; i < slice.size(); ++i)
         {
-            new_offset *= _strides[i] * slice[i].start;
+            new_offset *= _strides[i] * slice[i].start.value_or(0);
         }
         result->_offset = _offset + new_offset;
 
@@ -426,7 +429,7 @@ namespace traph
         DimVector strides;
         for(idx_type i = 0; i < slice.size(); ++i)
         {
-            strides.push_back(_strides[i] * slice[i].step);
+            strides.push_back(_strides[i] * slice[i].step.value_or(1));
         }
         result->_strides = strides;
 

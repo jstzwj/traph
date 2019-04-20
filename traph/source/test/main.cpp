@@ -53,5 +53,6 @@ int main()
 	slice.push_back(traph::Slice(0, 1, 1));
 	slice.push_back(traph::Slice(0, 1, 2));
 	auto b = traph::select(a, slice);
+	std::cout << b->data()->to_string();
     return 0;
 }

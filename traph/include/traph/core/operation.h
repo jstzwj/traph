@@ -93,14 +93,23 @@ namespace traph
 			assert(inputs.size() == 1);
 
 			TensorInterfacePtr input = inputs[0];
+			auto grad = input->create_grad();
+			grad->fill_(0);
+			auto zero_grad = std::dynamic_pointer_cast<TensorInterface>(grad);
+
+			context.save(zero_grad);
 			
 			return input->select(slice);
 		}
 
 		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
 		{
-			TensorBasePtr<f32> result = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->select(slice));
-			return { result };
+			auto saved_tensors = context.get_saved_tensors();
+			assert(saved_tensors.size() == 1);
+			auto grad = std::dynamic_pointer_cast<TensorBase<f32>>(saved_tensors[0]);
+			auto selected_grad = std::dynamic_pointer_cast<TensorBase<f32>>(grad->select(slice));
+			selected_grad->add_(output_grad);
+			return { grad };
 		}
 	};
 
