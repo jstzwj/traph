@@ -16,6 +16,11 @@ SET(TRAPH_PATH_HEADER ${TRAPH_PATH_INCLUDE}/traph CACHE STRING "Adds a path to T
 SET(TRAPH_PATH_SOURCE ${TRAPH_PATH}/traph/source CACHE STRING "Adds a path to TRAPH source" FORCE)
 SET(TRAPH_PATH_DEPENDENCIES ${TRAPH_PATH}/traph/contrib CACHE STRING "Adds a path to TRAPH dependencies" FORCE)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+
 find_package(Boost)
 if(Boost_FOUND)
 	message(STATUS Boost found: ${Boost_INCLUDE_DIRS})

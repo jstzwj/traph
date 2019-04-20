@@ -15,6 +15,24 @@ class Tensor(object):
         else:
             return "None"
 
+    def __getitem__(self, given):
+        slice_vector = pytraph.core.traph_tensor.SliceVector()
+        if isinstance(given, slice):
+            slice_vector.push_back(pytraph.core.traph_tensor.Slice(given.start, given.step, given.stop))
+        elif isinstance(given, tuple):
+            for each_slice in given:
+                if isinstance(given, slice):
+                    slice_vector.push_back(pytraph.core.traph_tensor.Slice(each_slice.start, each_slice.step, each_slice.stop))
+                else:
+                    slice_vector.push_back(pytraph.core.traph_tensor.Slice(each_slice, 1, each_slice+1))
+        else:
+            slice_vector.push_back(pytraph.core.traph_tensor.Slice(given, 1, given+1))
+
+        return self._inner_tensor.select(slice_vector)
+
+    def __setitem__(self,key,value):
+        self.dict[key] = value
+
 class FloatTensor(Tensor):
     def __init__(self):
         self._inner_tensor = pytraph.core.traph_tensor.FloatTensor()

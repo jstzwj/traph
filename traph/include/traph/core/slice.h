@@ -2,6 +2,7 @@
 #define TRAPH_TENSOR_SLICE_H_
 
 #include <vector>
+#include <optional>
 
 #include <traph/core/type.h>
 #include <traph/core/index.h>
@@ -12,9 +13,9 @@ namespace traph
     class BasicSlice
     {
     public:
-        idx_type start;
-        idx_type step;
-        idx_type end;
+        std::optional<idx_type> start;
+		std::optional<idx_type> step;
+		std::optional<idx_type> end;
     };
 
     /*
@@ -34,12 +35,22 @@ namespace traph
     class Slice
     {
     public:
-        idx_type start;
-        idx_type step;
-        idx_type end;
+		std::optional<idx_type> start;
+		std::optional<idx_type> step;
+		std::optional<idx_type> end;
 
-		Slice(idx_type start, idx_type step, idx_type end)
-			:start(start), step(step), end(end)
+        Slice()
+			:start(), step(), end()
+		{
+		}
+
+        Slice(idx_type start, idx_type end)
+			:start(start), step(), end(end)
+		{
+		}
+
+		Slice(idx_type start, idx_type end, idx_type step)
+			:start(start), end(end), step(step)
 		{
 		}
     };

@@ -6,16 +6,25 @@
 #endif
 %}
 
+%include "std_vector.i"
+
+namespace std {
+  %template(IntVector) vector<int>;
+  %template(DoubleVector) vector<double>;
+};
+
 %{
     #include <string>
-    #include<traph/core/type.h>
-    #include<traph/core/index.h>
-    #include<traph/tensor/tensor.h>
-    #include<traph/tensor/tensor_storage.h>
+    #include <traph/core/type.h>
+    #include <traph/core/index.h>
+    #include <traph/core/slice.h>
+    #include <traph/tensor/tensor.h>
+    #include <traph/tensor/tensor_storage.h>
     
     using namespace traph;
 %}
 
+%template(SliceVector) std::vector<Slice>;
 
 typedef float f32;
 typedef double f64;
