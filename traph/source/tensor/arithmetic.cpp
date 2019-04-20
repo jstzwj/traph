@@ -17,6 +17,7 @@
 
 namespace traph
 {
+	/*
 	Tensor<f32> add(const Tensor<f32> &t, f32 v)
 	{
 		Tensor<f32> result(t.size());
@@ -48,6 +49,7 @@ namespace traph
 #endif
 		return result;
 	}
+	*/
 
 	Tensor<u8> matmul(const Tensor<u8> &a, const Tensor<u8> &b)
 	{

@@ -76,6 +76,7 @@ namespace traph
         virtual device_id device() override;
         virtual void fill_(T value) override;
         virtual T item() const override;
+        virtual std::shared_ptr<TensorInterface> matmul() const override;
 		virtual idx_type offset() const override;
 		virtual layout_type order() const override;
         virtual platform_type platform() override;
@@ -364,6 +365,11 @@ namespace traph
         {
             throw std::runtime_error("item: only one element tensors can be converted to scalars");
         }
+    }
+    template<typename T>
+    std::shared_ptr<TensorInterface> Tensor<T>::matmul() const
+    {
+
     }
     template<typename T>
     idx_type Tensor<T>::offset() const { return _offset; }
