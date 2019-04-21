@@ -3,6 +3,7 @@
 
 #include <initializer_list>
 #include <cmath>
+#include <cfenv>
 #include <memory>
 #include <functional>
 #include <stdexcept>
@@ -16,6 +17,7 @@
 #include<traph/core/tensor.h>
 
 #include<traph/tensor/tensor_storage.h>
+#include<traph/tensor/arithmetic.h>
 
 namespace traph
 {
@@ -75,8 +77,9 @@ namespace traph
         virtual const T* data_ptr() const override;
         virtual device_id device() override;
         virtual void fill_(T value) override;
+        virtual std::shared_ptr<TensorInterface> inverse() const override;
         virtual T item() const override;
-        virtual std::shared_ptr<TensorInterface> matmul() const override;
+        virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const override;
 		virtual idx_type offset() const override;
 		virtual layout_type order() const override;
         virtual platform_type platform() override;
@@ -354,6 +357,13 @@ namespace traph
     {
         apply_([&value](T a)->T {return value; });
     }
+
+    template<typename T>
+    std::shared_ptr<TensorInterface> Tensor<T>::inverse() const
+    {
+        return std::dynamic_pointer_cast<TensorInterface>(inverse_impl(*this);
+    }
+
     template<typename T>
     T Tensor<T>::item() const
     {
@@ -367,9 +377,10 @@ namespace traph
         }
     }
     template<typename T>
-    std::shared_ptr<TensorInterface> Tensor<T>::matmul() const
+    std::shared_ptr<TensorInterface> Tensor<T>::matmul(std::shared_ptr<TensorInterface> mat) const
     {
-
+		auto right_matrix = std::dynamic_pointer_cast<Tensor<T>>(mat);
+		return matmul_impl(*this, *right_matrix);
     }
     template<typename T>
     idx_type Tensor<T>::offset() const { return _offset; }
@@ -414,11 +425,12 @@ namespace traph
 
         // dimension
         DimVector dim;
+		std::fesetround(FE_TONEAREST);
         for(idx_type i = 0; i<slice.size(); ++i)
         {
 			auto& each = slice[i];
             dim.push_back(
-				std::ceil((each.end.value_or(_dimensions[i]) - each.start.value_or(0))/(float)each.step.value_or(1))
+				std::lrint(std::ceil((each.end.value_or(_dimensions[i]) - each.start.value_or(0))/(float)each.step.value_or(1)))
 			);
         }
         result->_dimensions = dim;

@@ -80,6 +80,33 @@ namespace traph
 		}
 	};
 
+	class MatmulOp : public OpBase
+	{
+	public:
+		virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) override
+		{
+			assert(inputs.size() == 2);
+
+			TensorInterfacePtr left_input = inputs[0];
+			TensorInterfacePtr right_input = inputs[1];
+			TensorInterfacePtr result = left_input->matmul(right_input);
+
+			context.save(left_input);
+			context.save(right_input);
+
+			return result;
+		}
+
+		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
+		{
+			auto saved_tensors = context.get_saved_tensors();
+			assert(saved_tensors.size() == 1);
+			std::shared_ptr<TensorBase<f32>> left_out = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->matmul(saved_tensors[0]->inverse()));
+			std::shared_ptr<TensorBase<f32>> right_out = std::dynamic_pointer_cast<TensorBase<f32>>(saved_tensors[0]->inverse()->matmul(output_grad));
+			return { left_out, right_out };
+		}
+	};
+
 	class SelectOp : public OpBase
 	{
 	public:

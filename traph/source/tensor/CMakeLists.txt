@@ -7,6 +7,8 @@ SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 SET(TENSOR_LIST
 	${HEADER_PATH}/tensor.h
 	${SOURCE_PATH}/tensor.cpp
+	${HEADER_PATH}/arithmetic.h
+	${SOURCE_PATH}/arithmetic.cpp
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${TENSOR_LIST})
