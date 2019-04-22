@@ -1,0 +1,179 @@
+#include <traph/tensor/tensor.h>
+
+
+namespace traph
+{
+    // definition
+    // public
+    template<typename T>
+    Tensor<T>::Tensor()
+        :_rep(new TensorStorage<T>),
+        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions, layout_type order)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(), _order(order)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
+        :_rep(new TensorStorage<T>),
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(order)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    Tensor<T>::Tensor(const T& t)
+        :_rep(new TensorStorage<T>),
+        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    void Tensor<T>::add_(TensorInterfacePtr other)
+    {
+		throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    void Tensor<T>::apply_(std::function<T(T)> f)
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    TensorInterfacePtr Tensor<T>::clone() const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    void Tensor<T>::cos_()
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    std::shared_ptr<TensorBase<f32>> Tensor<T>::create_grad()
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    T* Tensor<T>::data_ptr()
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    const T* Tensor<T>::data_ptr() const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    device_id Tensor<T>::device() { throw std::runtime_error("No implement"); }
+    template<typename T>
+    void Tensor<T>::fill_(T value)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    std::shared_ptr<TensorInterface> Tensor<T>::inverse() const
+    {
+        // return std::dynamic_pointer_cast<TensorInterface>(inverse_impl(*this));
+		throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    T Tensor<T>::item() const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    std::shared_ptr<TensorInterface> Tensor<T>::matmul(std::shared_ptr<TensorInterface> mat) const
+    {
+		throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    idx_type Tensor<T>::offset() const { throw std::runtime_error("No implement"); }
+    template<typename T>
+    layout_type Tensor<T>::order() const { throw std::runtime_error("No implement"); }
+    template<typename T>
+    platform_type Tensor<T>::platform() { throw std::runtime_error("No implement"); }
+    template<typename T>
+    T Tensor<T>::reduce_(std::function<T(T,T)> f) const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    TensorInterfacePtr Tensor<T>::reduce_dim(idx_type dim, std::function<T(T,T)> f) const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    void Tensor<T>::reshape_(const DimVector& dims)
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    void Tensor<T>::resize_(const DimVector& dims)
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    std::shared_ptr<TensorInterface> Tensor<T>::select(const SliceVector& slice) const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    void Tensor<T>::sin_()
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    DimVector Tensor<T>::size() const { throw std::runtime_error("No implement"); }
+	template<typename T>
+	idx_type Tensor<T>::size(idx_type i) const
+	{ 
+		throw std::runtime_error("No implement");
+	}
+    template<typename T>
+	std::shared_ptr<StorageBase<T>>  Tensor<T>::storage() const { throw std::runtime_error("No implement"); }
+    template<typename T>
+    DimVector Tensor<T>::stride() const { throw std::runtime_error("No implement"); }
+	template<typename T>
+	idx_type Tensor<T>::stride(idx_type i) const
+	{
+		throw std::runtime_error("No implement");
+	}
+    template<typename T>
+    TensorInterfacePtr Tensor<T>::sum() const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
+    std::string Tensor<T>::to_string() const
+    {
+        throw std::runtime_error("No implement");
+    }
+}
