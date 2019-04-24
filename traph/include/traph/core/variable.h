@@ -25,6 +25,7 @@ namespace traph
         virtual std::shared_ptr<OpBase> grad_fn() = 0;
         virtual std::vector<VariableInterfacePtr>& inputs() = 0;
         virtual bool is_leaf() const = 0;
+		virtual void leaf_(bool state) = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;
@@ -65,6 +66,7 @@ namespace traph
         virtual std::vector<VariableInterfacePtr>& inputs() = 0;
         virtual bool is_leaf() const = 0;
         virtual T item() const = 0;
+		virtual void leaf_(bool state) = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;

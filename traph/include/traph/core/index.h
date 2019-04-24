@@ -163,8 +163,19 @@ namespace traph
 			return flat_size;
 		}
 
+        bool in_range(idx_type dim) const
+        {
+            if(dim < 0)
+                dim = dim_num + dim;
+            
+            return dim >= 0 && dim < dim_num;
+        }
+
         idx_type& operator[](idx_type dim)
         {
+            if(dim < 0)
+                dim = dim_num + dim;
+            
             if(dim<0 || dim >= dim_num)
                 throw std::runtime_error("index out of dim vector size");
             
@@ -176,6 +187,9 @@ namespace traph
 
         idx_type operator[](idx_type dim) const
         {
+            if(dim < 0)
+                dim = dim_num + dim;
+            
             if(dim<0 || dim >= dim_num)
                 throw std::runtime_error("index out of dim vector size");
             

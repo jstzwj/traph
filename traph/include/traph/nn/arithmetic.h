@@ -15,6 +15,37 @@
 
 namespace traph
 {
+	// variable constructor
+	template<class T>
+	VariablePtr<T> zeros(std::initializer_list<idx_type> l, bool requires_grad = false)
+	{
+		DimVector dim;
+		for (auto i : l)
+			dim.push_back(i);
+
+		std::shared_ptr<Variable<T>> result(new Variable<T>(dim, false));
+		result->leaf_(true);
+		result->fill_(0);
+
+		return result;
+	}
+
+	template<class T>
+	VariablePtr<T> ones(std::initializer_list<idx_type> l, bool requires_grad = false)
+	{
+		DimVector dim;
+		for (auto i : l)
+			dim.push_back(i);
+
+		std::shared_ptr<Variable<T>> result(new Variable<T>(dim, false));
+		result->leaf_(true);
+		result->fill_(1);
+
+		return result;
+	}
+
+
+	// arithmetic
     template<class T>
 	VariablePtr<T> sum(VariablePtr<T> input)
     {

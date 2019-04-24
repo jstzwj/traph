@@ -406,11 +406,19 @@ namespace traph
 
     void Tensor<i16>::transpose_(idx_type dim0, idx_type dim1)
     {
-
+        if(dim0 != dim1 &&
+            _dimensions.in_range(dim0) &&
+            _dimensions.in_range(dim1))
+        {
+            std::swap(_dimensions[dim0], _dimensions[dim1]);
+            std::swap(_strides[dim0], _strides[dim1]);
+        }
     }
 
     std::shared_ptr<TensorInterface> Tensor<i16>::transpose(idx_type dim0, idx_type dim1)
     {
-
+        std::shared_ptr<TensorInterface> result= this->clone();
+        result->transpose_(dim0, dim1);
+        return result;
     }
 }
