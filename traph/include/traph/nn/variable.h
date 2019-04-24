@@ -12,7 +12,7 @@
 #include <traph/core/tensor.h>
 #include <traph/core/variable.h>
 #include <traph/tensor/tensor.h>
-#include <traph/core/operation.h>
+#include <traph/nn/operation.h>
 #include <traph/nn/executor.h>
 
 namespace traph

@@ -6,7 +6,7 @@
 
 #include <traph/core/type.h>
 #include <traph/core/tensor.h>
-#include <traph/core/operation.h>
+#include <traph/nn/operation.h>
 
 namespace traph
 {

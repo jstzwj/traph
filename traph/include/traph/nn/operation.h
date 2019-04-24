@@ -1,5 +1,5 @@
-#ifndef TRAPH_CORE_OPERATION_H_
-#define TRAPH_CORE_OPERATION_H_
+#ifndef TRAPH_NN_OPERATION_H_
+#define TRAPH_NN_OPERATION_H_
 
 #include <utility>
 #include <cmath>

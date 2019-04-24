@@ -209,7 +209,7 @@ namespace traph
 
     void Tensor<u8>::cos_()
     {
-        apply_([](u8 a)->u8 {return std::cos(a); });
+        throw std::runtime_error("No implement");
     }
 
     std::shared_ptr<TensorBase<f32>> Tensor<u8>::create_grad()
@@ -332,7 +332,7 @@ namespace traph
     
     void Tensor<u8>::sin_()
     {
-        apply_([](u8 a)->u8 {return std::sin(a); });
+        throw std::runtime_error("No implement");
     }
     
     DimVector Tensor<u8>::size() const { return _dimensions;}

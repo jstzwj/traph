@@ -209,7 +209,7 @@ namespace traph
 
     void Tensor<i16>::cos_()
     {
-        apply_([](i16 a)->i16 {return std::cos(a); });
+        throw std::runtime_error("No implement");
     }
 
     std::shared_ptr<TensorBase<f32>> Tensor<i16>::create_grad()
@@ -332,7 +332,7 @@ namespace traph
     
     void Tensor<i16>::sin_()
     {
-        apply_([](i16 a)->i16 {return std::sin(a); });
+        throw std::runtime_error("No implement");
     }
     
     DimVector Tensor<i16>::size() const { return _dimensions;}

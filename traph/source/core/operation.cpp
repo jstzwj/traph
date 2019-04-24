@@ -1,4 +1,4 @@
-#include <traph/core/operation.h>
+#include <traph/nn/operation.h>
 
 namespace traph
 {

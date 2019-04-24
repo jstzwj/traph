@@ -11,7 +11,7 @@
 #include <traph/nn/variable.h>
 #include <traph/core/tensor.h>
 #include <traph/tensor/tensor.h>
-#include <traph/core/operation.h>
+#include <traph/nn/operation.h>
 
 namespace traph
 {
