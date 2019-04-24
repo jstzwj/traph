@@ -1,5 +1,5 @@
-#ifndef TRAPH_NN_ARITHMETIC_H_
-#define TRAPH_NN_ARITHMETIC_H_
+#ifndef TRAPH_NN_FUNCTION_H_
+#define TRAPH_NN_FUNCTION_H_
 
 #include <utility>
 #include <cmath>
@@ -15,7 +15,7 @@
 
 namespace traph
 {
-	// variable constructor
+	// creation function
 	template<class T>
 	VariablePtr<T> zeros(std::initializer_list<idx_type> l, bool requires_grad = false)
 	{
@@ -45,7 +45,7 @@ namespace traph
 	}
 
 
-	// arithmetic
+	// arithmetic function
     template<class T>
 	VariablePtr<T> sum(VariablePtr<T> input)
     {

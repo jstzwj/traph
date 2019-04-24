@@ -7,14 +7,14 @@ SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 SET(CORE_LIST
 	${HEADER_PATH}/utils.h
 	${HEADER_PATH}/slice.h
+	${SOURCE_PATH}/slice.cpp
 	${HEADER_PATH}/index.h
 	${HEADER_PATH}/type.h
 	${HEADER_PATH}/log.h
 	${SOURCE_PATH}/log.cpp
 	${HEADER_PATH}/tensor.h
 	${HEADER_PATH}/variable.h
-	${HEADER_PATH}/operation.h
-	${SOURCE_PATH}/operation.cpp
+	
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})

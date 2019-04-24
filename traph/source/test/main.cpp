@@ -2,7 +2,7 @@
 
 #include <traph/core/tensor.h>
 #include <traph/tensor/tensor.h>
-#include <traph/nn/arithmetic.h>
+#include <traph/nn/function.h>
 #include <traph/core/variable.h>
 #include <traph/nn/variable.h>
 

@@ -12,6 +12,8 @@ SET(NN_LIST
 	${HEADER_PATH}/executor.h
 	${SOURCE_PATH}/executor.cpp
 	${HEADER_PATH}/arithmetic.h
+	${HEADER_PATH}/operation.h
+	${SOURCE_PATH}/operation.cpp
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${NN_LIST})
