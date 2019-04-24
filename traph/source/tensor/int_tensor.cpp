@@ -403,4 +403,14 @@ namespace traph
 		result += "[" + to_string_impl(*this, 0, offset()) + "]";
 		return result;
     }
+
+    void Tensor<i32>::transpose_(idx_type dim0, idx_type dim1)
+    {
+
+    }
+
+    std::shared_ptr<TensorInterface> Tensor<i32>::transpose(idx_type dim0, idx_type dim1)
+    {
+
+    }
 }

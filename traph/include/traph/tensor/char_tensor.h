@@ -82,6 +82,8 @@ namespace traph
 		virtual idx_type stride(idx_type i) const override;
 		virtual TensorInterfacePtr sum() const override;
 		virtual std::string to_string() const override;
+        virtual void transpose_(idx_type dim0, idx_type dim1) override;
+        virtual std::shared_ptr<TensorInterface> transpose(idx_type dim0, idx_type dim1) override;
     };
 
     using CharTensor = Tensor<i8>;

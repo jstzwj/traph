@@ -176,4 +176,16 @@ namespace traph
     {
         throw std::runtime_error("No implement");
     }
+
+    template<typename T>
+    void transpose_(idx_type dim0, idx_type dim1)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    std::shared_ptr<TensorInterface> transpose(idx_type dim0, idx_type dim1)
+    {
+        throw std::runtime_error("No implement");
+    }
 }

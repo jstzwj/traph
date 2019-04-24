@@ -100,9 +100,9 @@ namespace traph
 		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
 		{
 			auto saved_tensors = context.get_saved_tensors();
-			assert(saved_tensors.size() == 1);
-			std::shared_ptr<TensorBase<f32>> left_out = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->matmul(saved_tensors[0]->inverse()));
-			std::shared_ptr<TensorBase<f32>> right_out = std::dynamic_pointer_cast<TensorBase<f32>>(saved_tensors[0]->inverse()->matmul(output_grad));
+			assert(saved_tensors.size() == 2);
+			std::shared_ptr<TensorBase<f32>> left_out = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->matmul(saved_tensors[1]->transpose(0, 1)));
+			std::shared_ptr<TensorBase<f32>> right_out = std::dynamic_pointer_cast<TensorBase<f32>>(saved_tensors[0]->transpose(0, 1)->matmul(output_grad));
 			return { left_out, right_out };
 		}
 	};

@@ -49,10 +49,12 @@ int main()
 	std::cout << a->grad()->to_string();
 */
 	auto a = traph::ones<traph::f32>({ 2,3 });
-	traph::SliceVector slice;
-	slice.push_back(traph::Slice(0, 1, 1));
-	slice.push_back(traph::Slice(0, 1, 2));
-	auto b = traph::select(a, slice);
-	std::cout << b->data()->to_string();
+	a->requires_grad_(true);
+	auto b = traph::ones<traph::f32>({ 3,2 });
+	b->requires_grad_(true);
+	auto c = traph::matmul(a, b);
+	auto d = traph::sum(c);
+	d->backward();
+	std::cout << a->grad()->to_string();
     return 0;
 }

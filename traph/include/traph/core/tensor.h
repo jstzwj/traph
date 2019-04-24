@@ -48,6 +48,8 @@ namespace traph
 		virtual idx_type stride(idx_type i) const = 0;
         virtual shared_pointer sum() const = 0;
         virtual std::string to_string() const = 0;
+        virtual void transpose_(idx_type dim0, idx_type dim1) = 0;
+        virtual std::shared_ptr<TensorInterface> transpose(idx_type dim0, idx_type dim1) = 0;
     };
 
     using TensorInterfacePtr = std::shared_ptr<TensorInterface>;
@@ -97,6 +99,8 @@ namespace traph
 		virtual idx_type stride(idx_type i) const = 0;
         virtual TensorInterfacePtr sum() const = 0;
         virtual std::string to_string() const = 0;
+        virtual void transpose_(idx_type dim0, idx_type dim1) = 0;
+        virtual std::shared_ptr<TensorInterface> transpose(idx_type dim0, idx_type dim1) = 0;
     };
 
     using DoubleTensorBase = TensorBase<f64>;
