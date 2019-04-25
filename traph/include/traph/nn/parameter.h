@@ -5,8 +5,12 @@
 
 namespace traph
 {
+    class ParameterInterface
+    {
+    };
+
     template<typename T>
-    class Parameter:public Variable<T>
+    class Parameter:public Variable<T>, public ParameterInterface
     {
     public:
         Parameter();
@@ -52,25 +56,28 @@ namespace traph
 	Parameter<T>::Parameter()
 		:Variable<T>()
 	{
-
+        this->requires_grad_(true);
 	}
 
 	template<typename T>
 	Parameter<T>::Parameter(std::shared_ptr<TensorBase<T>> data)
 		:Variable<T>(data)
 	{
+        this->requires_grad_(true);
 	}
 
 	template<typename T>
 	Parameter<T>::Parameter(const DimVector& dim)
 		:Variable<T>(dim)
 	{
+        this->requires_grad_(true);
 	}
 
 	template<typename T>
 	Parameter<T>::Parameter(std::initializer_list<idx_type> l)
 		:Variable<T>(l)
 	{
+        this->requires_grad_(true);
 	}
 
 	template<typename T>

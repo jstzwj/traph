@@ -192,7 +192,8 @@ namespace traph
 
     void Tensor<f32>::apply_(std::function<f32(f32)> f)
     {
-        apply_impl(0, _offset, f);
+		if(_dimensions.size() > 0)
+			apply_impl(0, _offset, f);
     }
 
     TensorInterfacePtr Tensor<f32>::clone() const

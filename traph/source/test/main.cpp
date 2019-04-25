@@ -1,10 +1,6 @@
 #include <algorithm>
 
-#include <traph/core/tensor.h>
-#include <traph/tensor/tensor.h>
-#include <traph/nn/function.h>
-#include <traph/core/variable.h>
-#include <traph/nn/variable.h>
+#include <traph/nn/module.h>
 
 #include <iostream>
 
@@ -35,7 +31,7 @@ int main()
 	std::cout << b;
 	*/
 	// auto a = traph::Variable<traph::f32>({ 2, 3 });
-/*
+	/*
 	auto a = traph::ones<traph::f32>({ 2,3,2 });
 	a->requires_grad_(true);
 	auto b = traph::sin<traph::f32>(a);
@@ -47,7 +43,9 @@ int main()
 	e->backward();
 
 	std::cout << a->grad()->to_string();
-*/
+	*/
+
+	/*
 	auto a = traph::ones<traph::f32>({ 2,3 });
 	a->requires_grad_(true);
 	auto b = traph::ones<traph::f32>({ 3,2 });
@@ -56,5 +54,13 @@ int main()
 	auto d = traph::sum(c);
 	d->backward();
 	std::cout << a->grad()->to_string();
+	*/
+
+	int batch_size = 16;
+	auto a = traph::ones<traph::f32>({ batch_size,4 });
+
+	traph::LinearModule linear_model(4, 2, false);
+	auto out = linear_model.forward(a);
+
     return 0;
 }

@@ -161,6 +161,34 @@ namespace traph
 			return { result };
 		}
 	};
+
+	class TransposeOp : public OpBase
+	{
+	private:
+		idx_type dim0, dim1;
+	public:
+		void set_dim(idx_type d0, idx_type d1)
+		{
+			dim0 = d0;
+			dim1 = d1;
+		}
+
+		virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) override
+		{
+			assert(inputs.size() == 1);
+
+			TensorInterfacePtr input = inputs[0];
+			TensorInterfacePtr result = input->transpose(dim0, dim1);
+
+			return result;
+		}
+
+		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
+		{
+			TensorBasePtr<f32> result = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->transpose(dim0, dim1));
+			return { result };
+		}
+	};
 }
 
 #endif

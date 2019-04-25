@@ -20,12 +20,17 @@ namespace traph
     public:
         virtual void backward() = 0;
         virtual TensorInterfacePtr data() = 0;
+        virtual void data_(TensorInterfacePtr d) = 0;
         virtual device_id device() = 0;
         virtual TensorBasePtr<f32> grad() = 0;
+        virtual void grad_(TensorInterfacePtr g) = 0;
         virtual std::shared_ptr<OpBase> grad_fn() = 0;
+        virtual void grad_fn_(std::shared_ptr<OpBase> fn) = 0;
         virtual std::vector<VariableInterfacePtr>& inputs() = 0;
+        virtual void inputs_(const std::vector<VariableInterfacePtr>& i) = 0;
         virtual bool is_leaf() const = 0;
 		virtual void leaf_(bool state) = 0;
+        virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;
@@ -59,14 +64,19 @@ namespace traph
     public:
         virtual void backward() = 0;
         virtual TensorInterfacePtr data() = 0;
+        virtual void data_(TensorInterfacePtr d) = 0;
         virtual device_id device() = 0;
         virtual void fill_(T value) = 0;
         virtual TensorBasePtr<f32> grad() = 0;
+        virtual void grad_(TensorInterfacePtr g) = 0;
         virtual std::shared_ptr<OpBase> grad_fn() = 0;
+        virtual void grad_fn_(std::shared_ptr<OpBase> fn) = 0;
         virtual std::vector<VariableInterfacePtr>& inputs() = 0;
+        virtual void inputs_(const std::vector<VariableInterfacePtr>& i) = 0;
         virtual bool is_leaf() const = 0;
         virtual T item() const = 0;
 		virtual void leaf_(bool state) = 0;
+        virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;

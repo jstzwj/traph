@@ -37,6 +37,7 @@ namespace traph
         virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
+        // virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
         virtual platform_type platform() = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;

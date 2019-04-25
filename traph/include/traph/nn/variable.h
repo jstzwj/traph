@@ -63,14 +63,19 @@ namespace traph
 
         virtual void backward() override;
         virtual TensorInterfacePtr data() override;
+		virtual void data_(TensorInterfacePtr d) override;
         virtual device_id device() override;
         virtual void fill_(T value) override;
         virtual TensorBasePtr<f32> grad() override;
+		virtual void grad_(TensorInterfacePtr g) override;
         virtual std::shared_ptr<OpBase> grad_fn() override;
+		virtual void grad_fn_(std::shared_ptr<OpBase> fn) override;
         virtual std::vector<VariableInterfacePtr>& inputs() override;
+		virtual void inputs_(const std::vector<VariableInterfacePtr>& i) override;
         virtual bool is_leaf() const override;
         virtual T item() const override;
 		virtual void leaf_(bool state) override;
+		virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
         virtual platform_type platform() override;
@@ -199,6 +204,12 @@ namespace traph
     }
 
 	template<typename T>
+	void Variable<T>::data_(TensorInterfacePtr d)
+	{
+		this->_data = std::dynamic_pointer_cast<TensorBase<T>>(d);
+	}
+
+	template<typename T>
 	device_id Variable<T>::device()
 	{
 		return _data->device();
@@ -217,15 +228,33 @@ namespace traph
 	}
 
 	template<typename T>
+	void Variable<T>::grad_(TensorInterfacePtr g)
+	{
+		this->_grad = std::dynamic_pointer_cast<TensorBase<f32>>(g);
+	}
+
+	template<typename T>
 	std::shared_ptr<OpBase> Variable<T>::grad_fn()
 	{
 		return _grad_fn;
 	}
 
 	template<typename T>
+	void Variable<T>::grad_fn_(std::shared_ptr<OpBase> fn)
+	{
+		this->_grad_fn = fn;
+	}
+
+	template<typename T>
 	std::vector<VariableInterfacePtr>& Variable<T>::inputs()
 	{
 		return _inputs;
+	}
+
+	template<typename T>
+	void Variable<T>::inputs_(const std::vector<VariableInterfacePtr>& i)
+	{
+		this->_inputs = i;
 	}
 
     template<typename T>
@@ -244,6 +273,14 @@ namespace traph
 	void Variable<T>::leaf_(bool state)
 	{
 		_leaf = state;
+	}
+
+	template<typename T>
+	std::shared_ptr<VariableInterface> Variable<T>::new_empty(const DimVector& size, bool requires_grad) const
+	{
+		std::shared_ptr<VariableInterface> ret = std::shared_ptr<Variable<T>>(new Variable<T>(size));
+		ret->requires_grad_(requires_grad);
+		return ret;
 	}
 
 	template<typename T>
