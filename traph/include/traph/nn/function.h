@@ -44,7 +44,6 @@ namespace traph
 		return result;
 	}
 
-
 	// arithmetic function
     template<class T>
 	VariablePtr<T> sum(VariablePtr<T> input)

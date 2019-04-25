@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <traph/nn/variable.h>
+#include <traph/nn/operation.h>
 
 namespace traph
 {
@@ -13,7 +14,10 @@ namespace traph
     private:
         std::vector<std::shared_ptr<VariableInterface>> parameters;
     public:
-        
+        virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad)
+        {
+            
+        }
     };
 } // traph
 
