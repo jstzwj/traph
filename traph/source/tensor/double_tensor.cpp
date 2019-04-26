@@ -257,11 +257,21 @@ namespace traph
 		return matmul_impl(*this, *right_matrix);
 	}
 
+    void Tensor<f64>::neg_()
+    {
+        apply_([](f64 a)->f64 {return -a; });
+    }
+
     idx_type Tensor<f64>::offset() const { return _offset; }
 
     layout_type Tensor<f64>::order() const { return _order; }
 
     platform_type Tensor<f64>::platform() { return platform_type::none; }
+
+    void Tensor<f64>::pow_(f32 exp)
+    {
+        apply_([&exp](f64 a)->f64 {return std::pow(a, exp); });
+    }
 
 	f64 Tensor<f64>::reduce_(std::function<f64(f64, f64)> f) const
     {
@@ -362,6 +372,40 @@ namespace traph
 		else
 			throw std::runtime_error("Stride out of range");
 	}
+
+    void Tensor<f64>::sub_(std::shared_ptr<TensorInterface> other)
+    {
+        Tensor<f64> * lhs = this;
+		Tensor<f64> * rhs = dynamic_cast<Tensor<f64> *>(other.get());
+		std::function<void(Tensor<f64> *, Tensor<f64> *, idx_type, idx_type,idx_type, idx_type)> sub_impl =
+			[&](Tensor<f64> * lhs, Tensor<f64> * rhs, idx_type lhs_dim, idx_type rhs_dim, idx_type lhs_idx, idx_type rhs_idx) {
+
+			auto lhs_storage = std::dynamic_pointer_cast<TensorStorage<f64>>(lhs->storage())->data_ptr();
+			auto rhs_storage = std::dynamic_pointer_cast<TensorStorage<f64>>(rhs->storage())->data_ptr();
+
+			if (lhs_dim < -(lhs->size().size()) && rhs_dim < -(rhs->size().size()))
+			{
+				lhs_storage[lhs_idx] -= rhs_storage[rhs_idx];
+				return;
+			}
+
+			idx_type lhs_shape_size = lhs_dim >= -(lhs->size().size())? lhs->size(lhs_dim) : 1;
+			idx_type rhs_shape_size = rhs_dim >= -(rhs->size().size()) ? rhs->size(rhs_dim) : 1;
+			idx_type max_shape_size = std::max(lhs_shape_size, rhs_shape_size);
+
+			for (idx_type i = 0; i < max_shape_size; ++i)
+			{
+				sub_impl(lhs, rhs, lhs_dim - 1, rhs_dim - 1, lhs_idx, rhs_idx);
+
+				if(lhs_shape_size > 1)
+					lhs_idx += lhs->stride(lhs_dim);
+				if (rhs_shape_size > 1)
+					rhs_idx += rhs->stride(rhs_dim);
+			}
+		};
+
+		sub_impl(lhs, rhs, -1, -1, lhs->offset(), rhs->offset());
+    }
     
     TensorInterfacePtr Tensor<f64>::sum() const
     {

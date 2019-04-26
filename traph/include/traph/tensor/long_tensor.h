@@ -66,9 +66,11 @@ namespace traph
 		virtual std::shared_ptr<TensorInterface> inverse() const override;
 		virtual i64 item() const override;
 		virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const override;
+		virtual void neg_() override;
 		virtual idx_type offset() const override;
 		virtual layout_type order() const override;
 		virtual platform_type platform() override;
+        virtual void pow_(f32 exp) override;
 		virtual i64 reduce_(std::function<i64(i64, i64)> f) const override;
 		virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<i64(i64, i64)> f) const override;
 		virtual void reshape_(const DimVector& dims) override;
@@ -80,6 +82,7 @@ namespace traph
 		virtual std::shared_ptr<StorageBase<i64>> storage() const override;
 		virtual DimVector stride() const override;
 		virtual idx_type stride(idx_type i) const override;
+        virtual void sub_(std::shared_ptr<TensorInterface> other) override;
 		virtual TensorInterfacePtr sum() const override;
 		virtual std::string to_string() const override;
         virtual void transpose_(idx_type dim0, idx_type dim1) override;

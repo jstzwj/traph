@@ -206,6 +206,31 @@ namespace traph
 		return result;
 	}
 
+	VariableInterfacePtr sub(VariableInterfacePtr left, VariableInterfacePtr right)
+	{
+		DimVector result_dim;
+
+        VariableInterfacePtr result = left->new_empty(result_dim, true);
+		std::shared_ptr<SubOp> op(new SubOp);
+		result->data_(op->forward({ left->data(), right->data() }));
+		result->leaf_(false);
+		if (left->requires_grad() || right->requires_grad())
+		{
+			std::vector<VariableInterfacePtr> result_inputs{ left, right };
+			result->grad_(result->data()->create_grad());
+			result->grad()->fill_(0);
+			result->requires_grad_(true);
+			result->grad_fn_(op);
+			result->inputs_(result_inputs);
+		}
+		else
+		{
+			result->requires_grad_(false);
+		}
+
+		return result;
+	}
+
 	VariableInterfacePtr transpose(VariableInterfacePtr input, idx_type dim0, idx_type dim1)
 	{
 		DimVector result_dim;

@@ -114,12 +114,24 @@ namespace traph
     {
 		throw std::runtime_error("No implement");
     }
+
+    template<typename T>
+    void Tensor<T>::neg_()
+    {
+        throw std::runtime_error("No implement");
+    }
+
     template<typename T>
     idx_type Tensor<T>::offset() const { throw std::runtime_error("No implement"); }
     template<typename T>
     layout_type Tensor<T>::order() const { throw std::runtime_error("No implement"); }
     template<typename T>
     platform_type Tensor<T>::platform() { throw std::runtime_error("No implement"); }
+    template<typename T>
+    void Tensor<T>::pow_(f32 exp)
+    {
+        throw std::runtime_error("No implement");
+    }
     template<typename T>
     T Tensor<T>::reduce_(std::function<T(T,T)> f) const
     {
@@ -166,6 +178,13 @@ namespace traph
 	{
 		throw std::runtime_error("No implement");
 	}
+
+    template<typename T>
+    void Tensor<T>::sub_(std::shared_ptr<TensorInterface> other)
+    {
+        throw std::runtime_error("No implement");
+    }
+
     template<typename T>
     TensorInterfacePtr Tensor<T>::sum() const
     {

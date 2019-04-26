@@ -189,9 +189,10 @@ namespace traph
 			std::vector<TensorBasePtr<f32>> back_grad = cur_node->grad_fn()->backward(cur_node->grad());
 
 			assert(back_grad.size() == cur_node->inputs().size());
-			for (int i = 0; i < cur_node->inputs().size(); ++i)
+			for (int j = 0; j < cur_node->inputs().size(); ++j)
 			{
-				cur_node->inputs()[i]->grad()->add_(back_grad[i]);
+				if(cur_node->inputs()[j]->requires_grad())
+					cur_node->inputs()[j]->grad()->add_(back_grad[j]);
 			}
 		}
 
@@ -260,7 +261,7 @@ namespace traph
     template<typename T>
     bool Variable<T>::is_leaf() const
     {
-        return _leaf;
+        return !_grad_fn;
     }
 
 	template<typename T>

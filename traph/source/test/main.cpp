@@ -1,6 +1,7 @@
 #include <algorithm>
 
-#include <traph/nn/module.h>
+#include <traph/nn/layers/linear.h>
+#include <traph/nn/layers/loss.h>
 
 #include <iostream>
 
@@ -57,10 +58,17 @@ int main()
 	*/
 
 	int batch_size = 16;
-	auto a = traph::ones<traph::f32>({ batch_size,4 });
+	auto x = traph::ones<traph::f32>({ batch_size,4 });
+	auto y = traph::zeros<traph::f32>({ batch_size,2 });
 
-	traph::LinearModule linear_model(4, 2, false);
-	auto out = linear_model.forward(a);
+	traph::Linear linear_model(4, 2, false);
+	traph::MSELoss loss;
+
+	auto out = linear_model.forward(x);
+	auto result = loss.forward(out, y);
+
+	result->backward();
+	std::cout << result->data()->to_string();
 
     return 0;
 }

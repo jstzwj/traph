@@ -35,10 +35,12 @@ namespace traph
         virtual device_id device() = 0;
         virtual std::shared_ptr<TensorInterface> inverse() const = 0;
         virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const = 0;
+        virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         // virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
         virtual platform_type platform() = 0;
+        virtual void pow_(f32 exp) = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;
         virtual std::shared_ptr<TensorInterface> select(const SliceVector& slice) const = 0;
@@ -47,6 +49,7 @@ namespace traph
 		virtual idx_type size(idx_type i) const = 0;
 		virtual DimVector stride() const = 0;
 		virtual idx_type stride(idx_type i) const = 0;
+        virtual void sub_(std::shared_ptr<TensorInterface> other) = 0;
         virtual shared_pointer sum() const = 0;
         virtual std::string to_string() const = 0;
         virtual void transpose_(idx_type dim0, idx_type dim1) = 0;
@@ -84,9 +87,11 @@ namespace traph
         virtual std::shared_ptr<TensorInterface> inverse() const = 0;
         virtual T item() const = 0;
         virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const = 0;
+        virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         virtual platform_type platform() = 0;
+        virtual void pow_(f32 exp) = 0;
         virtual T reduce_(std::function<T(T,T)> f) const = 0;
         virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const = 0;
         virtual void reshape_(const DimVector& dims) = 0;
@@ -98,6 +103,7 @@ namespace traph
         virtual std::shared_ptr<StorageBase<T>> storage() const = 0;
 		virtual DimVector stride() const = 0;
 		virtual idx_type stride(idx_type i) const = 0;
+        virtual void sub_(std::shared_ptr<TensorInterface> other) = 0;
         virtual TensorInterfacePtr sum() const = 0;
         virtual std::string to_string() const = 0;
         virtual void transpose_(idx_type dim0, idx_type dim1) = 0;

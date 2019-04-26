@@ -257,11 +257,22 @@ namespace traph
 		return matmul_impl(*this, *right_matrix);
 	}
 
+    void Tensor<i64>::neg_()
+    {
+        apply_([](i64 a)->i64 {return -a; });
+    }
+
     idx_type Tensor<i64>::offset() const { return _offset; }
 
     layout_type Tensor<i64>::order() const { return _order; }
 
     platform_type Tensor<i64>::platform() { return platform_type::none; }
+
+    void Tensor<i64>::pow_(f32 exp)
+    {
+        std::int32_t exp_int = static_cast<std::int32_t>(exp);
+        apply_([&exp_int](i64 a)->i64 {return static_cast<i64>(std::pow(a, exp_int)); });
+    }
 
 	i64 Tensor<i64>::reduce_(std::function<i64(i64, i64)> f) const
     {
@@ -362,6 +373,40 @@ namespace traph
 		else
 			throw std::runtime_error("Stride out of range");
 	}
+
+    void Tensor<i64>::sub_(std::shared_ptr<TensorInterface> other)
+    {
+        Tensor<i64> * lhs = this;
+		Tensor<i64> * rhs = dynamic_cast<Tensor<i64> *>(other.get());
+		std::function<void(Tensor<i64> *, Tensor<i64> *, idx_type, idx_type,idx_type, idx_type)> sub_impl =
+			[&](Tensor<i64> * lhs, Tensor<i64> * rhs, idx_type lhs_dim, idx_type rhs_dim, idx_type lhs_idx, idx_type rhs_idx) {
+
+			auto lhs_storage = std::dynamic_pointer_cast<TensorStorage<i64>>(lhs->storage())->data_ptr();
+			auto rhs_storage = std::dynamic_pointer_cast<TensorStorage<i64>>(rhs->storage())->data_ptr();
+
+			if (lhs_dim < -(lhs->size().size()) && rhs_dim < -(rhs->size().size()))
+			{
+				lhs_storage[lhs_idx] -= rhs_storage[rhs_idx];
+				return;
+			}
+
+			idx_type lhs_shape_size = lhs_dim >= -(lhs->size().size())? lhs->size(lhs_dim) : 1;
+			idx_type rhs_shape_size = rhs_dim >= -(rhs->size().size()) ? rhs->size(rhs_dim) : 1;
+			idx_type max_shape_size = std::max(lhs_shape_size, rhs_shape_size);
+
+			for (idx_type i = 0; i < max_shape_size; ++i)
+			{
+				sub_impl(lhs, rhs, lhs_dim - 1, rhs_dim - 1, lhs_idx, rhs_idx);
+
+				if(lhs_shape_size > 1)
+					lhs_idx += lhs->stride(lhs_dim);
+				if (rhs_shape_size > 1)
+					rhs_idx += rhs->stride(rhs_dim);
+			}
+		};
+
+		sub_impl(lhs, rhs, -1, -1, lhs->offset(), rhs->offset());
+    }
     
     TensorInterfacePtr Tensor<i64>::sum() const
     {
