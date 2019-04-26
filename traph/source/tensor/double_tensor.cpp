@@ -229,6 +229,11 @@ namespace traph
 
     device_id Tensor<f64>::device() { return 0; }
 
+    DataType Tensor<f64>::dtype() const
+    {
+        return DataType::DOUBLE;
+    }
+
 	std::shared_ptr<TensorInterface> Tensor<f64>::inverse() const
 	{
 		return std::dynamic_pointer_cast<TensorInterface>(inverse_impl(*this));

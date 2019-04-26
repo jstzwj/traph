@@ -28,7 +28,6 @@ namespace traph
         std::shared_ptr<TensorBase<T>> _data;
         std::shared_ptr<TensorBase<f32>> _grad;
         bool _requires_grad;
-        bool _leaf;
         std::shared_ptr<OpBase> _grad_fn;
         std::vector<VariableInterfacePtr> _inputs;
         // std::vector<std::weak_ptr<VariableInterface>> _outputs;
@@ -36,7 +35,6 @@ namespace traph
         Variable();
         Variable(std::shared_ptr<TensorBase<T>> data);
         Variable(const DimVector& dim);
-        Variable(const DimVector& dim, bool is_leaf);
         Variable(std::initializer_list<idx_type> l);
 
 		Variable(const Variable& other) = delete;
@@ -74,7 +72,6 @@ namespace traph
 		virtual void inputs_(const std::vector<VariableInterfacePtr>& i) override;
         virtual bool is_leaf() const override;
         virtual T item() const override;
-		virtual void leaf_(bool state) override;
 		virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
@@ -116,7 +113,7 @@ namespace traph
 	template<typename T>
 	Variable<T>::Variable()
 		:_data(new Tensor<T>), _grad(nullptr),
-		_requires_grad(false), _leaf(false),
+		_requires_grad(false),
 		_grad_fn(nullptr), _inputs()
 	{
 
@@ -125,7 +122,7 @@ namespace traph
 	template<typename T>
 	Variable<T>::Variable(std::shared_ptr<TensorBase<T>> data)
 		:_data(data), _grad(nullptr),
-		_requires_grad(false), _leaf(false),
+		_requires_grad(false),
 		_grad_fn(nullptr), _inputs()
 	{
 	}
@@ -133,30 +130,15 @@ namespace traph
 	template<typename T>
 	Variable<T>::Variable(const DimVector& dim)
 		:_data(new Tensor<T>(dim)), _grad(nullptr),
-		_requires_grad(false), _leaf(false),
+		_requires_grad(false),
 		_grad_fn(nullptr), _inputs()
 	{
-	}
-
-	template<typename T>
-	Variable<T>::Variable(const DimVector& dim, bool is_leaf)
-		:_data(new Tensor<T>(dim)), _grad(nullptr),
-		_requires_grad(false), _leaf(is_leaf),
-		_grad_fn(nullptr), _inputs()
-	{
-		if (is_leaf)
-		{
-			_requires_grad = true;
-
-			_grad = _data->create_grad();
-			_grad->fill_(0);
-		}
 	}
 
 	template<typename T>
 	Variable<T>::Variable(std::initializer_list<idx_type> l)
 		:_data(new Tensor<T>()), _grad(nullptr),
-		_requires_grad(false), _leaf(false),
+		_requires_grad(false),
 		_grad_fn(nullptr), _inputs()
 	{
 		DimVector dim;
@@ -268,12 +250,6 @@ namespace traph
 	T Variable<T>::item() const
 	{
 		return _data->item();
-	}
-
-	template<typename T>
-	void Variable<T>::leaf_(bool state)
-	{
-		_leaf = state;
 	}
 
 	template<typename T>

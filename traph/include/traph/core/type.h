@@ -34,7 +34,7 @@ namespace traph
         opengl
     };
 
-    enum dtype
+    enum DataType
     {
         BYTE,
         CHAR,

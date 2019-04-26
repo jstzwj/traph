@@ -80,5 +80,10 @@
         "future": "cpp",
         "queue": "cpp",
         "cfenv": "cpp"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/build": true,
+        "**/traph/contrib": true,
     }
 }

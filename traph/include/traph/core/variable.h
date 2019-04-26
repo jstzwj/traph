@@ -29,7 +29,6 @@ namespace traph
         virtual std::vector<VariableInterfacePtr>& inputs() = 0;
         virtual void inputs_(const std::vector<VariableInterfacePtr>& i) = 0;
         virtual bool is_leaf() const = 0;
-		virtual void leaf_(bool state) = 0;
         virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
@@ -75,7 +74,6 @@ namespace traph
         virtual void inputs_(const std::vector<VariableInterfacePtr>& i) = 0;
         virtual bool is_leaf() const = 0;
         virtual T item() const = 0;
-		virtual void leaf_(bool state) = 0;
         virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;

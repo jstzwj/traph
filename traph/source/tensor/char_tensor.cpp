@@ -229,6 +229,11 @@ namespace traph
 
     device_id Tensor<i8>::device() { return 0; }
 
+    DataType Tensor<i8>::dtype() const
+    {
+        return DataType::CHAR;
+    }
+
 	std::shared_ptr<TensorInterface> Tensor<i8>::inverse() const
 	{
 		throw std::runtime_error("No implement");

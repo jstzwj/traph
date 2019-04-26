@@ -64,6 +64,7 @@ namespace traph
         virtual T* data_ptr() override;
         virtual const T* data_ptr() const override;
         virtual device_id device() override;
+        virtual DataType dtype() const override;
         virtual void fill_(T value) override;
         virtual std::shared_ptr<TensorInterface> inverse() const override;
         virtual T item() const override;

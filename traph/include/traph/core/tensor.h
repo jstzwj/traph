@@ -33,6 +33,7 @@ namespace traph
         virtual void cos_() = 0;
         virtual std::shared_ptr<TensorBase<f32>> create_grad() = 0;
         virtual device_id device() = 0;
+        virtual DataType dtype() const = 0;
         virtual std::shared_ptr<TensorInterface> inverse() const = 0;
         virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const = 0;
         virtual void neg_() = 0;
@@ -83,6 +84,7 @@ namespace traph
         virtual T* data_ptr() = 0;
         virtual const T* data_ptr() const = 0;
         virtual device_id device() = 0;
+        virtual DataType dtype() const = 0;
         virtual void fill_(T value) = 0;
         virtual std::shared_ptr<TensorInterface> inverse() const = 0;
         virtual T item() const = 0;

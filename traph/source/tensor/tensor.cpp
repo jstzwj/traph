@@ -91,6 +91,12 @@ namespace traph
     }
     template<typename T>
     device_id Tensor<T>::device() { throw std::runtime_error("No implement"); }
+
+    template<typename T>
+    DataType Tensor<T>::dtype() const
+    {
+        throw std::runtime_error("No implement");
+    }
     template<typename T>
     void Tensor<T>::fill_(T value)
     {
