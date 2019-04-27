@@ -107,6 +107,35 @@ namespace traph
 		}
 	};
 
+	class PowOp: public OpBase
+	{
+	private:
+		float _exp;
+	public:
+		void set_exp(float exp)
+		{
+			_exp = exp;
+		}
+
+		virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) override
+		{
+			assert(inputs.size() == 1);
+
+			TensorInterfacePtr input = inputs[0];
+			auto output = input->clone();
+			output->pow_(_exp);
+			
+			return output;
+		}
+
+		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
+		{
+			auto output = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->clone());
+			output->mul_(_exp);
+			return { output };
+		}
+	};
+
 	class SelectOp : public OpBase
 	{
 	public:

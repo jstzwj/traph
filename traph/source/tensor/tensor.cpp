@@ -122,6 +122,12 @@ namespace traph
     }
 
     template<typename T>
+    void Tensor<T>::mul_(T value)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
     void Tensor<T>::neg_()
     {
         throw std::runtime_error("No implement");

@@ -263,6 +263,12 @@ namespace traph
 		return matmul_impl(*this, *right_matrix);
 	}
 
+    void Tensor<f32>::mul_(f32 value)
+    {
+        apply_([value](f32 a)->f32 {return a*value; });
+    }
+
+
     void Tensor<f32>::neg_()
     {
         apply_([](f32 a)->f32 {return -a; });

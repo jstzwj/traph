@@ -89,6 +89,7 @@ namespace traph
         virtual std::shared_ptr<TensorInterface> inverse() const = 0;
         virtual T item() const = 0;
         virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const = 0;
+        virtual void mul_(T value) = 0;
         virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;

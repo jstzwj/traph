@@ -262,6 +262,11 @@ namespace traph
 		return matmul_impl(*this, *right_matrix);
 	}
 
+    void Tensor<i8>::mul_(i8 value)
+    {
+        apply_([value](i8 a)->i8 {return a*value; });
+    }
+
     void Tensor<i8>::neg_()
     {
         apply_([](i8 a)->i8 {return -a; });
