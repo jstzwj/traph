@@ -114,8 +114,30 @@ namespace traph
 	UNARY_OP(sum, SumOp)
 
 	BINARY_OP(add, AddOp)
-	
+
 	BINARY_OP(matmul, MatmulOp)
+
+	VariableInterfacePtr pow(VariableInterfacePtr input, float exp)
+	{
+		DimVector result_dim;
+        VariableInterfacePtr result = input->new_empty(result_dim, true);
+		std::shared_ptr<PowOp> op(new PowOp);
+		op->set_exp(exp);
+		result->data_(op->forward({ input->data() }));
+		if (input->requires_grad())
+		{
+			result->grad_(result->data()->create_grad());
+			result->grad()->fill_(0);
+			result->requires_grad_(true);
+			result->grad_fn_(op);
+			result->inputs_({ input });
+		}
+		else
+		{
+			result->requires_grad_(false);
+		}
+		return result;
+	}
 
 	VariableInterfacePtr select(VariableInterfacePtr input, const SliceVector& slice)
 	{

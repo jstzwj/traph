@@ -27,16 +27,16 @@ namespace traph
             std::shared_ptr<VariableInterface> ret;
             if(_reduction == MSELossReduction::SUM)
             {
-                ret = sum(sub(input, target));
+                ret = sum(pow(sub(input, target), 2));
             }
             else if(_reduction == MSELossReduction::MEAN)
             {
                 // fixme: use mean if it impled
-                ret = sum(sub(input, target));
+                ret = sum(pow(sub(input, target), 2));
             }
             else
             {
-                ret = sum(sub(input, target));
+                ret = pow(sub(input, target), 2);
             }
             return ret;
         }

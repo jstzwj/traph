@@ -1,6 +1,7 @@
 #ifndef TRAPH_CORE_TYPE_H_
 #define TRAPH_CORE_TYPE_H_
 
+#include <variant>
 #include <cstdint>
 
 namespace traph
@@ -43,6 +44,18 @@ namespace traph
         LONG,
         FLOAT,
         DOUBLE
+    };
+
+    class ScalarType
+    {
+    private:
+        std::variant<u8, i8, i16, i32, i64, f32, f64> _scalar;
+        DataType _dtype;
+    public:
+        DataType dtype() const
+        {
+            return _dtype;
+        }
     };
 }
 
