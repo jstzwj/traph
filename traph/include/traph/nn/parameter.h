@@ -10,7 +10,7 @@ namespace traph
     };
 
     template<typename T>
-    class Parameter:public Variable<T>, public ParameterInterface
+    class Parameter:public Variable<T>
     {
     public:
         Parameter();

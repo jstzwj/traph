@@ -11,9 +11,9 @@ namespace traph
     class Optimizer
     {
     private:
-        std::vector<std::shared_ptr<ParameterInterface>> _params;
+        std::vector<std::shared_ptr<VariableInterface>> _params;
     public:
-        Optimizer(std::vector<std::shared_ptr<ParameterInterface>> params)
+        Optimizer(std::vector<std::shared_ptr<VariableInterface>> params)
             :_params(params)
         {
         }
@@ -22,6 +22,10 @@ namespace traph
 
         void zero_grad()
         {
+            for(auto& each_param: _params)
+            {
+                each_param->grad()->fill_(0);
+            }
         }
     };
 }

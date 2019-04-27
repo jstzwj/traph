@@ -15,12 +15,32 @@ namespace traph
     class Module
     {
     private:
-        std::map<std::string, std::shared_ptr<ParameterInterface>> _parameters;
+        std::vector<std::pair<std::string, std::shared_ptr<VariableInterface>>> _parameters;
         std::vector<std::shared_ptr<Module>> _children;
     public:
-        std::vector<std::shared_ptr<ParameterInterface>> parameters(bool recurse)
+
+        std::vector<std::pair<std::string, std::shared_ptr<VariableInterface>>> named_parameters(bool recurse)
         {
-            std::vector<std::shared_ptr<ParameterInterface>> result;
+            std::vector<std::pair<std::string, std::shared_ptr<VariableInterface>>> result;
+            if(recurse)
+            {
+                // fixme: children params recurse
+                for (const auto &p : _parameters)
+                    if(p.first != "")
+                        result.push_back(p);
+            }
+            else
+            {
+                for (const auto &p : _parameters)
+                    if(p.first != "")
+                        result.push_back(p);
+            }
+            return result;
+        }
+
+        std::vector<std::shared_ptr<VariableInterface>> parameters(bool recurse)
+        {
+            std::vector<std::shared_ptr<VariableInterface>> result;
             if(recurse)
             {
                 // fixme: children params recurse
@@ -35,9 +55,9 @@ namespace traph
             return result;
         }
 
-        void register_parameter(const std::string& name, std::shared_ptr<ParameterInterface> param)
+        void register_parameter(const std::string& name, std::shared_ptr<VariableInterface> param)
         {
-            _parameters[name] = param;
+            _parameters.push_back(std::make_pair(name, param));
         }
     };
 } // traph

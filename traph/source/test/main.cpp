@@ -68,7 +68,7 @@ int main()
 	auto result = loss.forward(out, y);
 
 	result->backward();
-	std::cout << result->data()->to_string();
+	std::cout << linear_model.parameters(true)[0]->grad()->to_string();
 
     return 0;
 }
