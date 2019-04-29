@@ -154,9 +154,12 @@ namespace traph
     void Tensor<f64>::add_(TensorInterfacePtr other)
     {
 		// check tensor other type
-
+        if(other->dtype() != DataType::DOUBLE)
+            throw std::runtime_error("expected type double tensor");
 		// check broadcast.shape = this.shape
-
+        auto shape = broadcast_shape(this->size(), other->size());
+        if(shape != this->size())
+            throw std::runtime_error("The size of tensor a must match the size of tensor b");
 		// ok, get lhs, rhs
 		Tensor<f64> * lhs = this;
 		Tensor<f64> * rhs = dynamic_cast<Tensor<f64> *>(other.get());

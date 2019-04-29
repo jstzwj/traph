@@ -58,8 +58,8 @@ int main()
 	*/
 
 	int batch_size = 16;
-	auto x = traph::ones<traph::f32>({ batch_size,4 });
-	auto y = traph::zeros<traph::f32>({ batch_size,2 });
+	auto x = traph::randn<traph::f32>({ batch_size,4 });
+	auto y = traph::randn<traph::f32>({ batch_size,2 });
 
 	traph::Linear linear_model(4, 2, false);
 	traph::MSELoss loss;
@@ -68,7 +68,8 @@ int main()
 	auto result = loss.forward(out, y);
 
 	result->backward();
-	std::cout << linear_model.parameters(true)[0]->grad()->to_string();
+	std::cout << x->data()->to_string() << std::endl;
+	std::cout << linear_model.parameters(true)[0]->grad()->to_string() << std::endl;
 
     return 0;
 }

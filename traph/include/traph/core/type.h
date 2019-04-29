@@ -2,6 +2,7 @@
 #define TRAPH_CORE_TYPE_H_
 
 #include <variant>
+#include <optional>
 #include <cstdint>
 
 namespace traph
@@ -55,6 +56,62 @@ namespace traph
         DataType dtype() const
         {
             return _dtype;
+        }
+
+        std::optional<u8> get_byte()
+        {
+            if(_dtype == DataType::BYTE)
+                return std::get<u8>(_scalar);
+            else
+                return std::nullopt;
+        }
+
+        std::optional<i8> get_char()
+        {
+            if(_dtype == DataType::CHAR)
+                return std::get<i8>(_scalar);
+            else
+                return std::nullopt;
+        }
+
+        std::optional<i16> get_short()
+        {
+            if(_dtype == DataType::SHORT)
+                return std::get<i16>(_scalar);
+            else
+                return std::nullopt;
+        }
+
+        std::optional<i32> get_int()
+        {
+            if(_dtype == DataType::INT)
+                return std::get<i32>(_scalar);
+            else
+                return std::nullopt;
+        }
+
+        std::optional<i64> get_long()
+        {
+            if(_dtype == DataType::LONG)
+                return std::get<i64>(_scalar);
+            else
+                return std::nullopt;
+        }
+
+        std::optional<f32> get_float()
+        {
+            if(_dtype == DataType::FLOAT)
+                return std::get<f32>(_scalar);
+            else
+                return std::nullopt;
+        }
+
+        std::optional<f64> get_double()
+        {
+            if(_dtype == DataType::DOUBLE)
+                return std::get<f64>(_scalar);
+            else
+                return std::nullopt;
         }
     };
 }

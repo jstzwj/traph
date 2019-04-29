@@ -154,9 +154,12 @@ namespace traph
     void Tensor<f32>::add_(TensorInterfacePtr other)
     {
 		// check tensor other type
-
+        if(other->dtype() != DataType::FLOAT)
+            throw std::runtime_error("expected type float tensor");
 		// check broadcast.shape = this.shape
-
+        auto shape = broadcast_shape(this->size(), other->size());
+        if(shape != this->size())
+            throw std::runtime_error("The size of tensor a must match the size of tensor b");
 		// ok, get lhs, rhs
 		Tensor<f32> * lhs = this;
 		Tensor<f32> * rhs = dynamic_cast<Tensor<f32> *>(other.get());

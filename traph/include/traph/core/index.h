@@ -9,7 +9,7 @@
 #include <utility>
 #include <traph/core/type.h>
 
-#define DIMVECTOR_SMALL_VECTOR_OPTIMIZATION 4
+#define DIMVECTOR_SMALL_VECTOR_OPTIMIZATION 5
 
 namespace traph
 {
@@ -91,6 +91,30 @@ namespace traph
             }
             dim_num = other.dim_num;
             return *this;
+        }
+
+        bool operator==(const DimVector& other) const
+        {
+            if(dim_num != other.dim_num)
+                return false;
+
+            for(idx_type i = 0; i < dim_num; ++i)
+                if(this->operator[](i) != other[i])
+                    return false;
+
+            return true;
+        }
+
+        bool operator!=(const DimVector& other) const
+        {
+            if(dim_num != other.dim_num)
+                return true;
+
+            for(idx_type i = 0; i < dim_num; ++i)
+                if(this->operator[](i) != other[i])
+                    return true;
+
+            return false;
         }
 
         void erase(idx_type idx)

@@ -154,9 +154,12 @@ namespace traph
     void Tensor<i8>::add_(TensorInterfacePtr other)
     {
 		// check tensor other type
-
+        if(other->dtype() != DataType::CHAR)
+            throw std::runtime_error("expected type char tensor");
 		// check broadcast.shape = this.shape
-
+        auto shape = broadcast_shape(this->size(), other->size());
+        if(shape != this->size())
+            throw std::runtime_error("The size of tensor a must match the size of tensor b");
 		// ok, get lhs, rhs
 		Tensor<i8> * lhs = this;
 		Tensor<i8> * rhs = dynamic_cast<Tensor<i8> *>(other.get());

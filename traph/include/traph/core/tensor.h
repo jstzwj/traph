@@ -128,37 +128,31 @@ namespace traph
     template<class T>
     using TensorBaseConstRef = const TensorBase<T>&;
 
-    template<class T>
-    bool broadcastable(const TensorBase<T> &lhs, const TensorBase<T> & rhs)
+    bool broadcastable(const DimVector &lhs, const DimVector & rhs)
     {
-        DimVector lhs_dim = lhs.size();
-        DimVector rhs_dim = rhs.size();
-        if(lhs_dim.size() < 1 || rhs_dim.size() < 1)
+        if(lhs.size() < 1 || rhs.size() < 1)
             return false;
 
-        idx_type min = std::min(lhs_dim.size(), rhs_dim.size());
+        idx_type min = std::min(lhs.size(), rhs.size());
 		for (idx_type i = -1; i >= -min; --i)
-			if (lhs.size(i) != rhs.size(i) && lhs.size(i) != 1 && rhs.size(i) != 1)
+			if (lhs[i] != rhs[i] && lhs[i] != 1 && rhs[i] != 1)
 				return false;    
 
         return true;
     }
 
-	template<class T>
-	DimVector broadcast_shape(const TensorBase<T> &lhs, const TensorBase<T> & rhs)
+	DimVector broadcast_shape(const DimVector &lhs, const DimVector & rhs)
 	{
 		bool is_broadcastable = broadcastable(lhs, rhs);
 		if (!is_broadcastable)
 			throw std::runtime_error("The size of tensor a must match the size of tensor b");
-		DimVector lhs_dim = lhs.size();
-		DimVector rhs_dim = rhs.size();
-		auto max_size = std::max(lhs_dim.size(), rhs_dim.size());
+		auto max_size = std::max(lhs.size(), rhs.size());
 		DimVector result_dim(max_size);
 
 		for (idx_type i = -1; i >= -max_size; --i)
 		{
-			idx_type lhs_size = i >= -lhs_dim.size() ? lhs.size(i) : 1;
-			idx_type rhs_size = i >= -rhs_dim.size() ? rhs.size(i) : 1;
+			idx_type lhs_size = i >= -lhs.size() ? lhs[i] : 1;
+			idx_type rhs_size = i >= -rhs.size() ? rhs[i] : 1;
 			result_dim[max_size + i] = std::max(lhs_size, rhs_size);
 		}
 		return result_dim;
