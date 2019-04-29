@@ -27,13 +27,13 @@ namespace traph
         column_major
     };
 
-    enum platform_type
+    enum PlatformType
     {
-        none,
-        cuda,
-        opencl,
-        vulkan,
-        opengl
+        CPU,
+        CUDA,
+        OPENCL,
+        VULKAN,
+        OPENGL
     };
 
     enum DataType

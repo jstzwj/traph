@@ -138,7 +138,7 @@ namespace traph
     template<typename T>
     layout_type Tensor<T>::order() const { throw std::runtime_error("No implement"); }
     template<typename T>
-    platform_type Tensor<T>::platform() { throw std::runtime_error("No implement"); }
+    PlatformType Tensor<T>::platform() { throw std::runtime_error("No implement"); }
     template<typename T>
     void Tensor<T>::pow_(f32 exp)
     {

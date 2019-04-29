@@ -32,7 +32,7 @@ namespace traph
         virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
-        virtual platform_type platform() = 0;
+        virtual PlatformType platform() = 0;
         virtual bool requires_grad() const = 0;
         virtual void requires_grad_(bool requires_grad) = 0;
         virtual void reshape_(const DimVector& dims) = 0;
@@ -77,7 +77,7 @@ namespace traph
         virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
-        virtual platform_type platform() = 0;
+        virtual PlatformType platform() = 0;
         virtual bool requires_grad() const = 0;
         virtual void requires_grad_(bool requires_grad) = 0;
         virtual void reshape_(const DimVector& dims) = 0;

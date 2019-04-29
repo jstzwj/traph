@@ -141,7 +141,7 @@ public:
   virtual T item() const override;
   virtual idx_type offset() const override;
   virtual layout_type order() const override;
-  virtual platform_type platform() override;
+  virtual PlatformType platform() override;
   virtual T reduce_(std::function<T(T,T)> f) const override;
   virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override;
   virtual void reshape_(const DimVector& dims) override;

@@ -32,8 +32,6 @@ namespace traph
     private:
         void auto_strides();
 
-        void apply_impl(idx_type dim, idx_type idx, std::function<value_type(value_type)> f);
-
         void reduce_impl(value_type& result, idx_type dim, idx_type idx, std::function<value_type(value_type,value_type)> f) const;
 
         value_type reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<value_type(value_type,value_type)> f) const;
@@ -71,7 +69,7 @@ namespace traph
         virtual void neg_() override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
-		virtual platform_type platform() override;
+		virtual PlatformType platform() override;
         virtual void pow_(f32 exp) override;
 		virtual i8 reduce_(std::function<i8(i8, i8)> f) const override;
 		virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<i8(i8, i8)> f) const override;

@@ -75,7 +75,7 @@ namespace traph
 		virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
-        virtual platform_type platform() override;
+        virtual PlatformType platform() override;
 		virtual bool requires_grad() const override;
         virtual void requires_grad_(bool requires_grad) override;
         virtual void reshape_(const DimVector& dims) override;
@@ -273,7 +273,7 @@ namespace traph
 	}
 
 	template<typename T>
-	platform_type Variable<T>::platform()
+	PlatformType Variable<T>::platform()
 	{
 		return _data->platform();
 	}

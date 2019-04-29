@@ -13,6 +13,7 @@ SET(CORE_LIST
 	${HEADER_PATH}/log.h
 	${SOURCE_PATH}/log.cpp
 	${HEADER_PATH}/tensor.h
+	${SOURCE_PATH}/tensor.cpp
 	${HEADER_PATH}/variable.h
 	
 )

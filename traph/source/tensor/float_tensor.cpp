@@ -27,23 +27,6 @@ namespace traph
         }
     }
 
-    void Tensor<f32>::apply_impl(idx_type dim, idx_type idx, std::function<f32(f32)> f)
-    {
-        idx_type dim_size = _dimensions.size();
-
-        idx_type step_len = _strides[dim];
-        idx_type step_num = _dimensions[dim];
-        
-        for(idx_type i = 0; i < step_num; ++i)
-        {
-            if(dim == dim_size - 1)
-                _rep->data[idx] = f(_rep->data[idx]);
-            else
-                apply_impl(dim + 1, idx, f);
-            idx += step_len;
-        }
-    }
-
     void Tensor<f32>::reduce_impl(f32& result, idx_type dim, idx_type idx, std::function<f32(f32,f32)> f) const
     {
         idx_type dim_size = _dimensions.size();
@@ -195,8 +178,40 @@ namespace traph
 
     void Tensor<f32>::apply_(std::function<f32(f32)> f)
     {
-		if(_dimensions.size() > 0)
-			apply_impl(0, _offset, f);
+        // sort stride for cache optimization
+		DimVector cloned_stride(_strides);
+        DimVector sorted_stride(_strides.size());
+        for(int i = 0; i<_strides.size(); ++i)
+            sorted_stride[i] = i;
+        
+        for (int i = 0; i < cloned_stride.size() - 1; i++)
+            for (int j = 0; j < cloned_stride.size() - 1 - i; j++)
+                if (cloned_stride[j] < cloned_stride[j + 1])
+                {
+                    std::swap(cloned_stride[j], cloned_stride[j+1]);
+                    std::swap(sorted_stride[j], sorted_stride[j+1]);
+                }
+        
+        std::function<void(idx_type, idx_type, std::function<f32(f32)>)> apply_impl =
+        [&](idx_type dim_idx, idx_type idx, std::function<f32(f32)> f){
+            idx_type dim = sorted_stride[dim_idx];
+            idx_type dim_size = _dimensions.size();
+
+            idx_type step_len = _strides[dim];
+            idx_type step_num = _dimensions[dim];
+            
+            for(idx_type i = 0; i < step_num; ++i)
+            {
+                if(dim_idx == dim_size - 1)
+                    _rep->data[idx] = f(_rep->data[idx]);
+                else
+                    apply_impl(dim_idx + 1, idx, f);
+                idx += step_len;
+            }
+        };
+
+        if(_dimensions.size() > 0)
+            apply_impl(0, _offset, f);
     }
 
     TensorInterfacePtr Tensor<f32>::clone() const
@@ -281,7 +296,7 @@ namespace traph
 
     layout_type Tensor<f32>::order() const { return _order; }
 
-    platform_type Tensor<f32>::platform() { return platform_type::none; }
+    PlatformType Tensor<f32>::platform() { return PlatformType::CPU; }
 
     void Tensor<f32>::pow_(f32 exp)
     {

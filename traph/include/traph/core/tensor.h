@@ -40,7 +40,7 @@ namespace traph
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
         // virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
-        virtual platform_type platform() = 0;
+        virtual PlatformType platform() = 0;
         virtual void pow_(f32 exp) = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;
@@ -93,7 +93,7 @@ namespace traph
         virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
-        virtual platform_type platform() = 0;
+        virtual PlatformType platform() = 0;
         virtual void pow_(f32 exp) = 0;
         virtual T reduce_(std::function<T(T,T)> f) const = 0;
         virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const = 0;
@@ -128,35 +128,9 @@ namespace traph
     template<class T>
     using TensorBaseConstRef = const TensorBase<T>&;
 
-    bool broadcastable(const DimVector &lhs, const DimVector & rhs)
-    {
-        if(lhs.size() < 1 || rhs.size() < 1)
-            return false;
+    bool broadcastable(const DimVector &lhs, const DimVector & rhs);
 
-        idx_type min = std::min(lhs.size(), rhs.size());
-		for (idx_type i = -1; i >= -min; --i)
-			if (lhs[i] != rhs[i] && lhs[i] != 1 && rhs[i] != 1)
-				return false;    
-
-        return true;
-    }
-
-	DimVector broadcast_shape(const DimVector &lhs, const DimVector & rhs)
-	{
-		bool is_broadcastable = broadcastable(lhs, rhs);
-		if (!is_broadcastable)
-			throw std::runtime_error("The size of tensor a must match the size of tensor b");
-		auto max_size = std::max(lhs.size(), rhs.size());
-		DimVector result_dim(max_size);
-
-		for (idx_type i = -1; i >= -max_size; --i)
-		{
-			idx_type lhs_size = i >= -lhs.size() ? lhs[i] : 1;
-			idx_type rhs_size = i >= -rhs.size() ? rhs[i] : 1;
-			result_dim[max_size + i] = std::max(lhs_size, rhs_size);
-		}
-		return result_dim;
-	}
+	DimVector broadcast_shape(const DimVector &lhs, const DimVector & rhs);
 
     template<class T>
     bool strict_same_shape(const TensorBase<T> &lhs, const TensorBase<T> & rhs)

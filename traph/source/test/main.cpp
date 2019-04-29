@@ -1,7 +1,10 @@
 #include <algorithm>
+#include <memory>
 
 #include <traph/nn/layers/linear.h>
 #include <traph/nn/layers/loss.h>
+#include <traph/core/tensor.h>
+#include <traph/tensor/byte_tensor.h>
 
 #include <iostream>
 
@@ -56,8 +59,9 @@ int main()
 	d->backward();
 	std::cout << a->grad()->to_string();
 	*/
-
+/*
 	int batch_size = 16;
+	
 	auto x = traph::randn<traph::f32>({ batch_size,4 });
 	auto y = traph::randn<traph::f32>({ batch_size,2 });
 
@@ -70,6 +74,13 @@ int main()
 	result->backward();
 	std::cout << x->data()->to_string() << std::endl;
 	std::cout << linear_model.parameters(true)[0]->grad()->to_string() << std::endl;
+*/
 
+
+	auto x = traph::ones<traph::u8>({ 2, 3, 4 });
+	x->data()->transpose_(1, 2);
+	std::dynamic_pointer_cast<traph::TensorBase<traph::u8>>(x->data())->fill_(5);
+	std::cout << x->data()->to_string();
+	
     return 0;
 }

@@ -26,9 +26,9 @@ namespace traph
     class CLTensor: public TensorBase<T>
     {
     public:
-        virtual platform_type platform() override
+        virtual PlatformType platform() override
         {
-            return platform_type::opencl;
+            return PlatformType::opencl;
         }
 
         virtual device_id device() override
