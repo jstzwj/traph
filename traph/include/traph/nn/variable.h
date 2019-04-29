@@ -166,11 +166,11 @@ namespace traph
 	template<typename T>
 	void Variable<T>::clear_graph()
 	{
-		_grad_fn = nullptr;
 		for(auto &each:_inputs)
 		{
 			each->clear_graph();
 		}
+		_grad_fn = nullptr;
 		_inputs.clear();
 	}
 

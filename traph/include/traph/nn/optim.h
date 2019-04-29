@@ -49,7 +49,7 @@ namespace traph
                 auto d_p = each->grad();
 
                 auto cloned_d_p = std::dynamic_pointer_cast<TensorBase<f32>>(d_p->clone());
-                cloned_d_p->mul_(_lr);
+                cloned_d_p->mul_(-_lr);
                 each->data()->add_(cloned_d_p);
             }
         }

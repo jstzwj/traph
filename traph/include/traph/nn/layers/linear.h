@@ -18,9 +18,9 @@ namespace traph
         {
             _in_features = in_features;
             _out_features = out_features;
-            _weight = randn<f32>({out_features, in_features}, true);
+            _weight = zeros<f32>({out_features, in_features}, true);
             if(bias)
-                _bias = randn<f32>({out_features}, true);
+                _bias = zeros<f32>({out_features}, true);
             
             register_parameter("weight", _weight);
             register_parameter("bias", _bias);

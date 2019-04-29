@@ -124,15 +124,21 @@ namespace traph
 			TensorInterfacePtr input = inputs[0];
 			auto output = input->clone();
 			output->pow_(_exp);
+
+			context.save(input);
 			
 			return output;
 		}
 
 		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
 		{
-			auto output = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->clone());
-			output->mul_(_exp);
-			return { output };
+			auto saved_tensors = context.get_saved_tensors();
+			assert(saved_tensors.size() == 1);
+			auto cloned_x = std::dynamic_pointer_cast<TensorBase<f32>>(saved_tensors[0]->clone());
+			
+			//FIXME x^n = n*x^(n-1)
+			cloned_x->mul_(_exp);
+			return { cloned_x };
 		}
 	};
 

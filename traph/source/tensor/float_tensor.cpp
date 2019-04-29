@@ -146,17 +146,11 @@ namespace traph
 		// ok, get lhs, rhs
 		Tensor<f32> * lhs = this;
 		Tensor<f32> * rhs = dynamic_cast<Tensor<f32> *>(other.get());
-		std::function<void(Tensor<f32> *, Tensor<f32> *, idx_type, idx_type,idx_type, idx_type)> add_impl =
-			[&](Tensor<f32> * lhs, Tensor<f32> * rhs, idx_type lhs_dim, idx_type rhs_dim, idx_type lhs_idx, idx_type rhs_idx) {
+		std::function<void(idx_type, idx_type, idx_type, idx_type)> add_impl =
+			[&](idx_type lhs_dim, idx_type rhs_dim, idx_type lhs_idx, idx_type rhs_idx) {
 
 			auto lhs_storage = std::dynamic_pointer_cast<TensorStorage<f32>>(lhs->storage())->data_ptr();
 			auto rhs_storage = std::dynamic_pointer_cast<TensorStorage<f32>>(rhs->storage())->data_ptr();
-
-			if (lhs_dim < -(lhs->size().size()) && rhs_dim < -(rhs->size().size()))
-			{
-				lhs_storage[lhs_idx] += rhs_storage[rhs_idx];
-				return;
-			}
 
 			idx_type lsh_shape_size = lhs_dim >= -(lhs->size().size())? lhs->size(lhs_dim) : 1;
 			idx_type rsh_shape_size = rhs_dim >= -(rhs->size().size()) ? rhs->size(rhs_dim) : 1;
@@ -164,7 +158,14 @@ namespace traph
 
 			for (idx_type i = 0; i < max_shape_size; ++i)
 			{
-				add_impl(lhs, rhs, lhs_dim - 1, rhs_dim - 1, lhs_idx, rhs_idx);
+                if (lhs_dim <= -(lhs->size().size()) && rhs_dim <= -(rhs->size().size()))
+                {
+                    lhs_storage[lhs_idx] += rhs_storage[rhs_idx];
+                }
+                else
+                {
+                    add_impl(lhs_dim - 1, rhs_dim - 1, lhs_idx, rhs_idx);
+                }
 
 				if(lsh_shape_size > 1)
 					lhs_idx += lhs->stride(lhs_dim);
@@ -173,7 +174,7 @@ namespace traph
 			}
 		};
 
-		add_impl(lhs, rhs, -1, -1, lhs->offset(), rhs->offset());
+		add_impl(-1, -1, lhs->offset(), rhs->offset());
     }
 
     void Tensor<f32>::apply_(std::function<f32(f32)> f)

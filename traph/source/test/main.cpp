@@ -67,12 +67,12 @@ int main()
 
 	traph::Linear linear_model(4, 2, false);
 	traph::MSELoss criterion;
-	traph::SGD optimizer(linear_model.parameters(), 0.001f);
+	traph::SGD optimizer(linear_model.parameters(), 0.0001f);
 	std::cout << y->data()->to_string() << std::endl;
 
 	std::cout << "Start Training..." << std::endl;
 
-	for (int epoch = 0; epoch < 100; ++epoch)
+	for (int epoch = 0; epoch < 10000; ++epoch)
 	{
 		float loss100 = 0.f;
 
@@ -82,9 +82,18 @@ int main()
 		loss->backward();
 		optimizer.step();
 		// loss100 += loss->item();
-		std::cout << loss->data()->to_string()<<std::endl;
+		// std::cout << linear_model.parameters()[0]->data()->to_string()<<std::endl;
+		std::cout << loss->data()->to_string() << std::endl;
 	}
 	
+	//auto a = traph::ones<traph::f32>({ 2,3 });
+	//a->requires_grad_(true);
+	//auto b = traph::ones<traph::f32>({ 3,4 });
+	//b->requires_grad_(true);
+	//auto c = matmul(a, b);
+	//auto d = sum(c);
+	//d->backward();
+	//std::cout << a->grad()->to_string();
 	
     return 0;
 }
