@@ -19,6 +19,7 @@ namespace traph
 
     public:
         virtual void backward() = 0;
+        virtual void clear_graph() = 0;
         virtual TensorInterfacePtr data() = 0;
         virtual void data_(TensorInterfacePtr d) = 0;
         virtual device_id device() = 0;
@@ -62,6 +63,7 @@ namespace traph
         using ByteVariableBase = VariableBase<u8>;
     public:
         virtual void backward() = 0;
+        virtual void clear_graph() = 0;
         virtual TensorInterfacePtr data() = 0;
         virtual void data_(TensorInterfacePtr d) = 0;
         virtual device_id device() = 0;

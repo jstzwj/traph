@@ -38,14 +38,15 @@ namespace traph
             return result;
         }
 
-        std::vector<std::shared_ptr<VariableInterface>> parameters(bool recurse)
+        std::vector<std::shared_ptr<VariableInterface>> parameters(bool recurse=true)
         {
             std::vector<std::shared_ptr<VariableInterface>> result;
             if(recurse)
             {
                 // fixme: children params recurse
                 for (const auto &p : _parameters)
-                    result.push_back(p.second);
+					if(p.second)
+						result.push_back(p.second);
             }
             else
             {

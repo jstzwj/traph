@@ -4,7 +4,7 @@
 #include <traph/nn/layers/linear.h>
 #include <traph/nn/layers/loss.h>
 #include <traph/core/tensor.h>
-#include <traph/tensor/byte_tensor.h>
+#include <traph/nn/optim.h>
 
 #include <iostream>
 
@@ -59,28 +59,32 @@ int main()
 	d->backward();
 	std::cout << a->grad()->to_string();
 	*/
-/*
+
 	int batch_size = 16;
 	
-	auto x = traph::randn<traph::f32>({ batch_size,4 });
-	auto y = traph::randn<traph::f32>({ batch_size,2 });
+	auto x = traph::ones<traph::f32>({ batch_size,4 });
+	auto y = traph::ones<traph::f32>({ batch_size,2 });
 
 	traph::Linear linear_model(4, 2, false);
-	traph::MSELoss loss;
+	traph::MSELoss criterion;
+	traph::SGD optimizer(linear_model.parameters(), 0.001f);
+	std::cout << y->data()->to_string() << std::endl;
 
-	auto out = linear_model.forward(x);
-	auto result = loss.forward(out, y);
+	std::cout << "Start Training..." << std::endl;
 
-	result->backward();
-	std::cout << x->data()->to_string() << std::endl;
-	std::cout << linear_model.parameters(true)[0]->grad()->to_string() << std::endl;
-*/
+	for (int epoch = 0; epoch < 100; ++epoch)
+	{
+		float loss100 = 0.f;
 
-
-	auto x = traph::ones<traph::u8>({ 2, 3, 4 });
-	x->data()->transpose_(1, 2);
-	std::dynamic_pointer_cast<traph::TensorBase<traph::u8>>(x->data())->fill_(5);
-	std::cout << x->data()->to_string();
+		optimizer.zero_grad();
+		auto out = linear_model.forward(x);
+		auto loss = criterion.forward(out, y);
+		loss->backward();
+		optimizer.step();
+		// loss100 += loss->item();
+		std::cout << loss->data()->to_string()<<std::endl;
+	}
+	
 	
     return 0;
 }

@@ -24,7 +24,8 @@ namespace traph
         {
             for(auto& each_param: _params)
             {
-                each_param->grad()->fill_(0);
+				if(each_param->grad())
+					each_param->grad()->fill_(0);
             }
         }
     };

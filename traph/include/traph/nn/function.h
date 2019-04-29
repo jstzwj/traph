@@ -74,6 +74,9 @@ namespace traph
 
 		std::shared_ptr<VariableInterface> result(new Variable<T>(dim, false));
 
+		if(requires_grad)
+			result->requires_grad_(true);
+
 		return result;
 	}
 
@@ -87,6 +90,9 @@ namespace traph
 		std::shared_ptr<VariableInterface> result(new Variable<T>(dim));
 		std::dynamic_pointer_cast<TensorBase<T>>(result->data())->fill_(0);
 
+		if(requires_grad)
+			result->requires_grad_(true);
+
 		return result;
 	}
 
@@ -99,6 +105,9 @@ namespace traph
 
 		std::shared_ptr<VariableInterface> result(new Variable<T>(dim));
 		std::dynamic_pointer_cast<TensorBase<T>>(result->data())->fill_(1);
+
+		if(requires_grad)
+			result->requires_grad_(true);
 
 		return result;
 	}
@@ -119,6 +128,8 @@ namespace traph
 		result_data->apply_([&d, &gen](T n){
 			return d(gen);
 		});
+		if(requires_grad)
+			result->requires_grad_(true);
 
 		return result;
 	}
@@ -127,7 +138,8 @@ namespace traph
 	VariableInterfacePtr empty_like(VariableInterfacePtr input, bool requires_grad = false)
 	{
 		std::shared_ptr<VariableInterface> result(new Variable<T>(input->size(), false));
-
+		if(requires_grad)
+			result->requires_grad_(true);
 		return result;
 	}
 

@@ -14,6 +14,7 @@ SET(NN_LIST
 	${HEADER_PATH}/function.h
 	${HEADER_PATH}/operation.h
 	${SOURCE_PATH}/operation.cpp
+	${HEADER_PATH}/optim.h
 )
 
 ADD_LIBRARY(${LIB_OUTNAME} ${NN_LIST})

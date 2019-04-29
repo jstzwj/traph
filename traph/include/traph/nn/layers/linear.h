@@ -18,12 +18,12 @@ namespace traph
         {
             _in_features = in_features;
             _out_features = out_features;
-            _weight = std::shared_ptr<VariableInterface>(new FloatParameter({out_features, in_features}));
+            _weight = randn<f32>({out_features, in_features}, true);
             if(bias)
-                _bias = std::shared_ptr<VariableInterface>(new FloatParameter({out_features}));
+                _bias = randn<f32>({out_features}, true);
             
-            register_parameter("weight", std::dynamic_pointer_cast<FloatParameter>(_weight));
-            register_parameter("bias", std::dynamic_pointer_cast<FloatParameter>(_bias));
+            register_parameter("weight", _weight);
+            register_parameter("bias", _bias);
         }
 
         std::shared_ptr<VariableInterface> forward(std::shared_ptr<VariableInterface> input)
