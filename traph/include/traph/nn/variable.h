@@ -145,7 +145,7 @@ namespace traph
 		_grad->fill_(1);
 
 		std::vector<VariableInterface*> sorted_node = Executor::topology_sort(dynamic_cast<VariableInterface*>(this));
-		for (int i = static_cast<int>(sorted_node.size()) - 1; i >= 0; --i)
+		for (int i = 0; i < static_cast<int>(sorted_node.size()); ++i)
 		{
 			VariableInterface* cur_node = sorted_node[i];
 			if (cur_node->is_leaf()) continue;
