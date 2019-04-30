@@ -67,7 +67,7 @@ int main()
 
 	traph::Linear linear_model(4, 2, false);
 	traph::MSELoss criterion;
-	traph::SGD optimizer(linear_model.parameters(), 0.0001f);
+	traph::SGD optimizer(linear_model.parameters(), 0.001f);
 	std::cout << y->data()->to_string() << std::endl;
 
 	std::cout << "Start Training..." << std::endl;

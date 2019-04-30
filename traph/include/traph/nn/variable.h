@@ -44,7 +44,6 @@ namespace traph
         ~Variable();
 
         virtual void backward() override;
-		virtual void clear_graph() override;
         virtual TensorInterfacePtr data() override;
 		virtual void data_(TensorInterfacePtr d) override;
         virtual device_id device() override;
@@ -160,18 +159,11 @@ namespace traph
 		}
 
 		// TODO:retain_graph
-		clear_graph();
-	}
-
-	template<typename T>
-	void Variable<T>::clear_graph()
-	{
-		for(auto &each:_inputs)
+		for (int i = static_cast<int>(sorted_node.size()) - 1; i >= 0; --i)
 		{
-			each->clear_graph();
+			_grad_fn = nullptr;
+			_inputs.clear();
 		}
-		_grad_fn = nullptr;
-		_inputs.clear();
 	}
 
     template<typename T>
