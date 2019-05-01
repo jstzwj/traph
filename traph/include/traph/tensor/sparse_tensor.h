@@ -1,5 +1,5 @@
-#ifndef TRAPH_TENSOR_TENSOR_H_
-#define TRAPH_TENSOR_TENSOR_H_
+#ifndef TRAPH_SPARSE_TENSOR_TENSOR_H_
+#define TRAPH_SPARSE_TENSOR_TENSOR_H_
 
 #include <initializer_list>
 #include <cmath>
@@ -9,21 +9,24 @@
 #include <stdexcept>
 #include <algorithm>
 #include <string>
+#include <vector>
+#include <utility>
 
 
 #include<traph/core/type.h>
 #include<traph/core/index.h>
-#include<traph/core/utils.h>
 #include<traph/core/tensor.h>
-
-#include<traph/tensor/tensor_storage.h>
-#include<traph/tensor/arithmetic.h>
 
 namespace traph
 {
+    class SparseIndex
+    {
+
+    };
+
     // ndarray
     template<typename T>
-    class Tensor: public TensorBase<T>
+    class SparseTensor: public TensorBase<T>
     {
     public:
         using value_type = T;
@@ -37,24 +40,21 @@ namespace traph
         using reference = self_type&;
         using const_reference = const self_type&;
     private:
-        std::shared_ptr<TensorStorage<T>> _rep;
+        std::vector<std::pair<SparseIndex, T>> _rep;
         DimVector _dimensions;
-        idx_type _offset;
-		DimVector _strides;
-        layout_type _order;
 
     public:
-        Tensor();
-        explicit Tensor(const DimVector& dimensions);
-        explicit Tensor(const DimVector& dimensions, layout_type order);
-        explicit Tensor(const DimVector& dimensions, const DimVector& strides);
-        explicit Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order);
-        Tensor(const T& t);
+        SparseTensor();
+        explicit SparseTensor(const DimVector& dimensions);
+        explicit SparseTensor(const DimVector& dimensions, layout_type order);
+        explicit SparseTensor(const DimVector& dimensions, const DimVector& strides);
+        explicit SparseTensor(const DimVector& dimensions, const DimVector& strides, layout_type order);
+        SparseTensor(const T& t);
 
-        Tensor(const Tensor& other) = delete;
-        Tensor(Tensor&& other) = delete;
-        Tensor& operator= (const Tensor& other) = delete;
-        Tensor& operator= (Tensor&& other) = delete;
+        SparseTensor(const SparseTensor& other) = delete;
+        SparseTensor(SparseTensor&& other) = delete;
+        SparseTensor& operator= (const SparseTensor& other) = delete;
+        SparseTensor& operator= (SparseTensor&& other) = delete;
 
         virtual void add_(TensorInterfacePtr other) override;
         virtual void apply_(std::function<T(T)> f) override;
@@ -94,11 +94,11 @@ namespace traph
     };
 
 	template<typename T>
-	using TensorPtr = std::shared_ptr<Tensor<T>>;
+	using SparseTensorPtr = std::shared_ptr<SparseTensor<T>>;
 	template<typename T>
-	using TensorRef = Tensor<T> &;
+	using SparseTensorRef = SparseTensor<T> &;
 	template<typename T>
-	using TensorConstRef = const Tensor<T>&;
+	using SparseTensorConstRef = const SparseTensor<T>&;
 }
 
-#endif // !TRAPH_TENSOR
+#endif // !TRAPH_SPARSE_TENSOR_TENSOR_H_
