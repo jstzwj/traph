@@ -88,6 +88,33 @@ namespace traph
 		}
 	};
 
+	class MeanOp : public OpBase
+	{
+	public:
+		virtual TensorInterfacePtr forward(std::vector<TensorInterfacePtr> inputs) override
+		{
+			assert(inputs.size() == 1);
+
+			TensorInterfacePtr input = inputs[0];
+			TensorInterfacePtr result = input->mean();
+
+			context.save(input);
+
+			return result;
+		}
+
+		virtual std::vector<TensorBasePtr<f32>> backward(TensorBasePtr<f32> output_grad) override
+		{
+			auto saved_tensors = context.get_saved_tensors();
+			assert(saved_tensors.size() == 1);
+
+			auto flat_size = saved_tensors[0]->size().flat_size();
+			auto result = std::dynamic_pointer_cast<TensorBase<f32>>(output_grad->clone());
+			result->mul_(1.f/flat_size);
+			return { result };
+		}
+	};
+
 	class PowOp: public OpBase
 	{
 	private:
@@ -119,6 +146,8 @@ namespace traph
 			
 			//FIXME x^n = n*x^(n-1)
 			cloned_x->mul_(_exp);
+			cloned_x->mul_(output_grad);
+			
 			return { cloned_x };
 		}
 	};

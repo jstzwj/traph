@@ -8,7 +8,6 @@ SET(NN_LIST
 	${HEADER_PATH}/autograd.h
 	${HEADER_PATH}/variable.h
 	${SOURCE_PATH}/variable.cpp
-	${HEADER_PATH}/graph.h
 	${HEADER_PATH}/executor.h
 	${SOURCE_PATH}/executor.cpp
 	${HEADER_PATH}/function.h

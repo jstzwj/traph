@@ -150,6 +150,8 @@ namespace traph
 
 	BINARY_OP(matmul, MatmulOp)
 
+	UNARY_OP(mean, MeanOp)
+
 	VariableInterfacePtr pow(VariableInterfacePtr input, float exp)
 	{
 		DimVector result_dim;

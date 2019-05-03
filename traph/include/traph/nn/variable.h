@@ -158,11 +158,12 @@ namespace traph
 			}
 		}
 
-		// TODO:retain_graph
+		// TODO:retain_graph, retain_all_grad
 		for (int i = static_cast<int>(sorted_node.size()) - 1; i >= 0; --i)
 		{
 			_grad_fn = nullptr;
 			_inputs.clear();
+			// _grad = std::shared_ptr<TensorBase<f32>>(nullptr);
 		}
 	}
 

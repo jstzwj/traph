@@ -281,9 +281,64 @@ namespace traph
 		return matmul_impl(*this, *right_matrix);
 	}
 
+    TensorInterfacePtr Tensor<f64>::mean() const
+    {
+        DimVector d(1);
+        d[0] = 1;
+
+        TensorPtr<f64> result(new Tensor<f64>(d));
+        auto flat_size = _dimensions.flat_size();
+        result->_rep->data[0] = reduce_([](f64 a, f64 b)->f64 {return a + b; });
+        result->_rep->data[0] /= flat_size;
+        return std::dynamic_pointer_cast<TensorInterface>(result);
+    }
+
     void Tensor<f64>::mul_(f64 value)
     {
         apply_([value](f64 a)->f64 {return a*value; });
+    }
+
+    void Tensor<f64>::mul_(std::shared_ptr<TensorInterface> other)
+    {
+        // check tensor other type
+        if(other->dtype() != DataType::DOUBLE)
+            throw std::runtime_error("expected type double tensor");
+		// check broadcast.shape = this.shape
+        auto shape = broadcast_shape(this->size(), other->size());
+        if(shape != this->size())
+            throw std::runtime_error("The size of tensor a must match the size of tensor b");
+		// ok, get lhs, rhs
+		Tensor<f64> * lhs = this;
+		Tensor<f64> * rhs = dynamic_cast<Tensor<f64> *>(other.get());
+		std::function<void(idx_type, idx_type, idx_type, idx_type)> mul_impl =
+			[&](idx_type lhs_dim, idx_type rhs_dim, idx_type lhs_idx, idx_type rhs_idx) {
+
+			auto lhs_storage = std::dynamic_pointer_cast<TensorStorage<f32>>(lhs->storage())->data_ptr();
+			auto rhs_storage = std::dynamic_pointer_cast<TensorStorage<f32>>(rhs->storage())->data_ptr();
+
+			idx_type lsh_shape_size = lhs_dim >= -(lhs->size().size())? lhs->size(lhs_dim) : 1;
+			idx_type rsh_shape_size = rhs_dim >= -(rhs->size().size()) ? rhs->size(rhs_dim) : 1;
+			idx_type max_shape_size = std::max(lsh_shape_size, rsh_shape_size);
+
+			for (idx_type i = 0; i < max_shape_size; ++i)
+			{
+                if (lhs_dim <= -(lhs->size().size()) && rhs_dim <= -(rhs->size().size()))
+                {
+                    lhs_storage[lhs_idx] *= rhs_storage[rhs_idx];
+                }
+                else
+                {
+                    mul_impl(lhs_dim - 1, rhs_dim - 1, lhs_idx, rhs_idx);
+                }
+
+				if(lsh_shape_size > 1)
+					lhs_idx += lhs->stride(lhs_dim);
+				if (rsh_shape_size > 1)
+					rhs_idx += rhs->stride(rhs_dim);
+			}
+		};
+
+		mul_impl(-1, -1, lhs->offset(), rhs->offset());
     }
 
     void Tensor<f64>::neg_()

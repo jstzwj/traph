@@ -8,6 +8,31 @@
 
 #include <iostream>
 
+using namespace traph;
+
+class MyModel : public Module
+{
+private:
+	std::shared_ptr<Linear> linear1;
+	// std::shared_ptr<Linear> linear2;
+	// std::shared_ptr<Linear> linear3;
+public:
+
+	MyModel()
+		:linear1(new Linear(1024, 512, false))
+		// linear2(new Linear(512, 256, false)),
+		// linear3(new Linear(256, 128, false))
+	{
+		add_module("linear1", linear1);
+		// add_module("linear2", linear2);
+		// add_module("linear3", linear3);
+	}
+	std::shared_ptr<VariableInterface> forward(std::shared_ptr<VariableInterface> input)
+	{
+		return linear1->forward(input);
+	}
+};
+
 int main()
 {
 	/*
@@ -62,13 +87,13 @@ int main()
 
 	int batch_size = 16;
 	
-	auto x = traph::ones<traph::f32>({ batch_size,4 });
-	auto y = traph::ones<traph::f32>({ batch_size,2 });
+	auto x = traph::ones<traph::f32>({ batch_size,1024 });
+	auto y = traph::ones<traph::f32>({ batch_size,512 });
 
-	traph::Linear linear_model(4, 2, false);
-	traph::MSELoss criterion;
-	traph::SGD optimizer(linear_model.parameters(), 0.001f);
-	std::cout << y->data()->to_string() << std::endl;
+	MyModel model;
+	MSELoss criterion;
+	traph::SGD optimizer(model.parameters(), 0.01f);
+	// std::cout << y->data()->to_string() << std::endl;
 
 	std::cout << "Start Training..." << std::endl;
 
@@ -77,7 +102,7 @@ int main()
 		float loss100 = 0.f;
 
 		optimizer.zero_grad();
-		auto out = linear_model.forward(x);
+		auto out = model.forward(x);
 		auto loss = criterion.forward(out, y);
 		loss->backward();
 		optimizer.step();
@@ -86,6 +111,7 @@ int main()
 		std::cout << loss->data()->to_string() << std::endl;
 	}
 	
+
 	//auto a = traph::ones<traph::f32>({ 2,3 });
 	//a->requires_grad_(true);
 	//auto b = traph::ones<traph::f32>({ 3,4 });

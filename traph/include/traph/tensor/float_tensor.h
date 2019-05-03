@@ -66,7 +66,9 @@ namespace traph
 		virtual std::shared_ptr<TensorInterface> inverse() const override;
 		virtual f32 item() const override;
 		virtual std::shared_ptr<TensorInterface> matmul(std::shared_ptr<TensorInterface> mat) const override;
-		virtual void mul_(f32 value) override;
+		virtual TensorInterfacePtr mean() const override;
+        virtual void mul_(f32 value) override;
+        virtual void mul_(std::shared_ptr<TensorInterface> other) override;
         virtual void neg_() override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;

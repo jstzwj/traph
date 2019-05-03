@@ -31,8 +31,7 @@ namespace traph
             }
             else if(_reduction == MSELossReduction::MEAN)
             {
-                // fixme: use mean if it impled
-                ret = sum(pow(sub(input, target), 2.f));
+				ret = mean(pow(sub(input, target), 2.f));
             }
             else
             {

@@ -15,9 +15,25 @@ namespace traph
     class Module
     {
     private:
+        std::string _name;
         std::vector<std::pair<std::string, std::shared_ptr<VariableInterface>>> _parameters;
-        std::vector<std::shared_ptr<Module>> _children;
+        std::vector<std::pair<std::string, std::shared_ptr<Module>>> _children;
     public:
+        void add_module(const std::string& name, std::shared_ptr<Module> module)
+        {
+            _children.push_back(std::make_pair(name, module));
+        }
+
+        std::vector<std::shared_ptr<Module>> modules()
+        {
+            std::vector<std::shared_ptr<Module>> result;
+
+            for (const auto &m : _children)
+                if(m.second)
+                    result.push_back(m.second);
+
+            return result;
+        }
 
         std::vector<std::pair<std::string, std::shared_ptr<VariableInterface>>> named_parameters(bool recurse)
         {
@@ -47,6 +63,16 @@ namespace traph
                 for (const auto &p : _parameters)
 					if(p.second)
 						result.push_back(p.second);
+
+                for (const auto &m : _children)
+                {
+                    if(m.second)
+                    {
+                        auto child_params = m.second->parameters(true);
+                        for(auto &child_param: child_params)
+                            result.push_back(child_param);
+                    }
+                }
             }
             else
             {

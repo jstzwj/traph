@@ -53,6 +53,27 @@ namespace traph
         std::variant<u8, i8, i16, i32, i64, f32, f64> _scalar;
         DataType _dtype;
     public:
+		ScalarType(u8 v)
+			:_scalar(v) {}
+
+		ScalarType(i8 v)
+			:_scalar(v) {}
+
+		ScalarType(i16 v)
+			:_scalar(v) {}
+
+		ScalarType(i32 v)
+			:_scalar(v) {}
+
+		ScalarType(i64 v)
+			:_scalar(v) {}
+
+		ScalarType(f32 v)
+			:_scalar(v) {}
+
+		ScalarType(f64 v)
+			:_scalar(v) {}
+
         DataType dtype() const
         {
             return _dtype;

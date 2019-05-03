@@ -122,7 +122,19 @@ namespace traph
     }
 
     template<typename T>
+    TensorInterfacePtr Tensor<T>::mean() const
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
     void Tensor<T>::mul_(T value)
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
+    void Tensor<T>::mul_(std::shared_ptr<TensorInterface> other)
     {
         throw std::runtime_error("No implement");
     }
