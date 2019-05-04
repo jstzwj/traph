@@ -65,6 +65,7 @@ namespace traph
         virtual const T* data_ptr() const override;
         virtual device_id device() override;
         virtual DataType dtype() const override;
+        virtual bool equal(std::shared_ptr<TensorInterface> other) const override;
         virtual void fill_(T value) override;
         virtual std::shared_ptr<TensorInterface> inverse() const override;
         virtual T item() const override;
@@ -75,7 +76,7 @@ namespace traph
         virtual void neg_() override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
-        virtual PlatformType platform() override;
+        virtual PlatformType platform() const override;
         virtual void pow_(f32 exp) override;
         virtual T reduce_(std::function<T(T,T)> f) const override;
         virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override;

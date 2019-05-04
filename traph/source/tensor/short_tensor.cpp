@@ -253,6 +253,42 @@ namespace traph
         return DataType::SHORT;
     }
 
+    bool Tensor<i16>::equal(std::shared_ptr<TensorInterface> other) const
+    {
+        if(other->platform() != this->platform())
+            throw std::runtime_error("equal: Two tensors must be the same platform");
+        
+        if(other->dtype() != this->dtype())
+            return false;
+
+        if(other->size() != this->size())
+            return false;
+
+        std::shared_ptr<Tensor<i16>> other_ptr = std::dynamic_pointer_cast<Tensor<i16>>(other);
+        
+        std::function<bool(idx_type, i16*, i16*)> equal_impl =
+        [&](idx_type dim, i16* lhs_idx, i16* rhs_idx){
+            idx_type dim_size = _dimensions.size();
+            
+            for(idx_type i = 0; i < _dimensions[dim]; ++i)
+            {
+                if(dim == dim - 1)
+                {
+                    if(*lhs_idx != *rhs_idx) return false;
+                }
+                else
+                {
+                    if(!equal_impl(dim + 1, lhs_idx, rhs_idx)) return false;
+                }
+                lhs_idx += _strides[dim];
+                rhs_idx += other_ptr->stride(dim);
+            }
+            return true;
+        };
+
+        return equal_impl(0, _rep->data_ptr() + _offset, other_ptr->data_ptr() + other_ptr->offset());
+    }
+
 	std::shared_ptr<TensorInterface> Tensor<i16>::inverse() const
 	{
 		throw std::runtime_error("No implement");
@@ -350,7 +386,7 @@ namespace traph
 
     layout_type Tensor<i16>::order() const { return _order; }
 
-    PlatformType Tensor<i16>::platform() { return PlatformType::CPU; }
+    PlatformType Tensor<i16>::platform() const { return PlatformType::CPU; }
 
     void Tensor<i16>::pow_(f32 exp)
     {

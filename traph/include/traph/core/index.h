@@ -223,6 +223,24 @@ namespace traph
                 return stack_data[dim];
         }
     };
+
+
+    inline DimVector sort_index(DimVector dim)
+    {
+        DimVector sorted(dim.size());
+        for(int i = 0; i<dim.size(); ++i)
+            sorted[i] = i;
+        
+        for (int i = 0; i < dim.size() - 1; i++)
+            for (int j = 0; j < dim.size() - 1 - i; j++)
+                if (dim[j] < dim[j + 1])
+                {
+                    std::swap(dim[j], dim[j+1]);
+                    std::swap(sorted[j], sorted[j+1]);
+                }
+        
+        return sorted;
+    }
 }
 
 #endif

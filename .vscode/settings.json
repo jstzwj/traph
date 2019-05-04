@@ -79,11 +79,11 @@
         "resumable": "cpp",
         "future": "cpp",
         "queue": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "stack": "cpp"
     },
     "files.exclude": {
         "**/.git": true,
-        "**/build": true,
-        "**/traph/contrib": true,
+        "**/build": true
     }
 }

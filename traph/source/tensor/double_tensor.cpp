@@ -253,6 +253,42 @@ namespace traph
         return DataType::DOUBLE;
     }
 
+    bool Tensor<f64>::equal(std::shared_ptr<TensorInterface> other) const
+    {
+        if(other->platform() != this->platform())
+            throw std::runtime_error("equal: Two tensors must be the same platform");
+        
+        if(other->dtype() != this->dtype())
+            return false;
+
+        if(other->size() != this->size())
+            return false;
+
+        std::shared_ptr<Tensor<f64>> other_ptr = std::dynamic_pointer_cast<Tensor<f64>>(other);
+        
+        std::function<bool(idx_type, f64*, f64*)> equal_impl =
+        [&](idx_type dim, f64* lhs_idx, f64* rhs_idx){
+            idx_type dim_size = _dimensions.size();
+            
+            for(idx_type i = 0; i < _dimensions[dim]; ++i)
+            {
+                if(dim == dim - 1)
+                {
+                    if(*lhs_idx != *rhs_idx) return false;
+                }
+                else
+                {
+                    if(!equal_impl(dim + 1, lhs_idx, rhs_idx)) return false;
+                }
+                lhs_idx += _strides[dim];
+                rhs_idx += other_ptr->stride(dim);
+            }
+            return true;
+        };
+
+        return equal_impl(0, _rep->data_ptr() + _offset, other_ptr->data_ptr() + other_ptr->offset());
+    }
+
 	std::shared_ptr<TensorInterface> Tensor<f64>::inverse() const
 	{
 		return std::dynamic_pointer_cast<TensorInterface>(inverse_impl(*this));
@@ -350,7 +386,7 @@ namespace traph
 
     layout_type Tensor<f64>::order() const { return _order; }
 
-    PlatformType Tensor<f64>::platform() { return PlatformType::CPU; }
+    PlatformType Tensor<f64>::platform() const { return PlatformType::CPU; }
 
     void Tensor<f64>::pow_(f32 exp)
     {
