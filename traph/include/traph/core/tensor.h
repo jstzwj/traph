@@ -101,7 +101,7 @@ namespace traph
 		virtual layout_type order() const = 0;
         virtual PlatformType platform() const = 0;
         virtual void pow_(f32 exp) = 0;
-        virtual T reduce_(std::function<T(T,T)> f) const = 0;
+        virtual T reduce(std::function<T(T,T)> f) const = 0;
         virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const = 0;
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;

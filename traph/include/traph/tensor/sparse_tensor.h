@@ -75,7 +75,7 @@ namespace traph
 		virtual layout_type order() const override;
         virtual PlatformType platform() override;
         virtual void pow_(f32 exp) override;
-        virtual T reduce_(std::function<T(T,T)> f) const override;
+        virtual T reduce(std::function<T(T,T)> f) const override;
         virtual TensorInterfacePtr reduce_dim(idx_type dim, std::function<T(T,T)> f) const override;
         virtual void reshape_(const DimVector& dims) override;
         virtual void resize_(const DimVector& dims) override;

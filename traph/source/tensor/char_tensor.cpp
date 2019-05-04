@@ -323,7 +323,7 @@ namespace traph
 
         TensorPtr<i8> result(new Tensor<i8>(d));
         auto flat_size = _dimensions.flat_size();
-        result->_rep->data[0] = reduce_([](i8 a, i8 b)->i8 {return a + b; });
+        result->_rep->data[0] = reduce([](i8 a, i8 b)->i8 {return a + b; });
         result->_rep->data[0] /= flat_size;
         return std::dynamic_pointer_cast<TensorInterface>(result);
     }
@@ -393,7 +393,7 @@ namespace traph
         apply_([&exp_int](i8 a)->i8 {return static_cast<i8>(std::pow(a, exp_int)); });
     }
 
-	i8 Tensor<i8>::reduce_(std::function<i8(i8, i8)> f) const
+	i8 Tensor<i8>::reduce(std::function<i8(i8, i8)> f) const
     {
 		i8 result{};
         reduce_impl(result, 0, _offset, f);
@@ -533,7 +533,7 @@ namespace traph
         d[0] = 1;
 
         TensorPtr<i8> result(new Tensor<i8>(d));
-        result->_rep->data[0] = reduce_([](i8 a, i8 b)->i8 {return a + b; });
+        result->_rep->data[0] = reduce([](i8 a, i8 b)->i8 {return a + b; });
         return std::dynamic_pointer_cast<TensorInterface>(result);
     }
     

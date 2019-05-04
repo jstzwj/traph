@@ -164,7 +164,7 @@ namespace traph
         throw std::runtime_error("No implement");
     }
     template<typename T>
-    T Tensor<T>::reduce_(std::function<T(T,T)> f) const
+    T Tensor<T>::reduce(std::function<T(T,T)> f) const
     {
         throw std::runtime_error("No implement");
     }

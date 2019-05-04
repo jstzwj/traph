@@ -325,7 +325,7 @@ namespace traph
 
         TensorPtr<f32> result(new Tensor<f32>(d));
         auto flat_size = _dimensions.flat_size();
-        result->_rep->data[0] = reduce_([](f32 a, f32 b)->f32 {return a + b; });
+        result->_rep->data[0] = reduce([](f32 a, f32 b)->f32 {return a + b; });
         result->_rep->data[0] /= flat_size;
         return std::dynamic_pointer_cast<TensorInterface>(result);
     }
@@ -395,7 +395,7 @@ namespace traph
         apply_([&exp](f32 a)->f32 {return std::pow(a, exp); });
     }
 
-	f32 Tensor<f32>::reduce_(std::function<f32(f32, f32)> f) const
+	f32 Tensor<f32>::reduce(std::function<f32(f32, f32)> f) const
     {
 		f32 result{};
         reduce_impl(result, 0, _offset, f);
@@ -535,7 +535,7 @@ namespace traph
         d[0] = 1;
 
         TensorPtr<f32> result(new Tensor<f32>(d));
-        result->_rep->data[0] = reduce_([](f32 a, f32 b)->f32 {return a + b; });
+        result->_rep->data[0] = reduce([](f32 a, f32 b)->f32 {return a + b; });
         return std::dynamic_pointer_cast<TensorInterface>(result);
     }
     

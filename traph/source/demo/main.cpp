@@ -92,13 +92,15 @@ int main()
 	auto y = traph::ones<traph::f32>({ batch_size,2 });
 
 	MyModel model;
+	// auto param0 = std::dynamic_pointer_cast<Tensor<f32>>(model.parameters()[0]->data());
+	// param0->data_ptr()[0] = 0.0001f;
 	MSELoss criterion;
 	traph::SGD optimizer(model.parameters(), 0.01f);
 	// std::cout << y->data()->to_string() << std::endl;
 
 	std::cout << "Start Training..." << std::endl;
 
-	for (int epoch = 0; epoch < 10000; ++epoch)
+	for (int epoch = 0; epoch < 1000; ++epoch)
 	{
 		float loss100 = 0.f;
 
@@ -107,8 +109,7 @@ int main()
 		auto loss = criterion.forward(out, y);
 		loss->backward();
 		optimizer.step();
-		// loss100 += loss->item();
-		// std::cout << linear_model.parameters()[0]->data()->to_string()<<std::endl;
+		// std::cout << model.parameters()[0]->grad()->to_string()<<std::endl;
 		std::cout << loss->data()->to_string() << std::endl;
 	}
 	
