@@ -21,7 +21,7 @@ public:
 
 	MyModel()
 		:linear1(new Linear(32, 2, false))
-		// linear2(new Linear(512, 2, false))
+		// linear2(new Linear(16, 2, false))
 		// linear3(new Linear(256, 128, false))
 	{
 		add_module("linear1", linear1);
@@ -100,7 +100,7 @@ int main()
 
 	std::cout << "Start Training..." << std::endl;
 
-	for (int epoch = 0; epoch < 1000; ++epoch)
+	for (int epoch = 0; epoch < 100; ++epoch)
 	{
 		float loss100 = 0.f;
 

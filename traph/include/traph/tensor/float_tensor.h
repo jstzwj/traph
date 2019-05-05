@@ -73,6 +73,7 @@ namespace traph
         virtual void neg_() override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
+        virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const override;
 		virtual PlatformType platform() const override;
         virtual void pow_(f32 exp) override;
 		virtual f32 reduce(std::function<f32(f32, f32)> f) const override;

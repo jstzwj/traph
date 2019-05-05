@@ -42,7 +42,7 @@ namespace traph
         virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
-        // virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
+        virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
         virtual PlatformType platform() const = 0;
         virtual void pow_(f32 exp) = 0;
         virtual void reshape_(const DimVector& dims) = 0;
@@ -99,6 +99,7 @@ namespace traph
         virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
 		virtual layout_type order() const = 0;
+        virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
         virtual PlatformType platform() const = 0;
         virtual void pow_(f32 exp) = 0;
         virtual T reduce(std::function<T(T,T)> f) const = 0;

@@ -386,6 +386,40 @@ namespace traph
 
     layout_type Tensor<i64>::order() const { return _order; }
 
+    std::shared_ptr<TensorInterface> Tensor<i64>::permute(const DimVector& dims) const
+    {
+        // check dims
+        if(dims.size() != _strides.size())
+            throw std::runtime_error("permute dimension must have the same size");
+        std::vector<int> check_vec(dims.size(), 0);
+        for(int i = 0; i < dims.size();++i)
+            if(dims[i] >= 0 && dims[i] < dims.size())
+                check_vec[dims[i]] = 1;
+            else
+                throw std::runtime_error("permute dimension must in ndimension range");
+        
+        for(int i = 0; i < check_vec.size();++i)
+        {
+            if(check_vec[i] != 1)
+                throw std::runtime_error("permute dimension error");
+        }
+        // permute
+        std::shared_ptr<Tensor<i64>> result(new Tensor<i64>);
+        result->_rep = _rep;
+        result->_dimensions = _dimensions;
+        result->_offset = _offset;
+        result->_strides = _strides;
+        result->_order = _order;
+
+        for(int i=0; i<dims.size(); ++i)
+        {
+            result->_dimensions[i] = _dimensions[dims[i]];
+            result->_strides[i] = _strides[dims[i]];
+        }
+
+        return result;
+    }
+
     PlatformType Tensor<i64>::platform() const { return PlatformType::CPU; }
 
     void Tensor<i64>::pow_(f32 exp)
@@ -582,8 +616,15 @@ namespace traph
 
     std::shared_ptr<TensorInterface> Tensor<i64>::transpose(idx_type dim0, idx_type dim1)
     {
-        std::shared_ptr<TensorInterface> result= this->clone();
+        std::shared_ptr<Tensor<i64>> result(new Tensor<i64>);
+        result->_rep = _rep;
+        result->_dimensions = _dimensions;
+        result->_offset = _offset;
+        result->_strides = _strides;
+        result->_order = _order;
+
         result->transpose_(dim0, dim1);
+
         return result;
     }
 }

@@ -76,6 +76,7 @@ namespace traph
         virtual void neg_() override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;
+        virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const override;
         virtual PlatformType platform() const override;
         virtual void pow_(f32 exp) override;
         virtual T reduce(std::function<T(T,T)> f) const override;
@@ -105,6 +106,25 @@ namespace traph
 
     // TODO: macros
     // apply apply2 reduce...
+
+#define TENSOR_APPLY(TYPE, TENSOR, CODE)
+	{
+        std::function<void(idx_type, idx_type>)> apply_impl =
+        [&](idx_type dim, idx_type idx){
+            idx_type dim_size = TENSOR->_dimensions.size();
+            
+            for(idx_type i = 0; i < TENSOR->_dimensions[dim]; ++i)
+            {
+                if(dim_idx == dim_size - 1)
+                    CODE
+                else
+                    apply_impl(dim_idx + 1, idx, f);
+                idx += TENSOR->_strides[dim];
+            }
+        };
+
+        apply_impl(0, _offset);
+	}
 }
 
 #endif // !TRAPH_TENSOR

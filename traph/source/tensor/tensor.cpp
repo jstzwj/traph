@@ -157,6 +157,11 @@ namespace traph
     template<typename T>
     layout_type Tensor<T>::order() const { throw std::runtime_error("No implement"); }
     template<typename T>
+    std::shared_ptr<TensorInterface> Tensor<T>::permute(const DimVector& dims) const
+    {
+        throw std::runtime_error("No implement");
+    }
+    template<typename T>
     PlatformType Tensor<T>::platform() const { throw std::runtime_error("No implement"); }
     template<typename T>
     void Tensor<T>::pow_(f32 exp)
