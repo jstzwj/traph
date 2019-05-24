@@ -73,6 +73,7 @@ namespace traph
 		virtual TensorInterfacePtr mean() const override;
         virtual void mul_(T value) override;
         virtual void mul_(std::shared_ptr<TensorInterface> other) override;
+        virtual idx_type ndimension() const override;
         virtual void neg_() override;
         virtual idx_type offset() const override;
 		virtual layout_type order() const override;

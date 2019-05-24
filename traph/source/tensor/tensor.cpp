@@ -147,6 +147,12 @@ namespace traph
     }
 
     template<typename T>
+    idx_type Tensor<T>::ndimension() const
+    {
+        throw std::runtime_error("No implement");
+    }
+
+    template<typename T>
     void Tensor<T>::neg_()
     {
         throw std::runtime_error("No implement");

@@ -377,6 +377,11 @@ namespace traph
 		mul_impl(-1, -1, lhs->offset(), rhs->offset());
     }
 
+    idx_type Tensor<i64>::ndimension() const
+    {
+        return _dimensions.size();
+    }
+
     void Tensor<i64>::neg_()
     {
         apply_([](i64 a)->i64 {return -a; });
