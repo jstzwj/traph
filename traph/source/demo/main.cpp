@@ -5,6 +5,7 @@
 #include <traph/nn/layers/linear.h>
 #include <traph/nn/layers/loss.h>
 #include <traph/core/tensor.h>
+#include <traph/tensor/float_tensor.h>
 #include <traph/nn/optim.h>
 
 #include <iostream>
@@ -88,7 +89,7 @@ int main()
 
 	int batch_size = 16;
 	
-	auto x = traph::ones<traph::f32>({ batch_size,32 });
+	auto x = traph::randn<traph::f32>({ batch_size,32 });
 	auto y = traph::ones<traph::f32>({ batch_size,2 });
 
 	MyModel model;
@@ -122,6 +123,24 @@ int main()
 	//auto d = sum(c);
 	//d->backward();
 	//std::cout << a->grad()->to_string();
+
+	/*
+	DimVector dim;
+	dim.push_back(3);
+	dim.push_back(4);
+	auto a = std::make_shared<traph::FloatTensor>(dim);
+	auto b = std::make_shared<traph::FloatTensor>(dim);
+
+	a->fill_(0);
+	SliceVector slice(2);
+	slice[0] = Slice(0, 2);
+	slice[1] = Slice(0, 2);
+
+	auto selected = std::dynamic_pointer_cast<traph::FloatTensor>(a->select(slice));
+	TENSOR_APPLY(float, selected, (*element_ptr)++);
+	std::cout << a->to_string();
+	*/
+
 	
     return 0;
 }

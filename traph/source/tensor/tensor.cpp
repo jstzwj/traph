@@ -8,7 +8,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor()
         :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major)
+        _dimensions(), _offset(0), _strides(), _order(layout_type::row_major)
     {
         throw std::runtime_error("No implement");
     }
@@ -17,7 +17,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major)
+        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::row_major)
     {
         throw std::runtime_error("No implement");
     }
@@ -33,7 +33,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major)
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::row_major)
     {
         throw std::runtime_error("No implement");
     }
@@ -49,7 +49,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const T& t)
         :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major)
+        _dimensions(), _offset(0), _strides(), _order(layout_type::row_major)
     {
         throw std::runtime_error("No implement");
     }

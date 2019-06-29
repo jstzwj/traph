@@ -29,8 +29,8 @@ namespace traph
 		std::shared_ptr<Tensor<u8>> result(new Tensor<u8>(dim));
 
 		// copy data
-		Eigen::Map<const Eigen::Matrix<u8, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
-		Eigen::Map<const Eigen::Matrix<u8, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
+		Eigen::Map<const Eigen::Matrix<u8, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<u8, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
 
 		Eigen::Matrix<u8, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
 		// copy to result
@@ -49,8 +49,8 @@ namespace traph
 		std::shared_ptr<Tensor<i8>> result(new Tensor<i8>(dim));
 
 		// copy data
-		Eigen::Map<const Eigen::Matrix<i8, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
-		Eigen::Map<const Eigen::Matrix<i8, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i8, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i8, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
 
 		Eigen::Matrix<i8, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
 		// copy to result
@@ -69,8 +69,8 @@ namespace traph
 		std::shared_ptr<Tensor<i16>> result(new Tensor<i16>(dim));
 
 		// copy data
-		Eigen::Map<const Eigen::Matrix<i16, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
-		Eigen::Map<const Eigen::Matrix<i16, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i16, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i16, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
 
 		Eigen::Matrix<i16, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
 		// copy to result
@@ -89,8 +89,8 @@ namespace traph
 		std::shared_ptr<Tensor<i32>> result(new Tensor<i32>(dim));
 
 		// copy data
-		Eigen::Map<const Eigen::Matrix<i32, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
-		Eigen::Map<const Eigen::Matrix<i32, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i32, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i32, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
 
 		Eigen::Matrix<i32, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
 		// copy to result
@@ -109,8 +109,8 @@ namespace traph
 		std::shared_ptr<Tensor<i64>> result(new Tensor<i64>(dim));
 
 		// copy data
-		Eigen::Map<const Eigen::Matrix<i64, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
-		Eigen::Map<const Eigen::Matrix<i64, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i64, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<i64, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
 
 		Eigen::Matrix<i64, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
 		// copy to result
@@ -130,8 +130,8 @@ namespace traph
 
 #ifdef TRAPH_BUILD_EIGEN
 		// copy data
-		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
-		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
 
 		Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
 		// copy to result
@@ -169,8 +169,8 @@ namespace traph
 
 #ifdef TRAPH_BUILD_EIGEN
 		// copy data
-		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
-		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_b(b.data_ptr() + b.offset(), b.size()[0], b.size()[1]);
 
 		Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a * eigen_b;
 		// copy to result
@@ -203,9 +203,9 @@ namespace traph
 		std::shared_ptr<Tensor<f32>> result(new Tensor<f32>(a.size()[0], a.size()[1]));
 
 		// copy data
-		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
 
-		Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a.inverse();
+		Eigen::Matrix<f32, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> eigen_c = eigen_a.inverse();
 		// copy to result
 		std::copy(eigen_c.data(), eigen_c.data() + a.size()[0] * a.size()[1], result->data_ptr());
 		return result;
@@ -217,9 +217,9 @@ namespace traph
 		std::shared_ptr<Tensor<f64>> result(new Tensor<f64>(a.size()[0], a.size()[1]));
 
 		// copy data
-		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
+		Eigen::Map<const Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> eigen_a(a.data_ptr() + a.offset(), a.size()[0], a.size()[1]);
 
-		Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic> eigen_c = eigen_a.inverse();
+		Eigen::Matrix<f64, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> eigen_c = eigen_a.inverse();
 		// copy to result
 		std::copy(eigen_c.data(), eigen_c.data() + a.size()[0] * a.size()[1], result->data_ptr());
 		return result;

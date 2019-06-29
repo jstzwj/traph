@@ -9,7 +9,7 @@ namespace traph
         idx_type dim_num = _dimensions.size();
         _strides.resize(dim_num);
         idx_type stride = 1;
-        if(_order == layout_type::column_major)
+        if(_order == layout_type::row_major)
         {
             for (idx_type i = dim_num - 1; i >= 0; --i)
             {
@@ -86,13 +86,13 @@ namespace traph
     // public
     Tensor<f64>::Tensor()
         :_rep(new TensorStorage<f64>),
-        _dimensions(), _offset(0), _strides(), _order(layout_type::column_major)
+        _dimensions(), _offset(0), _strides(), _order(layout_type::row_major)
     {
     }
 
     Tensor<f64>::Tensor(const DimVector& dimensions)
         :_rep(new TensorStorage<f64>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::column_major)
+        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::row_major)
     {
         auto_strides();
         
@@ -110,7 +110,7 @@ namespace traph
 
     Tensor<f64>::Tensor(const DimVector& dimensions, const DimVector& strides)
         :_rep(new TensorStorage<f64>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::column_major)
+        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::row_major)
     {
         auto_strides();
 

@@ -157,7 +157,8 @@ namespace traph
         return true;
     }
 
-    inline std::shared_ptr<TensorInterface> sort_strides(std::shared_ptr<TensorInterface> t)
+    template<class T>
+    std::shared_ptr<TensorBase<T>> sort_strides(std::shared_ptr<TensorBase<T>> t)
     {
         DimVector indices(t->ndimension());
         for (idx_type i = 0; i < t->ndimension(); i++)

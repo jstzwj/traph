@@ -108,24 +108,60 @@ namespace traph
     // TODO: macros
     // apply apply2 reduce...
 
-#define TENSOR_APPLY(TYPE, TENSOR, CODE)
-	{
-        std::function<void(idx_type, idx_type>)> apply_impl =
-        [&](idx_type dim, idx_type idx){
-            idx_type dim_size = TENSOR->_dimensions.size();
-            
-            for(idx_type i = 0; i < TENSOR->_dimensions[dim]; ++i)
-            {
-                if(dim_idx == dim_size - 1)
-                    CODE
-                else
-                    apply_impl(dim_idx + 1, idx, f);
-                idx += TENSOR->_strides[dim];
-            }
-        };
+#define TENSOR_APPLY_CONTIGUOUS(TYPE, TENSOR, CODE) \
+    {                                               \
+        TYPE *element_ptr = TENSOR->data_ptr();     \
+        idx_type len = TENSOR->storage()->size();   \
+        TYPE *end_ptr = element_ptr + len;          \
+        while (element_ptr < end_ptr)               \
+        {                                           \
+            CODE;                                   \
+            element_ptr++;                          \
+        }                                           \
+    }
 
-        apply_impl(0, _offset);
-	}
+#define MEMORY_APPLY_CONTIGUOUS(TYPE, PTR, LEN, CODE) \
+    {                                                 \
+        TYPE *end_ptr = PTR + LEN;                    \
+        while (PTR < end_ptr)                         \
+        {                                             \
+            CODE;                                     \
+            PTR++;                                    \
+        }                                             \
+    }
+
+#define TENSOR_APPLY(TYPE, TENSOR, CODE)                                                                                        \
+    {                                                                                                                           \
+        idx_type dim_size = TENSOR->ndimension();                                                                               \
+        std::function<void(idx_type, TYPE *)> apply_impl =                                                                      \
+            [&](idx_type dim, TYPE *element_ptr) {                                                                              \
+                idx_type contiguous_dim = dim;                                                                                  \
+                while (contiguous_dim < dim_size - 1 &&                                                                         \
+                       TENSOR->stride(contiguous_dim + 1) * TENSOR->size(contiguous_dim + 1) == TENSOR->stride(contiguous_dim)) \
+                {                                                                                                               \
+                    contiguous_dim++;                                                                                           \
+                }                                                                                                               \
+                                                                                                                                \
+                int step_num = 1;                                                                                               \
+                for (idx_type i = contiguous_dim; i >= dim; --i)                                                                \
+                    step_num *= TENSOR->size(i);                                                                                \
+                                                                                                                                \
+                if (contiguous_dim == dim_size - 1)                                                                             \
+                {                                                                                                               \
+                    MEMORY_APPLY_CONTIGUOUS(TYPE, element_ptr, step_num, CODE);                                                 \
+                }                                                                                                               \
+                else                                                                                                            \
+                {                                                                                                               \
+                    for (idx_type i = 0; i < step_num; ++i)                                                                     \
+                    {                                                                                                           \
+                        apply_impl(contiguous_dim + 1, element_ptr);                                                            \
+                        element_ptr += TENSOR->stride(contiguous_dim);                                                          \
+                    }                                                                                                           \
+                }                                                                                                               \
+            };                                                                                                                  \
+                                                                                                                                \
+        apply_impl(0, TENSOR->data_ptr() + TENSOR->offset());                                                                   \
+    }
 }
 
 #endif // !TRAPH_TENSOR
