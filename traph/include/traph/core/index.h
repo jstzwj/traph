@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <memory>
 #include <utility>
+#include <initializer_list>
 #include <traph/core/type.h>
 
 #define DIMVECTOR_SMALL_VECTOR_OPTIMIZATION 5
@@ -26,6 +27,7 @@ namespace traph
         }
 
         DimVector(idx_type size)
+			:data(nullptr), dim_num(0)
         {
             if(size < 0)
                 return;
@@ -36,6 +38,15 @@ namespace traph
             
             dim_num = size;
         }
+
+		DimVector(std::initializer_list<int> list)
+			:data(nullptr), dim_num(0)
+		{
+			for (auto & each : list)
+			{
+				this->push_back(each);
+			}
+		}
 
         DimVector(const DimVector& other)
         {

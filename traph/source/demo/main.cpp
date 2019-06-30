@@ -90,6 +90,11 @@ int main()
 	int batch_size = 16;
 	
 	auto x = traph::randn<traph::f32>({ batch_size,32 });
+	auto x_data = std::dynamic_pointer_cast<traph::FloatTensor>(x->data());
+	// x_data->fill_(0.5f);
+	// x_data->data_ptr()[0] = 1.0f;
+	std::cout << x_data->to_string() << std::endl;
+
 	auto y = traph::ones<traph::f32>({ batch_size,2 });
 
 	MyModel model;
@@ -101,7 +106,7 @@ int main()
 
 	std::cout << "Start Training..." << std::endl;
 
-	for (int epoch = 0; epoch < 100; ++epoch)
+	for (int epoch = 0; epoch < 1000; ++epoch)
 	{
 		float loss100 = 0.f;
 
@@ -113,7 +118,6 @@ int main()
 		// std::cout << model.parameters()[0]->grad()->to_string()<<std::endl;
 		std::cout << loss->data()->to_string() << std::endl;
 	}
-	
 
 	//auto a = traph::ones<traph::f32>({ 2,3 });
 	//a->requires_grad_(true);
@@ -125,22 +129,22 @@ int main()
 	//std::cout << a->grad()->to_string();
 
 	/*
-	DimVector dim;
-	dim.push_back(3);
-	dim.push_back(4);
-	auto a = std::make_shared<traph::FloatTensor>(dim);
-	auto b = std::make_shared<traph::FloatTensor>(dim);
+	auto a = std::make_shared<traph::FloatTensor>(DimVector({ 2,1 }));
+	auto b = std::make_shared<traph::FloatTensor>(DimVector({ 1,2 }));
 
-	a->fill_(0);
-	SliceVector slice(2);
-	slice[0] = Slice(0, 2);
-	slice[1] = Slice(0, 2);
+	float * a_ptr = a->data_ptr();
+	float * b_ptr = b->data_ptr();
 
-	auto selected = std::dynamic_pointer_cast<traph::FloatTensor>(a->select(slice));
-	TENSOR_APPLY(float, selected, (*element_ptr)++);
-	std::cout << a->to_string();
+	a_ptr[0] = 3;
+	a_ptr[1] = 4;
+
+	b_ptr[0] = 5;
+	b_ptr[1] = 6;
+
+	auto c = std::dynamic_pointer_cast<traph::FloatTensor>(a->matmul(b));
+
+	std::cout << c->to_string();
 	*/
-
 	
     return 0;
 }
