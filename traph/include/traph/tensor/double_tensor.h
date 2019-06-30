@@ -27,7 +27,6 @@ namespace traph
         DimVector _dimensions;
         idx_type _offset;
 		DimVector _strides;
-        layout_type _order;
 
     private:
         void auto_strides();
@@ -42,9 +41,7 @@ namespace traph
     public:
         Tensor();
         explicit Tensor(const DimVector& dimensions);
-        explicit Tensor(const DimVector& dimensions, layout_type order);
         explicit Tensor(const DimVector& dimensions, const DimVector& strides);
-        explicit Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order);
         Tensor(const value_type& t);
 
         Tensor(const Tensor& other) = delete;
@@ -72,7 +69,6 @@ namespace traph
         virtual idx_type ndimension() const override;
         virtual void neg_() override;
         virtual idx_type offset() const override;
-		virtual layout_type order() const override;
         virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const override;
 		virtual PlatformType platform() const override;
         virtual void pow_(f32 exp) override;

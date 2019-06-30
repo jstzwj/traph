@@ -58,7 +58,6 @@ namespace traph
         virtual T item() const override;
 		virtual std::shared_ptr<VariableInterface> new_empty(const DimVector& size, bool requires_grad) const override;
         virtual idx_type offset() const override;
-		virtual layout_type order() const override;
         virtual PlatformType platform() override;
 		virtual bool requires_grad() const override;
         virtual void requires_grad_(bool requires_grad) override;
@@ -251,12 +250,6 @@ namespace traph
 	idx_type Variable<T>::offset() const
 	{
 		return _data->offset();
-	}
-
-	template<typename T>
-	layout_type Variable<T>::order() const
-	{
-		return _data->order();
 	}
 
 	template<typename T>

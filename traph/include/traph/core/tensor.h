@@ -42,7 +42,6 @@ namespace traph
         virtual idx_type ndimension() const = 0;
         virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
-		virtual layout_type order() const = 0;
         virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
         virtual PlatformType platform() const = 0;
         virtual void pow_(f32 exp) = 0;
@@ -100,7 +99,6 @@ namespace traph
         virtual idx_type ndimension() const = 0;
         virtual void neg_() = 0;
         virtual idx_type offset() const = 0;
-		virtual layout_type order() const = 0;
         virtual std::shared_ptr<TensorInterface> permute(const DimVector& dims) const = 0;
         virtual PlatformType platform() const = 0;
         virtual void pow_(f32 exp) = 0;

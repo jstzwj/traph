@@ -28,11 +28,6 @@ namespace traph
 		{
 			throw std::runtime_error("matmul: Dimension 0 of the first matrix shall be equal to dimension 1 of the second matrix.");
 		}
-		// check order
-		if (a.order() != b.order())
-		{
-			throw std::runtime_error("matmul: Two matrix shall have the same layout.");
-		}
 	}
 
 	std::shared_ptr<Tensor<u8>> matmul_impl(const Tensor<u8>& a, const Tensor<u8>& b);

@@ -9,21 +9,11 @@ namespace traph
         idx_type dim_num = _dimensions.size();
         _strides.resize(dim_num);
         idx_type stride = 1;
-        if(_order == layout_type::row_major)
+
+        for (idx_type i = dim_num - 1; i >= 0; --i)
         {
-            for (idx_type i = dim_num - 1; i >= 0; --i)
-            {
-                _strides[i] = stride;
-                stride *= _dimensions[i];
-            }
-        }
-        else
-        {
-            for (idx_type i = 0; i < dim_num; ++i)
-            {
-                _strides[i] = stride;
-                stride *= _dimensions[i];
-            }
+            _strides[i] = stride;
+            stride *= _dimensions[i];
         }
     }
 
@@ -86,40 +76,22 @@ namespace traph
     // public
     Tensor<i16>::Tensor()
         :_rep(new TensorStorage<i16>),
-        _dimensions(), _offset(0), _strides(), _order(layout_type::row_major)
+        _dimensions(), _offset(0), _strides()
     {
     }
 
     Tensor<i16>::Tensor(const DimVector& dimensions)
         :_rep(new TensorStorage<i16>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::row_major)
+        _dimensions(dimensions), _offset(0), _strides()
     {
         auto_strides();
         
         _rep->resize_(_dimensions.flat_size());
     }
 
-    Tensor<i16>::Tensor(const DimVector& dimensions, layout_type order)
-        :_rep(new TensorStorage<i16>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(order)
-    {
-        auto_strides();
-
-        _rep->resize_(_dimensions.flat_size());
-    }
-
     Tensor<i16>::Tensor(const DimVector& dimensions, const DimVector& strides)
         :_rep(new TensorStorage<i16>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::row_major)
-    {
-        auto_strides();
-
-        _rep->resize_(_dimensions.flat_size());
-    }
-
-    Tensor<i16>::Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
-        :_rep(new TensorStorage<i16>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(order)
+        _dimensions(dimensions), _offset(0), _strides(strides)
     {
         auto_strides();
 
@@ -221,7 +193,6 @@ namespace traph
         cloned_tensor->_dimensions = _dimensions;
         cloned_tensor->_offset = _offset;
         cloned_tensor->_strides = _strides;
-        cloned_tensor->_order = _order;
         
         return cloned_tensor;
     }
@@ -389,8 +360,6 @@ namespace traph
 
     idx_type Tensor<i16>::offset() const { return _offset; }
 
-    layout_type Tensor<i16>::order() const { return _order; }
-
     std::shared_ptr<TensorInterface> Tensor<i16>::permute(const DimVector& dims) const
     {
         // check dims
@@ -414,7 +383,6 @@ namespace traph
         result->_dimensions = _dimensions;
         result->_offset = _offset;
         result->_strides = _strides;
-        result->_order = _order;
 
         for(int i=0; i<dims.size(); ++i)
         {
@@ -495,7 +463,6 @@ namespace traph
 		}
 		result->_strides = strides;
 
-		result->_order = _order;
 
 		return std::dynamic_pointer_cast<TensorInterface>(result);
 	}
@@ -626,7 +593,6 @@ namespace traph
         result->_dimensions = _dimensions;
         result->_offset = _offset;
         result->_strides = _strides;
-        result->_order = _order;
 
         result->transpose_(dim0, dim1);
 

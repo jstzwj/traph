@@ -8,7 +8,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor()
         :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), _strides(), _order(layout_type::row_major)
+        _dimensions(), _offset(0), _strides()
     {
         throw std::runtime_error("No implement");
     }
@@ -17,15 +17,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(layout_type::row_major)
-    {
-        throw std::runtime_error("No implement");
-    }
-
-    template<typename T>
-    Tensor<T>::Tensor(const DimVector& dimensions, layout_type order)
-        :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(), _order(order)
+        _dimensions(dimensions), _offset(0), _strides()
     {
         throw std::runtime_error("No implement");
     }
@@ -33,15 +25,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides)
         :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(layout_type::row_major)
-    {
-        throw std::runtime_error("No implement");
-    }
-
-    template<typename T>
-    Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides, layout_type order)
-        :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(strides), _order(order)
+        _dimensions(dimensions), _offset(0), _strides(strides)
     {
         throw std::runtime_error("No implement");
     }
@@ -49,7 +33,7 @@ namespace traph
     template<typename T>
     Tensor<T>::Tensor(const T& t)
         :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), _strides(), _order(layout_type::row_major)
+        _dimensions(), _offset(0), _strides()
     {
         throw std::runtime_error("No implement");
     }
@@ -160,8 +144,7 @@ namespace traph
 
     template<typename T>
     idx_type Tensor<T>::offset() const { throw std::runtime_error("No implement"); }
-    template<typename T>
-    layout_type Tensor<T>::order() const { throw std::runtime_error("No implement"); }
+
     template<typename T>
     std::shared_ptr<TensorInterface> Tensor<T>::permute(const DimVector& dims) const
     {
