@@ -5,7 +5,7 @@
 #include <traph/nn/layers/linear.h>
 #include <traph/nn/layers/loss.h>
 #include <traph/core/tensor.h>
-#include <traph/tensor/float_tensor.h>
+#include <traph/tensor/tensor.h>
 #include <traph/nn/optim.h>
 
 #include <iostream>

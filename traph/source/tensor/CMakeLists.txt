@@ -5,20 +5,6 @@ SET(HEADER_PATH ${TRAPH_PATH_HEADER}/${LIB_NAME})
 SET(SOURCE_PATH ${TRAPH_PATH_SOURCE}/${LIB_NAME})
 
 SET(TENSOR_LIST
-	${HEADER_PATH}/float_tensor.h
-	${SOURCE_PATH}/float_tensor.cpp
-	${HEADER_PATH}/double_tensor.h
-	${SOURCE_PATH}/double_tensor.cpp
-	${HEADER_PATH}/char_tensor.h
-	${SOURCE_PATH}/char_tensor.cpp
-	${HEADER_PATH}/byte_tensor.h
-	${SOURCE_PATH}/byte_tensor.cpp
-	${HEADER_PATH}/short_tensor.h
-	${SOURCE_PATH}/short_tensor.cpp
-	${HEADER_PATH}/int_tensor.h
-	${SOURCE_PATH}/int_tensor.cpp
-	${HEADER_PATH}/long_tensor.h
-	${SOURCE_PATH}/long_tensor.cpp
 	${HEADER_PATH}/tensor.h
 	${SOURCE_PATH}/tensor.cpp
 	${HEADER_PATH}/arithmetic.h

@@ -42,6 +42,13 @@ namespace traph
         idx_type _offset;
 		DimVector _strides;
 
+    private:
+        void auto_strides();
+        void reduce_impl(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const;
+		void Tensor<T>::reduce_dim_impl(Tensor<T>& result, idx_type dim, idx_type reduce_dim,
+			idx_type this_idx, idx_type result_idx,
+			std::function<T(T, T)> f) const;
+        T reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<T(T,T)> f) const;
     public:
         Tensor();
         explicit Tensor(const DimVector& dimensions);
@@ -100,6 +107,23 @@ namespace traph
 	using TensorRef = Tensor<T> &;
 	template<typename T>
 	using TensorConstRef = const Tensor<T>&;
+
+
+    template class Tensor<u8>;
+    template class Tensor<i8>;
+    template class Tensor<i16>;
+    template class Tensor<i32>;
+    template class Tensor<i64>;
+    template class Tensor<f32>;
+    template class Tensor<f64>;
+
+    using ByteTensor = Tensor<u8>;
+    using CharTensor = Tensor<i8>;
+    using ShortTensor = Tensor<i16>;
+    using IntTensor = Tensor<i32>;
+    using LongTensor = Tensor<i64>;
+    using FloatTensor = Tensor<f32>;
+    using DoubleTensor = Tensor<f64>;
 
     // TODO: macros
     // apply apply2 reduce...

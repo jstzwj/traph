@@ -17,6 +17,7 @@ namespace traph
     using u16 = std::uint16_t;
     using u32 = std::uint32_t;
     using u64 = std::uint64_t;
+    using grad_type = f32;
     using idx_type = i32;
     using size_type = i32;
     using device_id = i32;
