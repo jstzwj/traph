@@ -1,4 +1,5 @@
 
 ADD_SUBDIRECTORY(contrib)
+ADD_SUBDIRECTORY(install)
 ADD_SUBDIRECTORY(source)
 

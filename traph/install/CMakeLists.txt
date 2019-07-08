@@ -1,0 +1,23 @@
+INCLUDE(ExternalProject)
+
+ExternalProject_Add(
+    xtl
+    GIT_REPOSITORY https://github.com/QuantStack/xtl.git
+    GIT_TAG 0d1f896ba90664248279baaea0059699cff5ab9b
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    PREFIX ${TRAPH_PATH_INSTALL}/source/xtl
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${TRAPH_PATH_INSTALL} -DBUILD_SHARED_LIBS=OFF
+)
+
+ExternalProject_Add(
+    xtensor
+    GIT_REPOSITORY https://github.com/QuantStack/xtensor.git
+    GIT_TAG d1513e465a44fef5a2b86aece05ec2157d1bd343
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    PREFIX ${TRAPH_PATH_INSTALL}/source/xtensor
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${TRAPH_PATH_INSTALL} -DBUILD_SHARED_LIBS=OFF
+)
+
+INCLUDE_DIRECTORIES(${TRAPH_PATH_INSTALL}/include)
