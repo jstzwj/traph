@@ -10,6 +10,9 @@
 
 #include <iostream>
 
+#include <xtensor/xarray.hpp>
+#include <xtensor/xio.hpp>
+
 using namespace traph;
 
 class MyModel : public Module
@@ -87,6 +90,7 @@ int main()
 	std::cout << a->grad()->to_string();
 	*/
 
+	/*
 	int batch_size = 16;
 	
 	auto x = traph::ones<traph::f32>({ batch_size,128 });
@@ -113,6 +117,7 @@ int main()
 		// std::cout << model.parameters()[0]->grad()->to_string()<<std::endl;
 		std::cout << loss->data()->to_string() << std::endl;
 	}
+	*/
 
 	//auto a = traph::ones<traph::f32>({ 2,3 });
 	//a->requires_grad_(true);
@@ -140,6 +145,14 @@ int main()
 
 	std::cout << c->to_string();
 	*/
+
+
+	xt::xarray<int> arr
+	{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+	arr.reshape({ 3, 3 });
+
+	std::cout << arr;
 	
     return 0;
 }

@@ -1,17 +1,22 @@
 INCLUDE(ExternalProject)
 
-# IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
-# 	MESSAGE(STATUS "current platform: Linux ")
-# ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-#     ExternalProject_Add(tbb
-#         URL               https://github.com/intel/tbb/releases/download/2019_U8/tbb2019_20190605oss_win.zip
-#         PREFIX ${TRAPH_PATH_INSTALL}/source/tbb
-#         CONFIGURE_COMMAND ""
-#         BUILD_COMMAND     ""
-#     )
-# ELSE ()
-# 	MESSAGE(STATUS "other platform tbb is not supported: ${CMAKE_SYSTEM_NAME}")
-# ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+	MESSAGE(STATUS "current platform: Linux ")
+ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    ExternalProject_Add(tbb
+        URL               https://github.com/intel/tbb/releases/download/2019_U8/tbb2019_20190605oss_win.zip
+        URL_HASH          MD5=82A1A72BF97F3F35C1C57036A92951E4
+        PREFIX ${TRAPH_PATH_INSTALL}/source/tbb
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND     ""
+        INSTALL_COMMAND   ""
+    )
+    SET(TBB_INCLUDE_DIRS ${TRAPH_PATH_INSTALL}/source/tbb/src/tbb/tbb2019_20190605oss/include)
+    SET(TBB_LIBRARIES ${TRAPH_PATH_INSTALL}/source/tbb/src/tbb/tbb2019_20190605oss/lib)
+ELSE ()
+	MESSAGE(STATUS "other platform tbb is not supported: ${CMAKE_SYSTEM_NAME}")
+ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+
 
 ExternalProject_Add(
     xtl
@@ -41,7 +46,8 @@ ExternalProject_Add(
     GIT_PROGRESS TRUE
     PREFIX ${TRAPH_PATH_INSTALL}/source/xtensor
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${TRAPH_PATH_INSTALL} -DBUILD_SHARED_LIBS=OFF
-        -DXTENSOR_USE_XSIMD=ON -DXTENSOR_ENABLE_ASSERT=ON -DXTENSOR_CHECK_DIMENSION=ON -DXTENSOR_USE_TBB=OFF
+        -DTBB_LIBRARIES_RELEASE=ON -DTBB_INCLUDE_DIRS=${TBB_INCLUDE_DIRS} -DTBB_LIBRARIES=${TBB_LIBRARIES}
+        -DXTENSOR_USE_XSIMD=ON -DXTENSOR_ENABLE_ASSERT=ON -DXTENSOR_CHECK_DIMENSION=ON -DXTENSOR_USE_TBB=ON
 )
 
 INCLUDE_DIRECTORIES(${TRAPH_PATH_INSTALL}/include)
