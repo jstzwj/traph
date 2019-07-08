@@ -1,5 +1,18 @@
 INCLUDE(ExternalProject)
 
+# IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+# 	MESSAGE(STATUS "current platform: Linux ")
+# ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+#     ExternalProject_Add(tbb
+#         URL               https://github.com/intel/tbb/releases/download/2019_U8/tbb2019_20190605oss_win.zip
+#         PREFIX ${TRAPH_PATH_INSTALL}/source/tbb
+#         CONFIGURE_COMMAND ""
+#         BUILD_COMMAND     ""
+#     )
+# ELSE ()
+# 	MESSAGE(STATUS "other platform tbb is not supported: ${CMAKE_SYSTEM_NAME}")
+# ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+
 ExternalProject_Add(
     xtl
     GIT_REPOSITORY https://github.com/QuantStack/xtl.git
@@ -11,6 +24,16 @@ ExternalProject_Add(
 )
 
 ExternalProject_Add(
+    xsimd
+    GIT_REPOSITORY https://github.com/QuantStack/xsimd.git
+    GIT_TAG 898402de2db78fa82c7f0df016b64ffa51dbd212
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    PREFIX ${TRAPH_PATH_INSTALL}/source/xsimd
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${TRAPH_PATH_INSTALL} -DBUILD_SHARED_LIBS=OFF
+)
+
+ExternalProject_Add(
     xtensor
     GIT_REPOSITORY https://github.com/QuantStack/xtensor.git
     GIT_TAG d1513e465a44fef5a2b86aece05ec2157d1bd343
@@ -18,6 +41,7 @@ ExternalProject_Add(
     GIT_PROGRESS TRUE
     PREFIX ${TRAPH_PATH_INSTALL}/source/xtensor
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${TRAPH_PATH_INSTALL} -DBUILD_SHARED_LIBS=OFF
+        -DXTENSOR_USE_XSIMD=ON -DXTENSOR_ENABLE_ASSERT=ON -DXTENSOR_CHECK_DIMENSION=ON -DXTENSOR_USE_TBB=OFF
 )
 
 INCLUDE_DIRECTORIES(${TRAPH_PATH_INSTALL}/include)
