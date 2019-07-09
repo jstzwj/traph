@@ -81,7 +81,6 @@ namespace traph
         virtual void reshape_(const DimVector& dims) = 0;
         virtual void resize_(const DimVector& dims) = 0;
 		virtual DimVector size() const = 0;
-        virtual std::shared_ptr<StorageBase<T>> storage() const = 0;
 		virtual DimVector stride() const = 0;
     };
 

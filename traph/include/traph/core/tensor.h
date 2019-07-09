@@ -9,8 +9,6 @@
 #include <traph/core/index.h>
 #include <traph/core/slice.h>
 
-#include <traph/core/tensor_storage.h>
-
 namespace traph
 {
 	template<class T>
@@ -110,7 +108,6 @@ namespace traph
         virtual void sin_() = 0;
 		virtual DimVector size() const = 0;
 		virtual idx_type size(idx_type i) const = 0;
-        virtual std::shared_ptr<StorageBase<T>> storage() const = 0;
 		virtual DimVector stride() const = 0;
 		virtual idx_type stride(idx_type i) const = 0;
         virtual void sub_(std::shared_ptr<TensorInterface> other) = 0;

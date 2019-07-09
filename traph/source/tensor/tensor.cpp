@@ -3,101 +3,23 @@
 namespace traph
 {
 	// definition
-    // private
-    template<typename T>
-    void Tensor<T>::auto_strides()
-    {
-        idx_type dim_num = _dimensions.size();
-        _strides.resize(dim_num);
-        idx_type stride = 1;
-        for (idx_type i = dim_num - 1; i >= 0; --i)
-        {
-            _strides[i] = stride;
-            stride *= _dimensions[i];
-        }
-    }
-
-    template<typename T>
-    void Tensor<T>::reduce_impl(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const
-    {
-        idx_type dim_size = _dimensions.size();
-
-        idx_type step_len = _strides[dim];
-        idx_type step_num = _dimensions[dim];
-
-        for(idx_type i = 0; i < step_num; ++i)
-        {
-            if(dim == dim_size - 1)
-                result = f(result, _rep->data[idx]);
-            else
-                reduce_impl(result, dim + 1, idx, f);
-            idx += step_len;
-        }
-    }
-
-    template<typename T>
-    T Tensor<T>::reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<T(T,T)> f) const
-    {
-        T result{};
-        for(idx_type i = 0; i < step_num; ++i)
-        {
-            result = f(result, _rep->data[begin]);
-            begin += step_len;
-        }
-        return result;
-    }
-
-    template<typename T>
-    void Tensor<T>::reduce_dim_impl(Tensor<T>& result, idx_type dim, idx_type reduce_dim,
-        idx_type this_idx, idx_type result_idx,
-        std::function<T(T,T)> f) const
-    {
-        idx_type dim_size = _dimensions.size();
-
-        if(dim == dim_size)
-        {
-            result._rep->data[result_idx] = 
-                reduce_dim_kernel(this_idx, _strides[reduce_dim], _dimensions[reduce_dim], f);
-            return;
-        }
-
-        if(dim == reduce_dim)
-        {
-            reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
-        }
-        else
-        {
-            for(idx_type i = 0; i < _dimensions[dim]; ++i)
-            {
-                reduce_dim_impl(result, dim + 1, reduce_dim, this_idx,result_idx, f);
-                    
-                this_idx += _strides[dim];
-                result_idx += result._strides[dim];
-            }
-        }
-    }
     // public
     template<typename T>
     Tensor<T>::Tensor()
-        :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), _strides()
+        :tensor_impl()
     {
     }
 
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions)
-        :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides()
+        : tensor_impl()
     {
-        auto_strides();
-        
-        _rep->resize_(_dimensions.flat_size());
+		tensor_impl.resize(dimensions);
     }
 
     template<typename T>
     Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides)
-        :_rep(new TensorStorage<T>),
-        _dimensions(dimensions), _offset(0), _strides(strides)
+        : tensor_impl()
     {
         auto_strides();
 
@@ -523,9 +445,6 @@ namespace traph
 		else
 			throw std::runtime_error("Dimension out of range");
 	}
-
-    template<typename T>
-	std::shared_ptr<StorageBase<T>>  Tensor<T>::storage() const { return _rep; }
 
     template<typename T>
     DimVector Tensor<T>::stride() const { return _strides; }

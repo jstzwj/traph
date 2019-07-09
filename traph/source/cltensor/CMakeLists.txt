@@ -17,9 +17,6 @@ SET(CORE_LIST
 
 ADD_LIBRARY(${LIB_OUTNAME} ${CORE_LIST})
 
-IF(Boost_FOUND)
-	target_link_libraries(${LIB_OUTNAME} ${Boost_LIBRARIES})
-ENDIF()
 
 IF(OpenCL_FOUND)
 	target_link_libraries(${LIB_OUTNAME} ${OpenCL_LIBRARIES})

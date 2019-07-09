@@ -13,9 +13,8 @@ SET(TENSOR_LIST
 
 ADD_LIBRARY(${LIB_OUTNAME} ${TENSOR_LIST})
 
-IF(Boost_FOUND)
-	target_link_libraries(${LIB_OUTNAME} ${Boost_LIBRARIES})
-ENDIF()
+
+add_dependencies(${LIB_OUTNAME} xtensor)
 
 IF(TRAPH_ACCELERATE EQUAL 0)
 	# link eigen?

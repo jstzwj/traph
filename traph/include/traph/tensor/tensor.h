@@ -16,8 +16,8 @@
 #include<traph/core/utils.h>
 #include<traph/core/tensor.h>
 
-#include<traph/tensor/tensor_storage.h>
 #include<traph/tensor/arithmetic.h>
+#include <xtensor/xarray.hpp>
 
 namespace traph
 {
@@ -29,7 +29,6 @@ namespace traph
         using value_type = T;
         using self_type = Tensor<T>;
         using base_type = TensorBase<T>;
-        using storage_type = TensorStorage<value_type>;
 
         using raw_pointer = self_type*;
         using raw_const_pointer = const self_type*;
@@ -37,18 +36,7 @@ namespace traph
         using reference = self_type&;
         using const_reference = const self_type&;
     private:
-        std::shared_ptr<TensorStorage<T>> _rep;
-        DimVector _dimensions;
-        idx_type _offset;
-		DimVector _strides;
-
-    private:
-        void auto_strides();
-        void reduce_impl(T& result, idx_type dim, idx_type idx, std::function<T(T,T)> f) const;
-		void Tensor<T>::reduce_dim_impl(Tensor<T>& result, idx_type dim, idx_type reduce_dim,
-			idx_type this_idx, idx_type result_idx,
-			std::function<T(T, T)> f) const;
-        T reduce_dim_kernel(idx_type begin, idx_type step_len, idx_type step_num, std::function<T(T,T)> f) const;
+        xt::xarray<T> tensor_impl;
     public:
         Tensor();
         explicit Tensor(const DimVector& dimensions);
@@ -91,7 +79,6 @@ namespace traph
         virtual void sin_() override;
 		virtual DimVector size() const override;
 		virtual idx_type size(idx_type i) const override;
-        virtual std::shared_ptr<StorageBase<T>> storage() const override;
 		virtual DimVector stride() const override;
 		virtual idx_type stride(idx_type i) const override;
         virtual void sub_(std::shared_ptr<TensorInterface> other) override;

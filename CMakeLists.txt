@@ -22,10 +22,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
-find_package(Boost)
-if(Boost_FOUND)
-	message(STATUS Boost found: ${Boost_INCLUDE_DIRS})
-endif()
+# find_package(Boost)
+# if(Boost_FOUND)
+# 	message(STATUS Boost found: ${Boost_INCLUDE_DIRS})
+# endif()
 
 
 # languge feature
@@ -33,13 +33,13 @@ set(ENABLE_PYTHON False CACHE BOOL "Language: Python")
 
 
 # thread feature
-FIND_PACKAGE(OpenMP REQUIRED)
-if(OPENMP_FOUND)
-	message("OPENMP FOUND")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
+# FIND_PACKAGE(OpenMP REQUIRED)
+# if(OPENMP_FOUND)
+# 	message("OPENMP FOUND")
+# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+# 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+# endif()
 
 # gpgpu feature
 set(ENABLE_CUDA FALSE CACHE BOOL "Feature: OPENCL")

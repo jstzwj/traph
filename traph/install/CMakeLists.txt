@@ -50,4 +50,6 @@ ExternalProject_Add(
         -DXTENSOR_USE_XSIMD=ON -DXTENSOR_ENABLE_ASSERT=ON -DXTENSOR_CHECK_DIMENSION=ON -DXTENSOR_USE_TBB=ON
 )
 
+add_dependencies(xtensor xsimd xtl tbb)
+
 INCLUDE_DIRECTORIES(${TRAPH_PATH_INSTALL}/include)

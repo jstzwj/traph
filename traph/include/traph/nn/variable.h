@@ -64,7 +64,6 @@ namespace traph
         virtual void reshape_(const DimVector& dims) override;
         virtual void resize_(const DimVector& dims) override;
 		virtual DimVector size() const override;
-        virtual std::shared_ptr<StorageBase<T>> storage() const override;
 		virtual DimVector stride() const override;
     };
 
@@ -294,12 +293,6 @@ namespace traph
 	DimVector Variable<T>::size() const
 	{
 		return _data->size();
-	}
-
-	template<typename T>
-	std::shared_ptr<StorageBase<T>> Variable<T>::storage() const
-	{
-		return _data->storage();
 	}
 
 	template<typename T>

@@ -151,8 +151,10 @@ int main()
 	{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	arr.reshape({ 3, 3 });
+	auto brr = xt::strided_view(arr, { xt::range(0, 1), xt::all() });
 
-	std::cout << arr;
+	brr.fill(1);
+	std::cout << arr <<std::endl << brr;
 	
     return 0;
 }

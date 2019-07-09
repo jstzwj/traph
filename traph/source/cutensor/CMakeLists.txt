@@ -14,10 +14,6 @@ SET(CUTENSOR_LIST
 ADD_LIBRARY(${LIB_OUTNAME} ${CUTENSOR_LIST})
 target_link_libraries(${LIB_OUTNAME} traph-cutensor-cuda)
 
-IF(Boost_FOUND)
-	target_link_libraries(${LIB_OUTNAME} ${Boost_LIBRARIES})
-ENDIF()
-
 
 IF(TRAPH_ACCELERATE EQUAL 0)
 	# do something
