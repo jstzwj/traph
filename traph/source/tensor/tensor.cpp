@@ -21,18 +21,11 @@ namespace traph
     Tensor<T>::Tensor(const DimVector& dimensions, const DimVector& strides)
         : tensor_impl()
     {
-        auto_strides();
-
-        _rep->resize_(_dimensions.flat_size());
     }
 
     template<typename T>
     Tensor<T>::Tensor(const T& t)
-        :_rep(new TensorStorage<T>),
-        _dimensions(), _offset(0), _strides()
     {
-        _dimensions.resize(1);
-        auto_strides();
     }
 
     template<typename T>
@@ -45,77 +38,12 @@ namespace traph
         auto shape = broadcast_shape(this->size(), other->size());
         if(shape != this->size())
             throw std::runtime_error("The size of tensor a must match the size of tensor b");
-		// ok, get lhs, rhs
-		Tensor<T> * lhs = this;
-		Tensor<T> * rhs = dynamic_cast<Tensor<T> *>(other.get());
-		std::function<void(idx_type, idx_type, idx_type, idx_type)> add_impl =
-			[&](idx_type lhs_dim, idx_type rhs_dim, idx_type lhs_idx, idx_type rhs_idx) {
-
-			auto lhs_storage = std::dynamic_pointer_cast<TensorStorage<T>>(lhs->storage())->data_ptr();
-			auto rhs_storage = std::dynamic_pointer_cast<TensorStorage<T>>(rhs->storage())->data_ptr();
-
-			idx_type lsh_shape_size = lhs_dim >= -(lhs->size().size())? lhs->size(lhs_dim) : 1;
-			idx_type rsh_shape_size = rhs_dim >= -(rhs->size().size()) ? rhs->size(rhs_dim) : 1;
-			idx_type max_shape_size = std::max(lsh_shape_size, rsh_shape_size);
-
-			for (idx_type i = 0; i < max_shape_size; ++i)
-			{
-                if (lhs_dim <= -(lhs->size().size()) && rhs_dim <= -(rhs->size().size()))
-                {
-                    lhs_storage[lhs_idx] += rhs_storage[rhs_idx];
-                }
-                else
-                {
-                    add_impl(lhs_dim - 1, rhs_dim - 1, lhs_idx, rhs_idx);
-                }
-
-				if(lsh_shape_size > 1)
-					lhs_idx += lhs->stride(lhs_dim);
-				if (rsh_shape_size > 1)
-					rhs_idx += rhs->stride(rhs_dim);
-			}
-		};
-
-		add_impl(-1, -1, lhs->offset(), rhs->offset());
     }
 
     template<typename T>
     void Tensor<T>::apply_(std::function<T(T)> f)
     {
-        // sort stride for cache optimization
-		DimVector cloned_stride(_strides);
-        DimVector sorted_stride(_strides.size());
-        for(int i = 0; i<_strides.size(); ++i)
-            sorted_stride[i] = i;
         
-        for (int i = 0; i < cloned_stride.size() - 1; i++)
-            for (int j = 0; j < cloned_stride.size() - 1 - i; j++)
-                if (cloned_stride[j] < cloned_stride[j + 1])
-                {
-                    std::swap(cloned_stride[j], cloned_stride[j+1]);
-                    std::swap(sorted_stride[j], sorted_stride[j+1]);
-                }
-        
-        std::function<void(idx_type, idx_type, std::function<T(T)>)> apply_impl =
-        [&](idx_type dim_idx, idx_type idx, std::function<T(T)> f){
-            idx_type dim = sorted_stride[dim_idx];
-            idx_type dim_size = _dimensions.size();
-
-            idx_type step_len = _strides[dim];
-            idx_type step_num = _dimensions[dim];
-            
-            for(idx_type i = 0; i < step_num; ++i)
-            {
-                if(dim_idx == dim_size - 1)
-                    _rep->data[idx] = f(_rep->data[idx]);
-                else
-                    apply_impl(dim_idx + 1, idx, f);
-                idx += step_len;
-            }
-        };
-
-        if(_dimensions.size() > 0)
-            apply_impl(0, _offset, f);
     }
 
     template<typename T>
